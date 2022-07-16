@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\KAS.API.MIDDEWARE\KAS.API.MIDDEWARE.csproj" />
-    <ProjectReference Include="..\KAS.ECOS.PROGRESS\KAS.ECOS.PROGRESS.csproj" />
+    <ProjectReference Include="../KAS.API.MIDDEWARE/KAS.API.MIDDEWARE.csproj" />
+    <ProjectReference Include="../KAS.ECOS.Entity.DB/KAS.Entity.DB.ECOS.csproj" />
   </ItemGroup>
 
 </Project>

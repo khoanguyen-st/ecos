@@ -4,7 +4,11 @@ using System.Collections.Generic;
 namespace KAS.Entity.DB.ECOS
 {
     /// <summary>
-    /// Phân quyền tính năng
+    /// Phân quyền tính năng.
+    /// 
+    /// Tại thời điểm đăng nhập:
+    /// 	- Input: KAS.Product.ID , CustomerID,RoleName
+    /// 	- Nếu giá trị trả về danh sách  FunctionName ==0, thì trả về thông báo tài khoản không hợp lệ. Dùng cho trường hợp 1 tài khoản truy cập vào nhiều sản phẩm
     /// </summary>
     public partial class KasProductsFunctionsPermission
     {

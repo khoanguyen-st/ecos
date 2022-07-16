@@ -27,6 +27,7 @@ namespace KAS.Entity.DB.ECOS
         public DateTime? CreateDate { get; set; }
 
         public virtual Customer Customer { get; set; } = null!;
+        public virtual CustomersContentPermission CustomersContentPermission { get; set; } = null!;
         public virtual ICollection<KasProductsFunctionsPermission> KasProductsFunctionsPermissions { get; set; }
         public virtual ICollection<RolesUser> RolesUsers { get; set; }
     }

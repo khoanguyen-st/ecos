@@ -14,15 +14,29 @@ namespace KAS.Entity.DB.ECOS
         /// </summary>
         public string KasProduct { get; set; } = null!;
         /// <summary>
-        /// Thông tin chi tiết phục vụ cho Front End, bao gồm url và thông số cấu hình
+        /// IP App IP, phục vụ cho FrontEnd. Sau này đây chính là GatewayAPI
         /// </summary>
-        public string? KasProductFrontEndProfile { get; set; }
-        public bool IsDeleted { get; set; }
+        public string? KasProductApi { get; set; }
         /// <summary>
-        /// Thông tin chi tiết phục vụ cho BackEnd, bao gồm url và thông số cấu hình.
-        /// Chỉ những thiết bị được xác nhận là hệ thống của KAS mới truy vấn được
+        /// Mặc định là False
         /// </summary>
-        public string? KasProductBackEndProfile { get; set; }
+        public bool IsDelete { get; set; }
+        /// <summary>
+        /// Yêu cầu mã hóa
+        /// </summary>
+        public string? M1connectionString { get; set; }
+        /// <summary>
+        /// Yêu cầu mã hóa
+        /// </summary>
+        public string? M2connectionString { get; set; }
+        /// <summary>
+        /// Yêu cầu mã hóa
+        /// </summary>
+        public string? P1connectionString { get; set; }
+        /// <summary>
+        /// Yêu cầu mã hóa
+        /// </summary>
+        public string? P2connectionString { get; set; }
 
         public virtual Customer Customer { get; set; } = null!;
         public virtual KasProduct KasProductNavigation { get; set; } = null!;

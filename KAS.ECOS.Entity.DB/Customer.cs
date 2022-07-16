@@ -10,6 +10,7 @@ namespace KAS.Entity.DB.ECOS
     {
         public Customer()
         {
+            CustomersProfiles = new HashSet<CustomersProfile>();
             Devies = new HashSet<Devy>();
             Roles = new HashSet<Role>();
         }
@@ -17,11 +18,17 @@ namespace KAS.Entity.DB.ECOS
         public string Id { get; set; } = null!;
         public string? ParentId { get; set; }
         public string Name { get; set; } = null!;
-        public DateTime CreateDate { get; set; }
+        /// <summary>
+        /// Ngày tạo
+        /// </summary>
+        public DateTime CreatedDate { get; set; }
+        /// <summary>
+        /// Mặc định là false
+        /// </summary>
         public bool IsDeleted { get; set; }
 
         public virtual CustomersInfo CustomersInfo { get; set; } = null!;
-        public virtual CustomersProfile CustomersProfile { get; set; } = null!;
+        public virtual ICollection<CustomersProfile> CustomersProfiles { get; set; }
         public virtual ICollection<Devy> Devies { get; set; }
         public virtual ICollection<Role> Roles { get; set; }
     }

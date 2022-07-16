@@ -9,8 +9,10 @@ namespace KAS.Entity.DB.ECOS
     public partial class CustomersInfo
     {
         public string Id { get; set; } = null!;
-        public string Name { get; set; } = null!;
-        public string? Address { get; set; }
+        /// <summary>
+        /// Điện thoại cầm tay
+        /// </summary>
+        public string HandPhone { get; set; } = null!;
 
         public virtual Customer IdNavigation { get; set; } = null!;
     }

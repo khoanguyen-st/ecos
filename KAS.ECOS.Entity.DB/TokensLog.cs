@@ -17,7 +17,6 @@ namespace KAS.Entity.DB.ECOS
         public DateTimeOffset? TokenExpired { get; set; }
         public bool IsDeleted { get; set; }
         public string KasProductsId { get; set; } = null!;
-
-        public virtual RolesUser RolesUser { get; set; } = null!;
+        public long Stt { get; set; }
     }
 }

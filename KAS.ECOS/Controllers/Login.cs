@@ -4,7 +4,7 @@ using KAS.ECOS.API.Entity;
 using KAS.Entity.DB.ECOS;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KAS.ECOS.API.Controllersv2
+namespace KAS.ECOS.API.Controllers
 {
     [ApiController]
     [Route("api/KAS/ECOS")]
