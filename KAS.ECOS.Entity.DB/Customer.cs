@@ -11,7 +11,6 @@ namespace KAS.Entity.DB.ECOS
         public Customer()
         {
             CustomersProfiles = new HashSet<CustomersProfile>();
-            Devies = new HashSet<Devy>();
             Roles = new HashSet<Role>();
         }
 
@@ -26,10 +25,26 @@ namespace KAS.Entity.DB.ECOS
         /// Mặc định là false
         /// </summary>
         public bool IsDeleted { get; set; }
+        /// <summary>
+        /// Địa chỉ
+        /// </summary>
+        public string Address { get; set; } = null!;
+        /// <summary>
+        /// Số điện thoại khách hàng
+        /// </summary>
+        public string HandPhone { get; set; } = null!;
+        public string Email { get; set; } = null!;
+        /// <summary>
+        /// Ghi chú
+        /// </summary>
+        public string Description { get; set; } = null!;
+        /// <summary>
+        /// mã khách hàng trên SMAC
+        /// </summary>
+        public string CustomerCodeSmac { get; set; } = null!;
 
         public virtual CustomersInfo CustomersInfo { get; set; } = null!;
         public virtual ICollection<CustomersProfile> CustomersProfiles { get; set; }
-        public virtual ICollection<Devy> Devies { get; set; }
         public virtual ICollection<Role> Roles { get; set; }
     }
 }

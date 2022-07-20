@@ -19,6 +19,10 @@ namespace KAS.Entity.DB.ECOS
         public string? FunctionPath { get; set; }
         public string? Description { get; set; }
         public bool IsDeleted { get; set; }
+        /// <summary>
+        /// Level của đệ quy Function
+        /// </summary>
+        public short Level { get; set; }
 
         public virtual KasProduct KasProduct { get; set; } = null!;
         public virtual ICollection<KasProductsFunctionsPermission> KasProductsFunctionsPermissions { get; set; }

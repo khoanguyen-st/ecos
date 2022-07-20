@@ -26,8 +26,8 @@ namespace KAS.ECOS.API.Controllers
         /// </summary>
         /// <param name="ie"></param>
         /// <returns></returns>
-        [HttpPost("Products/Set")]
-        public async Task<OutEntity> Products_Set(InEntity ie)
+        [HttpPost("Products/Save")]
+        public async Task<OutEntity> Products_Save(InEntity ie)
         {
             try
             {
@@ -44,9 +44,13 @@ namespace KAS.ECOS.API.Controllers
                             isSave=true;
                             w.KasProducts.Add(new KAS.Entity.DB.ECOS.KasProduct()
                             {
-                                Id = item.Id,
+                                Id = item.Id.ToUpper(),
                                 Description = item.Description
                             });
+                        }
+                        else
+                        {
+                            dbItem.Description = item.Description;
                         }
                     }
                     if (isSave)
@@ -57,6 +61,72 @@ namespace KAS.ECOS.API.Controllers
 
                 }
                 return new OutEntity("ok", "");
+            }
+            catch
+            {
+                return new OutEntity("", "Hiện tại hệ thống đang bận, vui lòng thử lại sau");
+            }
+        }
+
+
+        [HttpPost("Products/Function/Get")]
+        public OutEntity Products_Function_Get(InEntity ie)
+        {
+            try
+            {
+                return new OutEntity(w.KasProductsFunctions.Where(ii => ii.KasProductId==ie.data && !ii.IsDeleted).Select(ii => new
+                {
+                    ii.KasProductId,
+                    ii.FunctionName,
+                    ii.FunctionParent,
+                    ii.FunctionPath,
+                    ii.Description,
+                    ii.Level
+                }).ToList(), "");
+            }
+            catch
+            {
+                return new OutEntity("", "Hiện tại hệ thống đang bận, vui lòng thử lại sau");
+            }
+        }
+        [HttpPost("Products/Function/Save")]
+        public async Task<OutEntity> Products_Function_Add(InEntity ie)
+        {
+            try
+            {
+                var item = ie.getData<KAS.Entity.DB.ECOS.KasProductsFunction>();
+                using (var dbContextTransaction = w.Database.BeginTransaction())
+                {
+
+                    var dbItem = w.KasProductsFunctions.FirstOrDefault(ii => ii.FunctionName == item.FunctionName && ii.KasProductId == ie.KASProductName);
+
+                    if (dbItem == null)
+                    {
+
+                        w.KasProductsFunctions.Add(new KAS.Entity.DB.ECOS.KasProductsFunction()
+                        {
+                            KasProductId = ie.KASProductName,
+                            FunctionName = item.FunctionName,
+                            Description=item.Description,
+                            FunctionParent=item.FunctionParent,
+                            FunctionPath=item.FunctionPath,
+                            Level=item.Level,
+                        });
+                    }
+                    else
+                    {
+                        dbItem.FunctionName = item.FunctionName;
+                        dbItem.Description=item.Description;
+                        dbItem.FunctionParent=item.FunctionParent;
+                        dbItem.FunctionPath=item.FunctionPath;
+                        dbItem.Level=item.Level;
+                    }
+                    await w.SaveChangesAsync();
+                    await dbContextTransaction.CommitAsync();
+                    return new OutEntity("ok", "");
+
+                }
+
             }
             catch
             {

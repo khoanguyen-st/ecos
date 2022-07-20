@@ -21,16 +21,51 @@ namespace ClassLibrary1
 
         public async System.Threading.Tasks.Task Invoke(HttpContext context)
         {
+
+
+            string content = "";
+            var stream = context.Request.Body;
+            // Optimization: don't buffer the request if
+            // there was no stream or if it is rewindable.
+            if (stream == Stream.Null || stream.CanSeek)
+            {
+                await next(context);
+                return;
+
+            }
+            else
+            {
+                try
+                {
+                    using (var buffer = new MemoryStream())
+                    {
+                        // Copy the request stream to the memory stream.
+                        await stream.CopyToAsync(buffer);
+
+                        // Rewind the memory stream.
+                        buffer.Position = 0L;
+
+                         content = System.Text.Encoding.UTF8.GetString(buffer.ToArray());
+                        // Replace the request stream by the memory stream.
+                     //   context.Request.Body = buffer;
+
+                        // Invoke the rest of the pipeline.
+                     //   await next(context);
+                    }
+                }
+                catch { }
+            }
+
             string localPath = context.Request.Path.ToString().ToLower();
 
 
-            string kasProduct = context.Request.Headers["Product"].ToString()??"web";
+            string kasProduct = (context.Request.Headers["Product"].ToString()??"WEB").ToUpper();
 
-            context.Request.EnableBuffering();
-            var buffer = new byte[Convert.ToInt32(context.Request.ContentLength)];
-            await context.Request.Body.ReadAsync(buffer, 0, buffer.Length);
-            context.Request.Body.Position = 0;
-            string content = System.Text.Encoding.UTF8.GetString(buffer);
+            //context.Request.EnableBuffering();
+           // var buffer = new byte[Convert.ToInt32(context.Request.ContentLength)];
+          //  await context.Request.Body.ReadAsync(buffer, 0, buffer.Length);
+          //  context.Request.Body.Position = 0;
+          
 
 
 
@@ -72,31 +107,31 @@ namespace ClassLibrary1
             byte xToken = 0;
             switch (kasProduct.ToLower())
             {
-                case "ecos":
+                case "ECOS":
                     xToken = 81;
                     sToken = "e4a2d4dafac7227ebe69e6972cfe22c5";
                     break;
-                case "hos":
+                case "HOS":
                     xToken = 71;
                     sToken = "d0bb11aea7b6258e23a3371c763a3eed";
                     break;
-                case "mos":
+                case "MOS":
                     xToken = 21;
                     sToken = "921208b14f34d17ebdd6c771da883a84";
                     break;
-                case "pos":
+                case "POS":
                     xToken = 31;
                     sToken = "c92da0de253abca837c881ee704dff93";
                     break;
-                case "cap":
+                case "CAP":
                     xToken = 41;
                     sToken = "ec10e61d3c3ebb7951423cac08dfb3cc";
                     break;
-                case "occ":
+                case "OCC":
                     xToken = 0;
                     sToken = "5db75df8578fd480db2fd5cd643f214b";
                     break;
-                case "web":
+                case "WEB":
                     xToken = 0;
                     sToken = "76fdb9f147230fc3b6ea909ff1aa6881";
                     break;

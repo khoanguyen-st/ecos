@@ -12,7 +12,7 @@ namespace KAS.Entity.DB.ECOS
         /// <summary>
         /// Điện thoại cầm tay
         /// </summary>
-        public string HandPhone { get; set; } = null!;
+        public string Anything { get; set; } = null!;
 
         public virtual Customer IdNavigation { get; set; } = null!;
     }

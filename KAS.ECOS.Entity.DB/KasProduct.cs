@@ -11,7 +11,6 @@ namespace KAS.Entity.DB.ECOS
         public KasProduct()
         {
             CustomersProfiles = new HashSet<CustomersProfile>();
-            Devies = new HashSet<Devy>();
             KasProductsFunctions = new HashSet<KasProductsFunction>();
         }
 
@@ -22,7 +21,6 @@ namespace KAS.Entity.DB.ECOS
         public string? Description { get; set; }
 
         public virtual ICollection<CustomersProfile> CustomersProfiles { get; set; }
-        public virtual ICollection<Devy> Devies { get; set; }
         public virtual ICollection<KasProductsFunction> KasProductsFunctions { get; set; }
     }
 }

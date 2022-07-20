@@ -27,7 +27,7 @@ namespace KAS.ECOS.API.Controllers
         {
             try
             {
-                var acc = ie.getData<AccountEntity>();
+                var acc = ie.getData<AccountDTO>();
 
 
                 var dbAcc = w.RolesUsers.FirstOrDefault(ii => ii.User==acc.us && !ii.IsDeleted);
@@ -60,13 +60,13 @@ namespace KAS.ECOS.API.Controllers
                         {
                             using (var dbContextTransaction = w.Database.BeginTransaction())
                             {
-                                if (ie.KASProductName=="ecos")
+                                if (ie.KASProductName=="ECOS")
                                 {
                                     dbAcc.TokenExpired = DateTime.UtcNow.AddDays(1);
                                 }
                                 else
                                 {
-                                    dbAcc.TokenExpired = DateTime.UtcNow.AddYears(1);
+                                    dbAcc.TokenExpired = DateTime.UtcNow.AddDays(10);
 
                                 }
                                 dbAcc.Token = Core.CoreString.StringMD5(string.Join(ie.KASProductName, dbAcc.RoleName, dbAcc.TokenExpired.Value.ToOADate()));
@@ -115,8 +115,8 @@ namespace KAS.ECOS.API.Controllers
         /// </summary>
         /// <param name="ie"></param>
         /// <returns></returns>
-        [HttpPost("Token")]
-        public OutEntity checkToken(InEntity ie)
+        [HttpPost("Token/Check")]
+        public OutEntity Token_Check(InEntity ie)
         {
             try
             {
@@ -147,8 +147,83 @@ namespace KAS.ECOS.API.Controllers
                     if (listFunction>0 || dbAcc.RoleName=="sysadmin") //có tính năng đã phân quyền
                     {
 
-                        //todo Kiểm tra quyền ở đây
                         return new OutEntity("ok", "");
+                    }
+                }
+
+
+                return new OutEntity("", "Token không hợp lệ");
+            }
+            catch
+            {
+                return new OutEntity("", "Hiện tại hệ thống đang bận, vui lòng thử lại sau");
+            }
+        }
+        [HttpPost("Token/Reset")]
+        public async Task<OutEntity> Token_Reset(InEntity ie)
+        {
+            try
+            {
+                // var acc = ie.getData<AccountEntity>();
+
+
+                var dbAcc = w.RolesUsers.FirstOrDefault(ii => ii.Token==ie.Token && !ii.IsDeleted);
+
+                if (dbAcc!=null)  //Có token
+                {
+
+                    var tmpDate = w.KasProductsFunctionsPermissions.Where(ii => ii.CustomerId==dbAcc.CustomerId
+                   && ii.KasProductId == ie.KASProductName
+                   && ii.RoleName==dbAcc.RoleName && !ii.IsDeleted
+                   && ii.Expired.HasValue ? DateTime.UtcNow<ii.Expired.Value : true
+                   ).Min(ii => ii.Expired);
+
+                    using (var dbContextTransaction = w.Database.BeginTransaction())
+                    {
+                        if (ie.KASProductName=="ECOS")
+                        {
+                            dbAcc.TokenExpired = DateTime.UtcNow.AddDays(1);
+                        }
+                        else
+                        {
+
+                            if (tmpDate<DateTime.UtcNow)
+                            {
+                                return new OutEntity("", "Token không thể gia hạn");
+                            }
+
+                            dbAcc.TokenExpired = DateTime.UtcNow.AddDays(10);
+                            if (tmpDate<dbAcc.TokenExpired)
+                            {
+                                dbAcc.TokenExpired = tmpDate;
+                            }
+
+                        }
+                        dbAcc.Token = Core.CoreString.StringMD5(string.Join(ie.KASProductName, dbAcc.RoleName, dbAcc.TokenExpired.Value.ToOADate()));
+
+
+                        await w.TokensLogs.AddAsync(new TokensLog()
+                        {
+                            CustomerId =dbAcc.CustomerId,
+                            DeviceId =Newtonsoft.Json.JsonConvert.SerializeObject(ie.DeivceInfo),
+                            IsDeleted =false,
+                            KasProductsId = ie.KASProductName,
+                            RoleName = dbAcc.RoleName,
+                            User = dbAcc.User,
+                            Token =  dbAcc.Token,
+                            TokenCreate = DateTime.UtcNow,
+                            TokenExpired = dbAcc.TokenExpired,
+
+                        });
+
+                        await w.SaveChangesAsync();
+                        await dbContextTransaction.CommitAsync();
+
+                        return new OutEntity(new
+                        {
+                            token = dbAcc.Token,
+                            Expired = dbAcc.TokenExpired
+                        }, "");
                     }
                 }
 
