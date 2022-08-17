@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace KAS.Entity.DB.ECOS
 {
-    public partial class Devy
+    public partial class Device
     {
         /// <summary>
         /// Mã duy nhất của thiết bị. Window sẽ dùng thuật toán riêng, các hệ điều hành khác sẽ dùng function lấy mã thiết bị duy nhất
@@ -16,7 +16,7 @@ namespace KAS.Entity.DB.ECOS
         /// <summary>
         /// Mã sản phẩm của KAS
         /// </summary>
-        public string KasProductsId { get; set; } = null!;
+        public string ProductsId { get; set; } = null!;
         /// <summary>
         /// Ngày kích hoạt.Hệ thống tự tạo, không cần gán giá trị. 
         /// </summary>
@@ -36,7 +36,7 @@ namespace KAS.Entity.DB.ECOS
         /// <summary>
         /// Mã khách hàng có ParantID là null
         /// </summary>
-        public string CustomerIdRoot { get; set; } = null!;
+        public string CustomerIdroot { get; set; } = null!;
         /// <summary>
         /// Mã tăng tự động
         /// </summary>

@@ -12,15 +12,23 @@ namespace KAS.Entity.DB.ECOS
         public string RoleName { get; set; } = null!;
         /// <summary>
         /// Tại 1 thời điểm, chỉ có 1 Token gắn với 1 User. 
-        /// Nếu có nhiều User cùng tên (bắt buộc khác công ty), thì chỉ duy nhất 1 User được Active
+        /// User và ProductID sẽ là duy nhất
         /// </summary>
         public string User { get; set; } = null!;
         public DateTime CreateDate { get; set; }
         public string Password { get; set; } = null!;
+        /// <summary>
+        /// Token là duy nhất
+        /// </summary>
         public string Token { get; set; } = null!;
         public DateTime? TokenExpired { get; set; }
         public bool IsDeleted { get; set; }
+        /// <summary>
+        /// Tên sản phẩm của KAS. Khi login truyền vào Header
+        /// </summary>
+        public string ProductId { get; set; } = null!;
 
+        public virtual Product Product { get; set; } = null!;
         public virtual Role Role { get; set; } = null!;
     }
 }

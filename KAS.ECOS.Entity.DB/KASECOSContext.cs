@@ -20,10 +20,11 @@ namespace KAS.Entity.DB.ECOS
         public virtual DbSet<CustomersContentPermission> CustomersContentPermissions { get; set; } = null!;
         public virtual DbSet<CustomersInfo> CustomersInfos { get; set; } = null!;
         public virtual DbSet<CustomersProfile> CustomersProfiles { get; set; } = null!;
-        public virtual DbSet<Devy> Devies { get; set; } = null!;
-        public virtual DbSet<KasProduct> KasProducts { get; set; } = null!;
-        public virtual DbSet<KasProductsFunction> KasProductsFunctions { get; set; } = null!;
-        public virtual DbSet<KasProductsFunctionsPermission> KasProductsFunctionsPermissions { get; set; } = null!;
+        public virtual DbSet<Device> Devices { get; set; } = null!;
+        public virtual DbSet<EcosUser> EcosUsers { get; set; } = null!;
+        public virtual DbSet<Product> Products { get; set; } = null!;
+        public virtual DbSet<ProductsFunction> ProductsFunctions { get; set; } = null!;
+        public virtual DbSet<ProductsFunctionsPermission> ProductsFunctionsPermissions { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<RolesUser> RolesUsers { get; set; } = null!;
         public virtual DbSet<TokensLog> TokensLogs { get; set; } = null!;
@@ -140,7 +141,7 @@ namespace KAS.Entity.DB.ECOS
 
             modelBuilder.Entity<CustomersProfile>(entity =>
             {
-                entity.HasKey(e => new { e.CustomerId, e.KasProduct })
+                entity.HasKey(e => new { e.CustomerId, e.ProductId })
                     .HasName("Customers.Profiles_pkey");
 
                 entity.ToTable("Customers.Profiles");
@@ -151,10 +152,10 @@ namespace KAS.Entity.DB.ECOS
                     .HasMaxLength(50)
                     .HasColumnName("CustomerID");
 
-                entity.Property(e => e.KasProduct)
+                entity.Property(e => e.ProductId)
                     .HasMaxLength(50)
-                    .HasColumnName("KAS.Product")
-                    .HasComment("Tên sản phẩm của KAS");
+                    .HasColumnName("ProductID")
+                    .HasComment("Tên sản phẩm của");
 
                 entity.Property(e => e.IsDelete)
                     .HasColumnName("isDelete")
@@ -175,16 +176,17 @@ namespace KAS.Entity.DB.ECOS
                     .HasForeignKey(d => d.CustomerId)
                     .HasConstraintName("Customers_Customers.Profiles_CustomerID");
 
-                entity.HasOne(d => d.KasProductNavigation)
+                entity.HasOne(d => d.Product)
                     .WithMany(p => p.CustomersProfiles)
-                    .HasForeignKey(d => d.KasProduct)
-                    .HasConstraintName("KAS.Products_Customer.Profiles_ID");
+                    .HasForeignKey(d => d.ProductId)
+                    .HasConstraintName("Products_Customer.Profiles_ID");
             });
 
-            modelBuilder.Entity<Devy>(entity =>
+            modelBuilder.Entity<Device>(entity =>
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
+                    .HasDefaultValueSql("nextval('\"Devies_ID_seq\"'::regclass)")
                     .HasComment("Mã tăng tự động");
 
                 entity.Property(e => e.AccessDate)
@@ -200,9 +202,9 @@ namespace KAS.Entity.DB.ECOS
                     .HasColumnName("CustomerID")
                     .HasComment("Mã khách hàng");
 
-                entity.Property(e => e.CustomerIdRoot)
+                entity.Property(e => e.CustomerIdroot)
                     .HasMaxLength(50)
-                    .HasColumnName("CustomerID.Root")
+                    .HasColumnName("CustomerIDRoot")
                     .HasDefaultValueSql("''::character varying")
                     .HasComment("Mã khách hàng có ParantID là null");
 
@@ -222,11 +224,6 @@ namespace KAS.Entity.DB.ECOS
                     .HasDefaultValueSql("''::character varying")
                     .HasComment("IP truy cập lần cuối");
 
-                entity.Property(e => e.KasProductsId)
-                    .HasMaxLength(50)
-                    .HasColumnName("KAS.Products.ID")
-                    .HasComment("Mã sản phẩm của KAS");
-
                 entity.Property(e => e.Location)
                     .HasColumnType("json")
                     .HasComment("Lưu trữ thông tin địa điểm truy cập");
@@ -240,12 +237,46 @@ namespace KAS.Entity.DB.ECOS
                     .HasMaxLength(50)
                     .HasColumnName("OSVer")
                     .HasComment("Phiên bản hệ điều hành");
+
+                entity.Property(e => e.ProductsId)
+                    .HasMaxLength(50)
+                    .HasColumnName("ProductsID")
+                    .HasComment("Mã sản phẩm của KAS");
             });
 
-            modelBuilder.Entity<KasProduct>(entity =>
+            modelBuilder.Entity<EcosUser>(entity =>
             {
-                entity.ToTable("KAS.Products");
+                entity.HasKey(e => e.PhoneNumber)
+                    .HasName("ECOS.User_pkey");
 
+                entity.ToTable("ECOS.User");
+
+                entity.Property(e => e.PhoneNumber)
+                    .HasMaxLength(20)
+                    .HasComment("Số điện thoại được quyền login vào ECOS");
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(255)
+                    .HasComment("Thông tin bổ sung cần lưu ý");
+
+                entity.Property(e => e.FullName)
+                    .HasMaxLength(255)
+                    .HasComment("Tên người truy cập vào ECOS");
+
+                entity.Property(e => e.Ip)
+                    .HasMaxLength(50)
+                    .HasColumnName("IP")
+                    .HasComment("IP truy cập");
+
+                entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
+
+                entity.Property(e => e.LastAccesDate)
+                    .HasDefaultValueSql("now()")
+                    .HasComment("Lần cuối truy cập");
+            });
+
+            modelBuilder.Entity<Product>(entity =>
+            {
                 entity.HasComment("Các sản phẩm của KAS");
 
                 entity.Property(e => e.Id)
@@ -257,18 +288,18 @@ namespace KAS.Entity.DB.ECOS
                     .HasComment("Mô tả sản phẩm của KAS. Tối đa 2000 ký tự");
             });
 
-            modelBuilder.Entity<KasProductsFunction>(entity =>
+            modelBuilder.Entity<ProductsFunction>(entity =>
             {
-                entity.HasKey(e => new { e.KasProductId, e.FunctionName })
+                entity.HasKey(e => new { e.ProductId, e.FunctionName })
                     .HasName("KAS.Products.Functions_pkey");
 
-                entity.ToTable("KAS.Products.Functions");
+                entity.ToTable("Products.Functions");
 
                 entity.HasComment("Danh sách tính năng của sản phẩm KAS");
 
-                entity.Property(e => e.KasProductId)
+                entity.Property(e => e.ProductId)
                     .HasMaxLength(50)
-                    .HasColumnName("KAS.Product.ID");
+                    .HasColumnName("Product.ID");
 
                 entity.Property(e => e.FunctionName).HasMaxLength(50);
 
@@ -282,24 +313,24 @@ namespace KAS.Entity.DB.ECOS
 
                 entity.Property(e => e.Level).HasComment("Level của đệ quy Function");
 
-                entity.HasOne(d => d.KasProduct)
-                    .WithMany(p => p.KasProductsFunctions)
-                    .HasForeignKey(d => d.KasProductId)
-                    .HasConstraintName("KAS.Products_KAS.Products.Function_ID3");
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.ProductsFunctions)
+                    .HasForeignKey(d => d.ProductId)
+                    .HasConstraintName("Products_KAS.Products.Function_ID3");
             });
 
-            modelBuilder.Entity<KasProductsFunctionsPermission>(entity =>
+            modelBuilder.Entity<ProductsFunctionsPermission>(entity =>
             {
-                entity.HasKey(e => new { e.KasProductId, e.FunctionName, e.CustomerId, e.RoleName })
+                entity.HasKey(e => new { e.ProductId, e.FunctionName, e.CustomerId, e.RoleName })
                     .HasName("KAS.Products.Functions.Permissions_pkey");
 
-                entity.ToTable("KAS.Products.Functions.Permissions");
+                entity.ToTable("Products.Functions.Permissions");
 
                 entity.HasComment("Phân quyền tính năng.\r\n\r\nTại thời điểm đăng nhập:\r\n	- Input: KAS.Product.ID , CustomerID,RoleName\r\n	- Nếu giá trị trả về danh sách  FunctionName ==0, thì trả về thông báo tài khoản không hợp lệ. Dùng cho trường hợp 1 tài khoản truy cập vào nhiều sản phẩm");
 
-                entity.Property(e => e.KasProductId)
+                entity.Property(e => e.ProductId)
                     .HasMaxLength(50)
-                    .HasColumnName("KAS.Product.ID");
+                    .HasColumnName("Product.ID");
 
                 entity.Property(e => e.FunctionName).HasMaxLength(50);
 
@@ -318,14 +349,14 @@ namespace KAS.Entity.DB.ECOS
                 entity.Property(e => e.Permission).HasComment("Phân quyền tính năng theo Enum(hệ số Bit)");
 
                 entity.HasOne(d => d.Role)
-                    .WithMany(p => p.KasProductsFunctionsPermissions)
+                    .WithMany(p => p.ProductsFunctionsPermissions)
                     .HasForeignKey(d => new { d.CustomerId, d.RoleName })
-                    .HasConstraintName("ROLES.KAS.Products.Function.Permissions.FK2");
+                    .HasConstraintName("ROLES.Products.Function.Permissions.FK2");
 
-                entity.HasOne(d => d.KasProductsFunction)
-                    .WithMany(p => p.KasProductsFunctionsPermissions)
-                    .HasForeignKey(d => new { d.KasProductId, d.FunctionName })
-                    .HasConstraintName("KAS.Products.Functions.Permissions_F1");
+                entity.HasOne(d => d.ProductsFunction)
+                    .WithMany(p => p.ProductsFunctionsPermissions)
+                    .HasForeignKey(d => new { d.ProductId, d.FunctionName })
+                    .HasConstraintName("Products.Functions.Permissions_F1");
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -363,7 +394,7 @@ namespace KAS.Entity.DB.ECOS
 
             modelBuilder.Entity<RolesUser>(entity =>
             {
-                entity.HasKey(e => new { e.CustomerId, e.RoleName, e.User })
+                entity.HasKey(e => new { e.User, e.ProductId, e.CustomerId })
                     .HasName("ROLES.Users_pkey");
 
                 entity.ToTable("ROLES.Users");
@@ -373,18 +404,21 @@ namespace KAS.Entity.DB.ECOS
                 entity.HasIndex(e => e.Token, "TokenUnique")
                     .IsUnique();
 
-                entity.HasIndex(e => e.User, "usernameUnique")
+                entity.HasIndex(e => new { e.User, e.ProductId }, "usernameUnique")
                     .IsUnique();
+
+                entity.Property(e => e.User)
+                    .HasMaxLength(50)
+                    .HasComment("Tại 1 thời điểm, chỉ có 1 Token gắn với 1 User. \nUser và ProductID sẽ là duy nhất");
+
+                entity.Property(e => e.ProductId)
+                    .HasMaxLength(50)
+                    .HasColumnName("ProductID")
+                    .HasComment("Tên sản phẩm của KAS. Khi login truyền vào Header");
 
                 entity.Property(e => e.CustomerId)
                     .HasMaxLength(50)
                     .HasColumnName("CustomerID");
-
-                entity.Property(e => e.RoleName).HasMaxLength(50);
-
-                entity.Property(e => e.User)
-                    .HasMaxLength(50)
-                    .HasComment("Tại 1 thời điểm, chỉ có 1 Token gắn với 1 User. \nNếu có nhiều User cùng tên (bắt buộc khác công ty), thì chỉ duy nhất 1 User được Active");
 
                 entity.Property(e => e.CreateDate).HasDefaultValueSql("now()");
 
@@ -392,11 +426,19 @@ namespace KAS.Entity.DB.ECOS
 
                 entity.Property(e => e.Password).HasMaxLength(50);
 
+                entity.Property(e => e.RoleName).HasMaxLength(50);
+
                 entity.Property(e => e.Token)
                     .HasMaxLength(50)
-                    .IsFixedLength();
+                    .IsFixedLength()
+                    .HasComment("Token là duy nhất");
 
                 entity.Property(e => e.TokenExpired).HasColumnName("Token.Expired");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.RolesUsers)
+                    .HasForeignKey(d => d.ProductId)
+                    .HasConstraintName("Product_RUS01");
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.RolesUsers)

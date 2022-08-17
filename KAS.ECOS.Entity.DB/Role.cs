@@ -10,7 +10,7 @@ namespace KAS.Entity.DB.ECOS
     {
         public Role()
         {
-            KasProductsFunctionsPermissions = new HashSet<KasProductsFunctionsPermission>();
+            ProductsFunctionsPermissions = new HashSet<ProductsFunctionsPermission>();
             RolesUsers = new HashSet<RolesUser>();
         }
 
@@ -28,7 +28,7 @@ namespace KAS.Entity.DB.ECOS
 
         public virtual Customer Customer { get; set; } = null!;
         public virtual CustomersContentPermission CustomersContentPermission { get; set; } = null!;
-        public virtual ICollection<KasProductsFunctionsPermission> KasProductsFunctionsPermissions { get; set; }
+        public virtual ICollection<ProductsFunctionsPermission> ProductsFunctionsPermissions { get; set; }
         public virtual ICollection<RolesUser> RolesUsers { get; set; }
     }
 }

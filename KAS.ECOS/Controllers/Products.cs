@@ -13,7 +13,7 @@ namespace KAS.ECOS.API.Controllers
         {
             try
             {
-                return new OutEntity(w.KasProducts.Select(ii => new { ii.Id, ii.Description }).ToList(), "");
+                return new OutEntity(w.Products.Select(ii => new { ii.Id, ii.Description }).ToList(), "");
             }
             catch
             {
@@ -31,18 +31,18 @@ namespace KAS.ECOS.API.Controllers
         {
             try
             {
-                var tmpList = ie.getData<List<KAS.Entity.DB.ECOS.KasProduct>>();
+                var tmpList = ie.getData<List<KAS.Entity.DB.ECOS.Product>>();
                 bool isSave = false;
                 using (var dbContextTransaction = w.Database.BeginTransaction())
                 {
                     foreach (var item in tmpList)
                     {
-                        var dbItem = w.KasProducts.FirstOrDefault(ii => ii.Id == item.Id);
+                        var dbItem = w.Products.FirstOrDefault(ii => ii.Id == item.Id);
 
                         if (dbItem == null)
                         {
                             isSave=true;
-                            w.KasProducts.Add(new KAS.Entity.DB.ECOS.KasProduct()
+                            w.Products.Add(new KAS.Entity.DB.ECOS.Product()
                             {
                                 Id = item.Id.ToUpper(),
                                 Description = item.Description
@@ -74,9 +74,9 @@ namespace KAS.ECOS.API.Controllers
         {
             try
             {
-                return new OutEntity(w.KasProductsFunctions.Where(ii => ii.KasProductId==ie.data && !ii.IsDeleted).Select(ii => new
+                return new OutEntity(w.ProductsFunctions.Where(ii => ii.ProductId==ie.data && !ii.IsDeleted).Select(ii => new
                 {
-                    ii.KasProductId,
+                    ii.ProductId,
                     ii.FunctionName,
                     ii.FunctionParent,
                     ii.FunctionPath,
@@ -94,18 +94,18 @@ namespace KAS.ECOS.API.Controllers
         {
             try
             {
-                var item = ie.getData<KAS.Entity.DB.ECOS.KasProductsFunction>();
+                var item = ie.getData<KAS.Entity.DB.ECOS.ProductsFunction>();
                 using (var dbContextTransaction = w.Database.BeginTransaction())
                 {
 
-                    var dbItem = w.KasProductsFunctions.FirstOrDefault(ii => ii.FunctionName == item.FunctionName && ii.KasProductId == ie.KASProductName);
+                    var dbItem = w.ProductsFunctions.FirstOrDefault(ii => ii.FunctionName == item.FunctionName && ii.ProductId == ie.KASProductName);
 
                     if (dbItem == null)
                     {
 
-                        w.KasProductsFunctions.Add(new KAS.Entity.DB.ECOS.KasProductsFunction()
+                        w.ProductsFunctions.Add(new KAS.Entity.DB.ECOS.ProductsFunction()
                         {
-                            KasProductId = ie.KASProductName,
+                            ProductId = ie.KASProductName,
                             FunctionName = item.FunctionName,
                             Description=item.Description,
                             FunctionParent=item.FunctionParent,

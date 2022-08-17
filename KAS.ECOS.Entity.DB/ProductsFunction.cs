@@ -6,14 +6,14 @@ namespace KAS.Entity.DB.ECOS
     /// <summary>
     /// Danh sách tính năng của sản phẩm KAS
     /// </summary>
-    public partial class KasProductsFunction
+    public partial class ProductsFunction
     {
-        public KasProductsFunction()
+        public ProductsFunction()
         {
-            KasProductsFunctionsPermissions = new HashSet<KasProductsFunctionsPermission>();
+            ProductsFunctionsPermissions = new HashSet<ProductsFunctionsPermission>();
         }
 
-        public string KasProductId { get; set; } = null!;
+        public string ProductId { get; set; } = null!;
         public string FunctionName { get; set; } = null!;
         public string? FunctionParent { get; set; }
         public string? FunctionPath { get; set; }
@@ -24,7 +24,7 @@ namespace KAS.Entity.DB.ECOS
         /// </summary>
         public short Level { get; set; }
 
-        public virtual KasProduct KasProduct { get; set; } = null!;
-        public virtual ICollection<KasProductsFunctionsPermission> KasProductsFunctionsPermissions { get; set; }
+        public virtual Product Product { get; set; } = null!;
+        public virtual ICollection<ProductsFunctionsPermission> ProductsFunctionsPermissions { get; set; }
     }
 }

@@ -30,77 +30,97 @@ namespace KAS.ECOS.API.Controllers
                 var acc = ie.getData<AccountDTO>();
 
 
-                var dbAcc = w.RolesUsers.FirstOrDefault(ii => ii.User==acc.us && !ii.IsDeleted);
-
-                if (dbAcc!=null)  //Có tài khoản
+                if (ie.KASProductName=="ECOS")
                 {
-                    if (!string.IsNullOrEmpty(ie.Token) && (dbAcc.User != acc.us))
-                    {
+                   
 
-                        return new OutEntity("", "Token không hợp lệ");
+                    var dbAccEcos = w.EcosUsers.FirstOrDefault(i => i.PhoneNumber==acc.us);
+                    if (dbAccEcos!=null)
+                    {
+                        //todo Tài làm xác thực notify ở đây dành cho login ecos
                     }
-
-                    var listFunction = w.KasProductsFunctionsPermissions.Count(ii => ii.CustomerId==dbAcc.CustomerId
-                    && ii.KasProductId == ie.KASProductName
-                    && ii.RoleName==dbAcc.RoleName && !ii.IsDeleted
-                    && ii.Expired.HasValue ? DateTime.UtcNow<ii.Expired.Value : true
-                    );
-
-                    //token nếu là ecos thì xác thực qua telegram
-                    if (listFunction>0 || dbAcc.RoleName=="sysadmin") //có tính năng đã phân quyền
+                    else
                     {
-                        if (!string.IsNullOrEmpty(dbAcc.Token))
-                        {
-                            if (DateTime.UtcNow>= dbAcc.TokenExpired) //Token hết hạn thì reset token
-                            {
-                                dbAcc.Token="";
-                            }
-                        }
-                        if (string.IsNullOrEmpty(dbAcc.Token))//Nếu chưa có Token thì tạo Token
-                        {
-                            using (var dbContextTransaction = w.Database.BeginTransaction())
-                            {
-                                if (ie.KASProductName=="ECOS")
-                                {
-                                    dbAcc.TokenExpired = DateTime.UtcNow.AddDays(1);
-                                }
-                                else
-                                {
-                                    dbAcc.TokenExpired = DateTime.UtcNow.AddDays(10);
-
-                                }
-                                dbAcc.Token = Core.CoreString.StringMD5(string.Join(ie.KASProductName, dbAcc.RoleName, dbAcc.TokenExpired.Value.ToOADate()));
-
-                                await w.TokensLogs.AddAsync(new TokensLog()
-                                {
-                                    CustomerId =dbAcc.CustomerId,
-                                    DeviceId =Newtonsoft.Json.JsonConvert.SerializeObject(ie.DeivceInfo),
-                                    IsDeleted =false,
-                                    KasProductsId = ie.KASProductName,
-                                    RoleName = dbAcc.RoleName,
-                                    User = dbAcc.User,
-                                    Token =  dbAcc.Token,
-                                    TokenCreate = DateTime.UtcNow,
-                                    TokenExpired = dbAcc.TokenExpired,
-
-                                });
-
-                                await w.SaveChangesAsync();
-                                await dbContextTransaction.CommitAsync();
-                            }
-
-                        }
-
-                        return new OutEntity(new
-                        {
-                            Token = dbAcc.Token,
-                            Expired = dbAcc.TokenExpired
-                        }, "");   //Trả về token báo đăng nhập thành công
-
+                        return new OutEntity("", "Tài khoản không hợp lệ");
                     }
                 }
+                else if (ie.KASProductName=="HOS")
+                {
+                    //todo trả về danh sách quyền của user
+                }
+                else
+                {
+                    var dbAcc = w.RolesUsers.FirstOrDefault(ii => ii.User==acc.us && !ii.IsDeleted && ii.Password == acc.pw);
 
+                    if (dbAcc!=null)  //Có tài khoản
+                    {
+                        //if (!string.IsNullOrEmpty(ie.Token) && (dbAcc.User != acc.us))
+                        //{
 
+                        //    return new OutEntity("", "Token không hợp lệ");
+                        //}
+
+                        var listFunction = w.ProductsFunctionsPermissions.Count(ii => ii.CustomerId==dbAcc.CustomerId
+                        && ii.ProductId == ie.KASProductName
+                        && ii.RoleName==dbAcc.RoleName && !ii.IsDeleted
+                        && ii.Expired.HasValue ? DateTime.UtcNow<ii.Expired.Value : true
+                        );
+
+                        //token nếu là ecos thì xác thực qua telegram
+                        if (listFunction>0 || dbAcc.RoleName=="sysadmin") //có tính năng đã phân quyền
+                        {
+                            if (!string.IsNullOrEmpty(dbAcc.Token))
+                            {
+                                if (DateTime.UtcNow>= dbAcc.TokenExpired) //Token hết hạn thì reset token
+                                {
+                                    dbAcc.Token="";
+                                }
+                            }
+                            if (string.IsNullOrEmpty(dbAcc.Token))//Nếu chưa có Token thì tạo Token
+                            {
+                                using (var dbContextTransaction = w.Database.BeginTransaction())
+                                {
+                                    if (ie.KASProductName=="ECOS")
+                                    {
+                                        dbAcc.TokenExpired = DateTime.UtcNow.AddDays(1);
+                                    }
+                                    else
+                                    {
+                                        dbAcc.TokenExpired = DateTime.UtcNow.AddDays(10);
+
+                                    }
+                                    dbAcc.Token = Core.CoreString.StringMD5(string.Join(ie.KASProductName, dbAcc.RoleName, dbAcc.TokenExpired.Value.ToOADate()));
+
+                                    await w.TokensLogs.AddAsync(new TokensLog()
+                                    {
+                                        CustomerId =dbAcc.CustomerId,
+                                        DeviceId =Newtonsoft.Json.JsonConvert.SerializeObject(ie.DeivceInfo),
+                                        IsDeleted =false,
+                                        KasProductsId = ie.KASProductName,
+                                        RoleName = dbAcc.RoleName,
+                                        User = dbAcc.User,
+                                        Token =  dbAcc.Token,
+                                        TokenCreate = DateTime.UtcNow,
+                                        TokenExpired = dbAcc.TokenExpired,
+
+                                    });
+
+                                    await w.SaveChangesAsync();
+                                    await dbContextTransaction.CommitAsync();
+                                }
+
+                            }
+
+                            return new OutEntity(new
+                            {
+                                Token = dbAcc.Token,
+                                Expired = dbAcc.TokenExpired
+                            }, "");   //Trả về token báo đăng nhập thành công
+
+                        }
+                    }
+
+                }
                 return new OutEntity("", "Token không hợp lệ");
             }
             catch
@@ -138,8 +158,8 @@ namespace KAS.ECOS.API.Controllers
                     }
 
 
-                    var listFunction = w.KasProductsFunctionsPermissions.Count(ii => ii.CustomerId==dbAcc.CustomerId
-                   && ii.KasProductId == ie.KASProductName
+                    var listFunction = w.ProductsFunctionsPermissions.Count(ii => ii.CustomerId==dbAcc.CustomerId
+                   && ii.ProductId == ie.KASProductName
                    && ii.RoleName==dbAcc.RoleName && !ii.IsDeleted
                    && ii.Expired.HasValue ? DateTime.UtcNow<ii.Expired.Value : true
                    );
@@ -172,8 +192,8 @@ namespace KAS.ECOS.API.Controllers
                 if (dbAcc!=null)  //Có token
                 {
 
-                    var tmpDate = w.KasProductsFunctionsPermissions.Where(ii => ii.CustomerId==dbAcc.CustomerId
-                   && ii.KasProductId == ie.KASProductName
+                    var tmpDate = w.ProductsFunctionsPermissions.Where(ii => ii.CustomerId==dbAcc.CustomerId
+                   && ii.ProductId == ie.KASProductName
                    && ii.RoleName==dbAcc.RoleName && !ii.IsDeleted
                    && ii.Expired.HasValue ? DateTime.UtcNow<ii.Expired.Value : true
                    ).Min(ii => ii.Expired);

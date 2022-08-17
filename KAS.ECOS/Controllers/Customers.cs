@@ -41,7 +41,7 @@ namespace KAS.ECOS.API.Controllers
                             tmpParent.CustomersProfiles.Add(new KAS.Entity.DB.ECOS.CustomersProfile()
                             {
                                 CustomerId = input.ID,
-                                KasProduct = item.KasProductID,
+                                ProductId = item.KasProductID,
                                 ProfileApi =Code.Core.DataHandle.Json.Json_SerializeObject(item.App),
                                 ProfileDb = Code.Core.DataHandle.Json.Json_SerializeObject(item.DB),
 
@@ -66,7 +66,7 @@ namespace KAS.ECOS.API.Controllers
                             tmp.CustomersProfiles.Add(new KAS.Entity.DB.ECOS.CustomersProfile()
                             {
                                 CustomerId = input.ID,
-                                KasProduct = item.KasProductID,
+                                ProductId = item.KasProductID,
                                 ProfileApi =Code.Core.DataHandle.Json.Json_SerializeObject(item.App),
                                 ProfileDb = Code.Core.DataHandle.Json.Json_SerializeObject(item.DB),
 

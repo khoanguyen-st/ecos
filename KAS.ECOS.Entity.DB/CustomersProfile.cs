@@ -10,9 +10,9 @@ namespace KAS.Entity.DB.ECOS
     {
         public string CustomerId { get; set; } = null!;
         /// <summary>
-        /// Tên sản phẩm của KAS
+        /// Tên sản phẩm của
         /// </summary>
-        public string KasProduct { get; set; } = null!;
+        public string ProductId { get; set; } = null!;
         /// <summary>
         /// Lưu thông tin Server của API, phục vụ cho FrontEnd
         /// </summary>
@@ -27,6 +27,6 @@ namespace KAS.Entity.DB.ECOS
         public string ProfileDb { get; set; } = null!;
 
         public virtual Customer Customer { get; set; } = null!;
-        public virtual KasProduct KasProductNavigation { get; set; } = null!;
+        public virtual Product Product { get; set; } = null!;
     }
 }

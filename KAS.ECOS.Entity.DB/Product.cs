@@ -6,12 +6,13 @@ namespace KAS.Entity.DB.ECOS
     /// <summary>
     /// Các sản phẩm của KAS
     /// </summary>
-    public partial class KasProduct
+    public partial class Product
     {
-        public KasProduct()
+        public Product()
         {
             CustomersProfiles = new HashSet<CustomersProfile>();
-            KasProductsFunctions = new HashSet<KasProductsFunction>();
+            ProductsFunctions = new HashSet<ProductsFunction>();
+            RolesUsers = new HashSet<RolesUser>();
         }
 
         public string Id { get; set; } = null!;
@@ -21,6 +22,7 @@ namespace KAS.Entity.DB.ECOS
         public string? Description { get; set; }
 
         public virtual ICollection<CustomersProfile> CustomersProfiles { get; set; }
-        public virtual ICollection<KasProductsFunction> KasProductsFunctions { get; set; }
+        public virtual ICollection<ProductsFunction> ProductsFunctions { get; set; }
+        public virtual ICollection<RolesUser> RolesUsers { get; set; }
     }
 }

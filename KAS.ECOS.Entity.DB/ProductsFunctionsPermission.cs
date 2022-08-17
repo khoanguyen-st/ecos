@@ -10,9 +10,9 @@ namespace KAS.Entity.DB.ECOS
     /// 	- Input: KAS.Product.ID , CustomerID,RoleName
     /// 	- Nếu giá trị trả về danh sách  FunctionName ==0, thì trả về thông báo tài khoản không hợp lệ. Dùng cho trường hợp 1 tài khoản truy cập vào nhiều sản phẩm
     /// </summary>
-    public partial class KasProductsFunctionsPermission
+    public partial class ProductsFunctionsPermission
     {
-        public string KasProductId { get; set; } = null!;
+        public string ProductId { get; set; } = null!;
         public string FunctionName { get; set; } = null!;
         public string CustomerId { get; set; } = null!;
         public string RoleName { get; set; } = null!;
@@ -30,7 +30,7 @@ namespace KAS.Entity.DB.ECOS
         /// </summary>
         public DateTime? Expired { get; set; }
 
-        public virtual KasProductsFunction KasProductsFunction { get; set; } = null!;
+        public virtual ProductsFunction ProductsFunction { get; set; } = null!;
         public virtual Role Role { get; set; } = null!;
     }
 }
