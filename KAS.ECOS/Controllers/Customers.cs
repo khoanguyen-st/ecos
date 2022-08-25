@@ -8,8 +8,6 @@ namespace KAS.ECOS.API.Controllers
     // [Route("api/KAS/ECOS")]
     public partial class EcosController : Controller
     {
-
-
         [HttpPost("Customer/Save")]
         public async Task<OutEntity> Customer_Save(InEntity ie)
         {

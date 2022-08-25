@@ -29,15 +29,13 @@ namespace KAS.ECOS.API.Controllers
             {
                 var acc = ie.getData<AccountDTO>();
 
-
                 if (ie.KASProductName=="ECOS")
                 {
-                   
-
-                    var dbAccEcos = w.EcosUsers.FirstOrDefault(i => i.PhoneNumber==acc.us);
+                    var dbAccEcos = w.EcosUsers.FirstOrDefault(i => i.PhoneNumber == acc.us);
                     if (dbAccEcos!=null)
                     {
-                        //todo Tài làm xác thực notify ở đây dành cho login ecos
+                        OutEntity data = await Core.SMS.Firebase.Send(acc.us, acc.recapcharToke);
+                        return data;
                     }
                     else
                     {
@@ -50,7 +48,7 @@ namespace KAS.ECOS.API.Controllers
                 }
                 else
                 {
-                    var dbAcc = w.RolesUsers.FirstOrDefault(ii => ii.User==acc.us && !ii.IsDeleted && ii.Password == acc.pw);
+                    var dbAcc = w.RolesUsers.FirstOrDefault(ii => ii.User == acc.us && !ii.IsDeleted && ii.Password == acc.pw);
 
                     if (dbAcc!=null)  //Có tài khoản
                     {
@@ -60,10 +58,10 @@ namespace KAS.ECOS.API.Controllers
                         //    return new OutEntity("", "Token không hợp lệ");
                         //}
 
-                        var listFunction = w.ProductsFunctionsPermissions.Count(ii => ii.CustomerId==dbAcc.CustomerId
+                        var listFunction = w.ProductsFunctionsPermissions.Count(ii => ii.CustomerId == dbAcc.CustomerId
                         && ii.ProductId == ie.KASProductName
-                        && ii.RoleName==dbAcc.RoleName && !ii.IsDeleted
-                        && ii.Expired.HasValue ? DateTime.UtcNow<ii.Expired.Value : true
+                        && ii.RoleName == dbAcc.RoleName && !ii.IsDeleted
+                        && ii.Expired.HasValue ? DateTime.UtcNow < ii.Expired.Value : true
                         );
 
                         //token nếu là ecos thì xác thực qua telegram
@@ -128,8 +126,40 @@ namespace KAS.ECOS.API.Controllers
                 return new OutEntity("", "Hiện tại hệ thống đang bận, vui lòng đăng nhập lại sau");
             }
         }
+        /// <summary>
+        /// Kiểm tra OTP firebase
+        /// </summary>
+        /// <param name="ie"></param>
+        /// <returns></returns>
+        [HttpPost("ChekOTPFirebase")]
+        public async Task<OutEntity> ChekOTPFirebase(InEntity ie)
+        {
+            try
+            {
+                var acc = ie.getData<OTPDTO>();
 
-
+                if (ie.KASProductName == "ECOS")
+                {
+                    OutEntity data = await Core.SMS.Firebase.Confirm(acc.otp, acc.sessionInfo);
+                    if (string.IsNullOrEmpty(data.error))
+                    {
+                        var dbAccEcos = w.EcosUsers.FirstOrDefault(i => i.PhoneNumber == acc.phone);
+                        var res = new
+                        {
+                            data = dbAccEcos,
+                            token = ""
+                        };
+                        data = new OutEntity(Core.DataHandle.Json.Json_SerializeObject(res), "");
+                    }
+                    return data;
+                }
+                return new OutEntity("", "Hiện tại hệ thống đang bận, vui lòng đăng nhập lại sau");
+            }
+            catch
+            {
+                return new OutEntity("", "Hiện tại hệ thống đang bận, vui lòng đăng nhập lại sau");
+            }
+        }
         /// <summary>
         /// Kiểm tra token có hợp lệ hay không
         /// </summary>
@@ -179,6 +209,11 @@ namespace KAS.ECOS.API.Controllers
                 return new OutEntity("", "Hiện tại hệ thống đang bận, vui lòng thử lại sau");
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ie"></param>
+        /// <returns></returns>
         [HttpPost("Token/Reset")]
         public async Task<OutEntity> Token_Reset(InEntity ie)
         {
