@@ -127,11 +127,11 @@ namespace KAS.ECOS.API.Controllers
             }
         }
         /// <summary>
-        /// Kiểm tra OTP firebase
+        /// Kiểm tra OTP firebase sau khi login
         /// </summary>
         /// <param name="ie"></param>
         /// <returns></returns>
-        [HttpPost("ChekOTPFirebase")]
+        [HttpPost("Login/ChekOTPFirebase")]
         public async Task<OutEntity> ChekOTPFirebase(InEntity ie)
         {
             try
