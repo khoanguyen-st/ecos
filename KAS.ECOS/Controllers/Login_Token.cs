@@ -143,7 +143,7 @@ namespace KAS.ECOS.API.Controllers
             {
                 var acc = ie.getData<OTPDTO>();
 
-                if (ie.KASProductName == "cos")
+                if (ie.KASProductName == "ecos")
                 {
                     OutEntity data = await Core.SMS.Firebase.Confirm(acc.otp, acc.sessionInfo);
                     if (string.IsNullOrEmpty(data.error))
