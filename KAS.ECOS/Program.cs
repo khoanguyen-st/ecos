@@ -35,5 +35,12 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.UseMiddleware<ClassLibrary1.Middeware>((builder.Configuration.GetValue<string>("isDebug") ?? "0").ToLower() == "1");
-
-app.Run();
+try
+{
+    app.Run();
+}
+catch (Exception ex)
+{
+    Console.WriteLine(ex.InnerException!=null?ex.InnerException.Message:ex.Message);
+}
+Console.ReadLine();

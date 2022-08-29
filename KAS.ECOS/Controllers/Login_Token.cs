@@ -17,6 +17,11 @@ namespace KAS.ECOS.API.Controllers
             w = context;
         }
 
+        [HttpGet]
+        public async Task<string> Get()
+        {
+            return "ok";
+        }
         /// <summary>
         /// Đăng nhập vào hệ thống
         /// </summary>
@@ -29,7 +34,7 @@ namespace KAS.ECOS.API.Controllers
             {
                 var acc = ie.getData<AccountDTO>();
 
-                if (ie.KASProductName=="ECOS")
+                if (ie.KASProductName=="ecos")
                 {
                     var dbAccEcos = w.EcosUsers.FirstOrDefault(i => i.PhoneNumber == acc.us);
                     if (dbAccEcos!=null)
@@ -42,7 +47,7 @@ namespace KAS.ECOS.API.Controllers
                         return new OutEntity("", "Tài khoản không hợp lệ");
                     }
                 }
-                else if (ie.KASProductName=="HOS")
+                else if (ie.KASProductName=="hos")
                 {
                     //todo trả về danh sách quyền của user
                 }
@@ -78,7 +83,7 @@ namespace KAS.ECOS.API.Controllers
                             {
                                 using (var dbContextTransaction = w.Database.BeginTransaction())
                                 {
-                                    if (ie.KASProductName=="ECOS")
+                                    if (ie.KASProductName=="ecos")
                                     {
                                         dbAcc.TokenExpired = DateTime.UtcNow.AddDays(1);
                                     }
@@ -138,7 +143,7 @@ namespace KAS.ECOS.API.Controllers
             {
                 var acc = ie.getData<OTPDTO>();
 
-                if (ie.KASProductName == "ECOS")
+                if (ie.KASProductName == "cos")
                 {
                     OutEntity data = await Core.SMS.Firebase.Confirm(acc.otp, acc.sessionInfo);
                     if (string.IsNullOrEmpty(data.error))
@@ -235,7 +240,7 @@ namespace KAS.ECOS.API.Controllers
 
                     using (var dbContextTransaction = w.Database.BeginTransaction())
                     {
-                        if (ie.KASProductName=="ECOS")
+                        if (ie.KASProductName=="ecos")
                         {
                             dbAcc.TokenExpired = DateTime.UtcNow.AddDays(1);
                         }
