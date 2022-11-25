@@ -4,9 +4,23 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>ECOS.ico</ApplicationIcon>
+    <PackageIcon>ECOS.ico</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="ECOS.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\ECOS.ico">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.Route53" Version="3.7.4.19" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.6">
       <PrivateAssets>all</PrivateAssets>

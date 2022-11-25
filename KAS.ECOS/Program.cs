@@ -18,7 +18,7 @@ var app = builder.Build();
 
 //Create Code
 //cd C:\Users\ducph\Documents\MyProject\KAS\KAS.ECOS\KAS.ECOS.Entity.DB
-//dotnet ef dbcontext scaffold "Host=127.0.0.1;Database=KAS.ECOS;Username=kasEcos_user01;Password=123" Npgsql.EntityFrameworkCore.PostgreSQL --project KAS.ECOS.Entity.DB -f
+//dotnet ef dbcontext scaffold "Host=127.0.0.1;Database=KAS.ECOS;Username=kasEcos_user01;Password=123" Npgsql.EntityFrameworkCore.PostgreSQL --project KAS.Entity.DB.ECOS -f
 
 
 

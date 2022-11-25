@@ -1,4 +1,5 @@
 ﻿using KAS.API.MIDDEWARE.Entity;
+using KAS.HOS.Entity.DB.HOS;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
@@ -77,7 +78,7 @@ namespace ClassLibrary1
             string location = context.Request.Headers["location"];
             string deviceInfo = context.Request.Headers["deviceinfo"];
             version = version ?? "1000";
-
+            string customerId = context.Request.Query["customerid"];
 
             var newObject = new InEntity()
             {
@@ -93,6 +94,12 @@ namespace ClassLibrary1
                 isNeedEncrypt = (X ?? "0") == "1",
                 Version = Convert.ToInt32(version.Replace(".", ""))
             };
+            if (!String.IsNullOrEmpty(customerId))
+            {
+                newObject.Postgre_HOS_Connection = $"Host=127.0.0.1;Database=KAS.HOS.{customerId.ToUpper()};Username=kashos;Password=kas3.14159";
+                newObject.Postgre_SYNC_Connection = $"Host=127.0.0.1;Database=KAS.SYNC;Username=kashos;Password=kas3.14159";
+            }
+
             try
             {
                 newObject.IP = context.Connection.RemoteIpAddress.ToString();
@@ -105,7 +112,7 @@ namespace ClassLibrary1
 
             string sToken = "";
             byte xToken = 0;
-            switch (kasProduct.ToLower())
+            switch (kasProduct.ToUpper())
             {
                 case "ECOS":
                     xToken = 81;
@@ -134,6 +141,14 @@ namespace ClassLibrary1
                 case "WEB":
                     xToken = 0;
                     sToken = "76fdb9f147230fc3b6ea909ff1aa6881";
+                    break;
+                case "VNPLACE":
+                    xToken = 51;
+                    sToken = "97618bab28a3538465357aea5bd43935";
+                    break;
+                case "DP":
+                    xToken = 61;
+                    sToken = "aff48fa51d7b0dabc3c53ae363de450d";
                     break;
                 default:
                     if (!isDebug)
@@ -164,7 +179,7 @@ namespace ClassLibrary1
             {
 
             }
-            else
+            else 
             {
                 string sign_server = GetMd5Hash(string.Join("|", token, version, localTime, newObject.data, sToken));
                 if (sign_server != sign)
@@ -308,6 +323,6 @@ namespace ClassLibrary1
             catch { }
             return json;
         }
-
+        
     }
 }

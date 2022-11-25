@@ -7,8 +7,10 @@ namespace KAS.Entity.DB.ECOS
 {
     public partial class KASECOSContext : DbContext
     {
-        public KASECOSContext()
+        string cn;
+        public KASECOSContext(string conn)
         {
+            cn = conn;
         }
 
         public KASECOSContext(DbContextOptions<KASECOSContext> options)
@@ -21,12 +23,16 @@ namespace KAS.Entity.DB.ECOS
         public virtual DbSet<CustomersInfo> CustomersInfos { get; set; } = null!;
         public virtual DbSet<CustomersProfile> CustomersProfiles { get; set; } = null!;
         public virtual DbSet<Device> Devices { get; set; } = null!;
+        public virtual DbSet<Dpconfig> Dpconfigs { get; set; } = null!;
+        public virtual DbSet<DpconfigCustomer> DpconfigCustomers { get; set; } = null!;
         public virtual DbSet<EcosUser> EcosUsers { get; set; } = null!;
+        public virtual DbSet<Ping> Pings { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
         public virtual DbSet<ProductsFunction> ProductsFunctions { get; set; } = null!;
         public virtual DbSet<ProductsFunctionsPermission> ProductsFunctionsPermissions { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<RolesUser> RolesUsers { get; set; } = null!;
+        public virtual DbSet<SmacSession> SmacSessions { get; set; } = null!;
         public virtual DbSet<TokensLog> TokensLogs { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -34,7 +40,7 @@ namespace KAS.Entity.DB.ECOS
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseNpgsql("Host=127.0.0.1;Database=KAS.ECOS;Username=kasEcos_user01;Password=123");
+                optionsBuilder.UseNpgsql(cn);// "Host=127.0.0.1;Database=KAS.ECOS;Username=kasEcos_user01;Password=123");
             }
         }
 
@@ -56,6 +62,7 @@ namespace KAS.Entity.DB.ECOS
                     .HasComment("Địa chỉ");
 
                 entity.Property(e => e.CreatedDate)
+                    .HasPrecision(6)
                     .HasDefaultValueSql("now()")
                     .HasComment("Ngày tạo");
 
@@ -190,10 +197,12 @@ namespace KAS.Entity.DB.ECOS
                     .HasComment("Mã tăng tự động");
 
                 entity.Property(e => e.AccessDate)
+                    .HasPrecision(6)
                     .HasDefaultValueSql("now()")
                     .HasComment("Thời gian truy cập lần cuối");
 
                 entity.Property(e => e.CreateDate)
+                    .HasPrecision(6)
                     .HasDefaultValueSql("now()")
                     .HasComment("Ngày kích hoạt.Hệ thống tự tạo, không cần gán giá trị. ");
 
@@ -244,6 +253,98 @@ namespace KAS.Entity.DB.ECOS
                     .HasComment("Mã sản phẩm của KAS");
             });
 
+            modelBuilder.Entity<Dpconfig>(entity =>
+            {
+                entity.ToTable("DPConfig");
+
+                entity.Property(e => e.Id)
+                    .HasMaxLength(50)
+                    .HasColumnName("ID")
+                    .HasComment("Client ID của Dataproccessor");
+
+                entity.Property(e => e.AppRun)
+                    .HasDefaultValueSql("2")
+                    .HasComment("0: Chỉ chạy DB, 1: Chỉ chạy APP, 2: Vừa chạy APP và DB");
+
+                entity.Property(e => e.BackupConfig)
+                    .HasColumnType("json")
+                    .HasComment("Cấu hình backup");
+
+                entity.Property(e => e.CreateSmacAppRun).HasComment("Chạy chức năng tạo SMAC tự động");
+
+                entity.Property(e => e.CreateSmacServerCode)
+                    .HasMaxLength(50)
+                    .HasComment("Server code để lấy thông tin tạo SMAC tự động");
+
+                entity.Property(e => e.IsDeleted).HasComment("Trạng thái dữ liệu");
+
+                entity.Property(e => e.MaxSecondSendLog)
+                    .HasDefaultValueSql("300")
+                    .HasComment("Số giây gửi log ");
+
+                entity.Property(e => e.MaxThread)
+                    .HasDefaultValueSql("1")
+                    .HasComment("Số thread chạy tính dữ liệu chung");
+
+                entity.Property(e => e.MaxThreadBill)
+                    .HasDefaultValueSql("1")
+                    .HasComment("Số thread chạy tính bill");
+
+                entity.Property(e => e.MaxThreadImport)
+                    .HasDefaultValueSql("1")
+                    .HasComment("Số thread chạy tính dữ liệu import");
+
+                entity.Property(e => e.MongoHost)
+                    .HasMaxLength(50)
+                    .HasComment("ConnectionString của mongodb");
+
+                entity.Property(e => e.MonitorHost)
+                    .HasMaxLength(50)
+                    .HasComment("Host của Monitor");
+
+                entity.Property(e => e.PostgreHost)
+                    .HasMaxLength(100)
+                    .HasComment("ConnectionString của postgre");
+
+                entity.Property(e => e.SyncApi)
+                    .HasMaxLength(100)
+                    .HasColumnName("SyncAPI")
+                    .HasComment("Domain của KAS.SYNC");
+            });
+
+            modelBuilder.Entity<DpconfigCustomer>(entity =>
+            {
+                entity.HasKey(e => e.CustomerId)
+                    .HasName("DPConfig.Customers_pkey");
+
+                entity.ToTable("DPConfig.Customers");
+
+                entity.Property(e => e.CustomerId)
+                    .HasMaxLength(50)
+                    .HasColumnName("CustomerID")
+                    .HasComment("Mã khách hàng (customerCode)");
+
+                entity.Property(e => e.ClientId)
+                    .HasMaxLength(50)
+                    .HasColumnName("ClientID")
+                    .HasComment("Mã DataProccessor");
+
+                entity.Property(e => e.ExcuteCostPriceDb)
+                    .HasColumnName("ExcuteCostPriceDB")
+                    .HasComment("Thời gian tính giá vốn tự động 0-23");
+
+                entity.Property(e => e.SapmaiSonConfig)
+                    .HasColumnType("json")
+                    .HasColumnName("SAPMaiSonConfig")
+                    .HasComment("Cau hinh SAP cho MaiSon");
+
+                entity.HasOne(d => d.Client)
+                    .WithMany(p => p.DpconfigCustomers)
+                    .HasForeignKey(d => d.ClientId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("DPConfig_Customers_ClientID");
+            });
+
             modelBuilder.Entity<EcosUser>(entity =>
             {
                 entity.HasKey(e => e.PhoneNumber)
@@ -271,8 +372,51 @@ namespace KAS.Entity.DB.ECOS
                 entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
 
                 entity.Property(e => e.LastAccesDate)
+                    .HasPrecision(6)
                     .HasDefaultValueSql("now()")
                     .HasComment("Lần cuối truy cập");
+            });
+
+            modelBuilder.Entity<Ping>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("Ping");
+
+                entity.Property(e => e.CustomerId)
+                    .HasMaxLength(50)
+                    .HasColumnName("CustomerID")
+                    .HasComment("Mã khách hàng");
+
+                entity.Property(e => e.KasProductName)
+                    .HasMaxLength(50)
+                    .HasComment("Tên sản phẩm của KAS");
+
+                entity.Property(e => e.MachineInfo)
+                    .HasMaxLength(255)
+                    .HasComment("Thông tin thiết bị");
+
+                entity.Property(e => e.PingTime)
+                    .HasPrecision(6)
+                    .HasDefaultValueSql("now()")
+                    .HasComment("Lần cuối đăng nhập");
+
+                entity.Property(e => e.SiteId)
+                    .HasMaxLength(50)
+                    .HasColumnName("SiteID")
+                    .HasComment("Mã chi nhánh");
+
+                entity.Property(e => e.UserId)
+                    .HasMaxLength(50)
+                    .HasComment("User đăng nhập");
+
+                entity.Property(e => e.UserInfo)
+                    .HasMaxLength(255)
+                    .HasComment("Thông tin user");
+
+                entity.Property(e => e.Version)
+                    .HasMaxLength(50)
+                    .HasComment("Phiên bản APP");
             });
 
             modelBuilder.Entity<Product>(entity =>
@@ -340,7 +484,9 @@ namespace KAS.Entity.DB.ECOS
 
                 entity.Property(e => e.RoleName).HasMaxLength(50);
 
-                entity.Property(e => e.Expired).HasComment("Ngày hết hạn của Function, hạn sử dụng của Token sẽ bằng thời ngày hết hạn gần nhất của tất cả tính năng, và tối đa là 1 năm");
+                entity.Property(e => e.Expired)
+                    .HasPrecision(6)
+                    .HasComment("Ngày hết hạn của Function, hạn sử dụng của Token sẽ bằng thời ngày hết hạn gần nhất của tất cả tính năng, và tối đa là 1 năm");
 
                 entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
 
@@ -376,7 +522,9 @@ namespace KAS.Entity.DB.ECOS
                     .HasMaxLength(50)
                     .HasComment("Tên Vai trò");
 
-                entity.Property(e => e.CreateDate).HasDefaultValueSql("now()");
+                entity.Property(e => e.CreateDate)
+                    .HasPrecision(6)
+                    .HasDefaultValueSql("now()");
 
                 entity.Property(e => e.Description)
                     .HasMaxLength(2000)
@@ -409,7 +557,7 @@ namespace KAS.Entity.DB.ECOS
 
                 entity.Property(e => e.User)
                     .HasMaxLength(50)
-                    .HasComment("Tại 1 thời điểm, chỉ có 1 Token gắn với 1 User. \nUser và ProductID sẽ là duy nhất");
+                    .HasComment("Tại 1 thời điểm, chỉ có 1 Token gắn với 1 User. \r\nUser và ProductID sẽ là duy nhất");
 
                 entity.Property(e => e.ProductId)
                     .HasMaxLength(50)
@@ -420,7 +568,9 @@ namespace KAS.Entity.DB.ECOS
                     .HasMaxLength(50)
                     .HasColumnName("CustomerID");
 
-                entity.Property(e => e.CreateDate).HasDefaultValueSql("now()");
+                entity.Property(e => e.CreateDate)
+                    .HasPrecision(6)
+                    .HasDefaultValueSql("now()");
 
                 entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
 
@@ -433,7 +583,9 @@ namespace KAS.Entity.DB.ECOS
                     .IsFixedLength()
                     .HasComment("Token là duy nhất");
 
-                entity.Property(e => e.TokenExpired).HasColumnName("Token.Expired");
+                entity.Property(e => e.TokenExpired)
+                    .HasPrecision(6)
+                    .HasColumnName("Token.Expired");
 
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.RolesUsers)
@@ -444,6 +596,29 @@ namespace KAS.Entity.DB.ECOS
                     .WithMany(p => p.RolesUsers)
                     .HasForeignKey(d => new { d.CustomerId, d.RoleName })
                     .HasConstraintName("ROLES_ROLES.Users_K2");
+            });
+
+            modelBuilder.Entity<SmacSession>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("SmacSession");
+
+                entity.Property(e => e.CustomerId)
+                    .HasMaxLength(50)
+                    .HasColumnName("CustomerID")
+                    .HasComment("Mã Smac (CustomerCode)");
+
+                entity.Property(e => e.Data).HasComment("Thông tin đăng nhập");
+
+                entity.Property(e => e.LastUpdated)
+                    .HasPrecision(6)
+                    .HasDefaultValueSql("now()")
+                    .HasComment("Lần cuối cập nhật");
+
+                entity.Property(e => e.Session)
+                    .HasMaxLength(50)
+                    .HasComment("Session do smac cấp");
             });
 
             modelBuilder.Entity<TokensLog>(entity =>
@@ -476,12 +651,12 @@ namespace KAS.Entity.DB.ECOS
                 entity.Property(e => e.Token).HasMaxLength(2000);
 
                 entity.Property(e => e.TokenCreate)
-                    .HasColumnType("time with time zone")
+                    .HasColumnType("time(6) with time zone")
                     .HasColumnName("Token.Create")
                     .HasDefaultValueSql("now()");
 
                 entity.Property(e => e.TokenExpired)
-                    .HasColumnType("time with time zone")
+                    .HasColumnType("time(6) with time zone")
                     .HasColumnName("Token.Expired");
 
                 entity.Property(e => e.User).HasMaxLength(50);

@@ -36,6 +36,8 @@
         public string IP { get; set; } = "";
         public bool isNeedEncrypt { get; set; } = false;
         public string data { get; set; } = "";
+        public string Postgre_HOS_Connection { get; set; } = "";
+        public string Postgre_SYNC_Connection { get; set; } = "";
         public T getData<T>()
         {
 
