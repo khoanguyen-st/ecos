@@ -8,6 +8,7 @@
     <PackageIcon>ECOS.ico</PackageIcon>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'KASE.ECOS' " />
   <ItemGroup>
     <Content Include="ECOS.ico" />
   </ItemGroup>
