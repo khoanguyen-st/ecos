@@ -12,8 +12,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<KAS.Entity.DB.ECOS.KASECOSContext>(options =>
-                options.UseNpgsql(builder.Configuration.GetConnectionString("POSTGRESQL")));
+builder.Services.AddDbContext<KAS.Entity.DB.ECOS.Entities.ECOSContext>(options =>
+                options.UseNpgsql(builder.Configuration.GetConnectionString("POSTGRESQL"), b => b.MigrationsAssembly("KAS.ECOS.API")));
 var app = builder.Build();
 
 //Create Code
