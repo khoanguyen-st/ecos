@@ -1,8 +1,12 @@
 ﻿using KAS.API.MIDDEWARE.Entity;
 using KAS.ECOS.API.Entity;
 using KAS.Entity.DB.ECOS.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace KAS.ECOS.API.Controllers
 {
@@ -11,10 +15,12 @@ namespace KAS.ECOS.API.Controllers
     public class Authentication : ControllerBase
     {
         private readonly ECOSContext _context;
+        private readonly IConfiguration _configuration;
 
-        public Authentication(ECOSContext context)
+        public Authentication(ECOSContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         [HttpPost("Login")]
@@ -28,23 +34,90 @@ namespace KAS.ECOS.API.Controllers
             {
                 return Unauthorized();
             }
+
+            var securityKey = new SymmetricSecurityKey(
+                Encoding.ASCII.GetBytes(_configuration["Authentication:SecretForKey"]));
+            var signingCredentials = new SigningCredentials(
+                securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claimsForToken = new List<Claim>();
+            claimsForToken.Add(new Claim("user", validatedAccount.UserName.ToString()));
+
+            var jwtSecurityToken = new JwtSecurityToken(
+                _configuration["Authentication:Issuer"],
+                _configuration["Authentication:Audience"],
+                claimsForToken,
+                DateTime.UtcNow,
+                DateTime.UtcNow.AddHours(1),
+                signingCredentials);
+
+            var tokenToReturn = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+            var refreshToken = GenerateRefreshToken();
+
+            return Ok(new
+            {
+                Token = tokenToReturn,
+                RefreshToken = refreshToken
+            });
+        }
+
+        [HttpPost("refresh-token")]
+        public ActionResult<string> RefreshToken(InEntity ie)
+        {
+            var tokens = ie.getData<RefreshTokenDTO>();
+
+            if(tokens == null)
+            {
+                return BadRequest("Invalid client request");
+            }
+
+            string accessToken = tokens.AccessToken;
+            string refreshToken = tokens.RefreshToken;
+
+            var principal = GetPrincipalFromExpiredToken(accessToken);
+            if(principal == null)
+            {
+                return BadRequest("Invalid access token or refresh token");
+            }
             return Ok();
         }
 
-        private OutEntity ValidateUser(string userName, string password)
+        private LoginDTO ValidateUser(string userName, string password)
         {
-            var user = _context.EndUserLists.Where(u => u.Username == userName).FirstOrDefault();
-            if (user == null)
+            //var user = _context.EndUserLists.Where(u => u.Username == userName && u.Password == password).FirstOrDefault();
+            //return new LoginDTO { UserName = userName, Password = password };
+            return new LoginDTO("khoanguyen", "123123");
+        }
+
+        private static string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[64];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
+        }
+
+        private ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token)
+        {
+            var tokenValidationParams = new TokenValidationParameters
             {
-                return new OutEntity("", "Không tồn tại tài khoản");
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.ASCII.GetBytes(_configuration["Authentication:SecretForKey"]!)),
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParams, out SecurityToken securityToken);
+
+            if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new SecurityTokenException("Invalid token");
             }
 
-            if(user.Password == password)
-            {
-                return new OutEntity(user, "");
-            }
-
-            return new OutEntity("", "Mật khẩu không hợp lệ!");
+            return principal;
         }
     }
+
 }

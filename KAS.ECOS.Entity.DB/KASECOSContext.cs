@@ -193,7 +193,7 @@ namespace KAS.Entity.DB.ECOS
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .HasDefaultValueSql("nextval('\"Devies_ID_seq\"'::regclass)")
+                    //.HasDefaultValueSql("nextval('\"Devies_ID_seq\"'::regclass)")
                     .HasComment("Mã tăng tự động");
 
                 entity.Property(e => e.AccessDate)
