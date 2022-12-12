@@ -1,20 +1,18 @@
-﻿using KAS.API.MIDDEWARE.Entity;
-using KAS.HOS.Entity.DB.HOS;
+﻿using KAS.ECOS.MIDDLEWARE.Entity;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using System;
-using System.IO;
 using System.IO.Compression;
+using System.Net.Http;
 using System.Text;
 
-namespace ClassLibrary1
+namespace KAS.ECOS.MIDDLEWARE
 {
-    public class Middeware
+    public class Middleware
     {
         bool isDebug = false;
         private readonly RequestDelegate next;
 
-        public Middeware(RequestDelegate _next, bool isDebug)
+        public Middleware(RequestDelegate _next, bool isDebug)
         {
             next = _next;
             this.isDebug = isDebug;
@@ -46,12 +44,12 @@ namespace ClassLibrary1
                         // Rewind the memory stream.
                         buffer.Position = 0L;
 
-                         content = System.Text.Encoding.UTF8.GetString(buffer.ToArray());
+                        content = System.Text.Encoding.UTF8.GetString(buffer.ToArray());
                         // Replace the request stream by the memory stream.
-                     //   context.Request.Body = buffer;
+                        //   context.Request.Body = buffer;
 
                         // Invoke the rest of the pipeline.
-                     //   await next(context);
+                        //   await next(context);
                     }
                 }
                 catch { }
@@ -60,13 +58,13 @@ namespace ClassLibrary1
             string localPath = context.Request.Path.ToString().ToLower();
 
 
-            string kasProduct = (context.Request.Headers["Product"].ToString()??"WEB").ToUpper();
+            string kasProduct = (context.Request.Headers["Product"].ToString() ?? "WEB").ToUpper();
 
             //context.Request.EnableBuffering();
-           // var buffer = new byte[Convert.ToInt32(context.Request.ContentLength)];
-          //  await context.Request.Body.ReadAsync(buffer, 0, buffer.Length);
-          //  context.Request.Body.Position = 0;
-          
+            // var buffer = new byte[Convert.ToInt32(context.Request.ContentLength)];
+            //  await context.Request.Body.ReadAsync(buffer, 0, buffer.Length);
+            //  context.Request.Body.Position = 0;
+
 
 
 
@@ -179,7 +177,7 @@ namespace ClassLibrary1
             {
 
             }
-            else 
+            else
             {
                 string sign_server = GetMd5Hash(string.Join("|", token, version, localTime, newObject.data, sToken));
                 if (sign_server != sign)
@@ -274,7 +272,7 @@ namespace ClassLibrary1
             {
 
 
-                byte[] buffer = ASCIIEncoding.UTF8.GetBytes(data);
+                byte[] buffer = Encoding.UTF8.GetBytes(data);
 
                 using (MemoryStream ms = new MemoryStream(buffer))
                 {
@@ -323,6 +321,5 @@ namespace ClassLibrary1
             catch { }
             return json;
         }
-        
     }
 }

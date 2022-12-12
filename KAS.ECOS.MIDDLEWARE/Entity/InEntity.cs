@@ -1,4 +1,4 @@
-﻿namespace KAS.API.MIDDEWARE.Entity
+﻿namespace KAS.ECOS.MIDDLEWARE.Entity
 {
     public class InEntity
     {

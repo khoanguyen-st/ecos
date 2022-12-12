@@ -2,6 +2,7 @@
 
 
 
+using KAS.ECOS.MIDDLEWARE;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,18 +24,31 @@ var app = builder.Build();
 
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
-app.UseMiddleware<ClassLibrary1.Middeware>((builder.Configuration.GetValue<string>("isDebug") ?? "0").ToLower() == "1");
+
+app.UseMiddleware<Middleware>((builder.Configuration.GetValue<string>("isDebug") ?? "0").ToLower() == "1");
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var context = services.GetRequiredService<KAS.Entity.DB.ECOS.Entities.ECOSContext>();
+    if (context.Database.GetPendingMigrations().Any())
+    {
+        context.Database.Migrate();
+    }
+}
+
 try
 {
     app.Run();

@@ -1,10 +1,28 @@
-version: '3'
+version: '3.9'
+
 services:
-  db:
-    image: postgres:15.1
-    environment:
-      POSTGRES_DB: KAS.ECOS
-      POSTGRES_PASSWORD: 123
-      POSTGRES_USER: kasEcos_user01
+  ecosapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - 5432:5432
+      - 80:80
+    depends_on:
+      - db
+    networks:
+      - global
+
+#  db:
+#    image: postgres:15.1
+#    environment:
+#      POSTGRES_DB: KAS.ECOS
+#      POSTGRES_PASSWORD: 123
+#      POSTGRES_USER: kasEcos_user01
+#    ports:
+#      - 5432:5432
+#    networks:
+#      - ecosapi-network
+
+networks:
+  global:
+    external: true

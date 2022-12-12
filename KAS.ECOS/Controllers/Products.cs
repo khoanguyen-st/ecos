@@ -1,4 +1,4 @@
-﻿using KAS.API.MIDDEWARE.Entity;
+﻿using KAS.ECOS.MIDDLEWARE.Entity;
 using Microsoft.AspNetCore.Mvc;
 
 

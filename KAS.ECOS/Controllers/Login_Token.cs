@@ -1,4 +1,4 @@
-﻿using KAS.API.MIDDEWARE.Entity;
+﻿using KAS.ECOS.MIDDLEWARE.Entity;
 using KAS.ECOS.API.Code;
 using KAS.ECOS.API.Entity;
 using KAS.Entity.DB.ECOS;

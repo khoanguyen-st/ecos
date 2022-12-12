@@ -1,6 +1,6 @@
-﻿using KAS.API.MIDDEWARE.Entity;
-using KAS.ECOS.API.Entity;
+﻿using KAS.ECOS.API.Entity;
 using KAS.Entity.DB.ECOS.Entities;
+using KAS.ECOS.MIDDLEWARE.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -21,6 +21,12 @@ namespace KAS.ECOS.API.Controllers
         {
             _context = context;
             _configuration = configuration;
+        }
+
+        [HttpGet]
+        public async Task<string> Get()
+        {
+            return "ok";
         }
 
         [HttpPost("Login")]
@@ -61,7 +67,7 @@ namespace KAS.ECOS.API.Controllers
             });
         }
 
-        [HttpPost("refresh-token")]
+        [HttpPost("RefreshToken")]
         public ActionResult<string> RefreshToken(InEntity ie)
         {
             var tokens = ie.getData<RefreshTokenDTO>();

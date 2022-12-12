@@ -1,7 +1,7 @@
 ﻿using Amazon;
 using Amazon.Route53;
 using Amazon.Route53.Model;
-using KAS.API.MIDDEWARE.Entity;
+using KAS.ECOS.MIDDLEWARE.Entity;
 using KAS.ECOS.API.Entity;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.Entity;

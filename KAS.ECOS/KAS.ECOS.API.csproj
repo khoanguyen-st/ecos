@@ -34,8 +34,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../KAS.API.MIDDEWARE/KAS.API.MIDDEWARE.csproj" />
     <ProjectReference Include="../KAS.ECOS.Entity.DB/KAS.Entity.DB.ECOS.csproj" />
+    <ProjectReference Include="..\KAS.ECOS.MIDDLEWARE\KAS.ECOS.MIDDLEWARE.csproj" />
   </ItemGroup>
 
 </Project>

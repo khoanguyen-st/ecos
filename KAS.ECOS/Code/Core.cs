@@ -1,5 +1,5 @@
-﻿using KAS.API.MIDDEWARE.Entity;
-using KAS.ECOS.API.Entity;
+﻿using KAS.ECOS.API.Entity;
+using KAS.ECOS.MIDDLEWARE.Entity;
 using Newtonsoft.Json;
 using System.IO.Compression;
 using System.Net;
