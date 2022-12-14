@@ -35,13 +35,13 @@ namespace KAS.Entity.DB.ECOS.Entities
         public virtual DbSet<UserDeviceList> UserDeviceLists { get; set; } = null!;
         public virtual DbSet<OrganizationDeviceList> OrganizationDeviceLists { get; set; } = null!;
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    if (!optionsBuilder.IsConfigured)
-        //    {
-        //        optionsBuilder.UseNpgsql(cn);// "Host=127.0.0.1;Database=KAS.ECOS;Username=kasEcos_user01;Password=123");
-        //    }
-        //}
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseNpgsql(cn);// "Host=127.0.0.1;Database=KAS.ECOS;Username=kasEcos_user01;Password=123");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

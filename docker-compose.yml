@@ -19,9 +19,9 @@ services:
       POSTGRES_PASSWORD: 123
       POSTGRES_USER: kasEcos_user01
     ports:
-      - 5432:5432
+      - 5433:5432
     networks:
-      - ecosapi-network
+      - global
 
 networks:
   global:

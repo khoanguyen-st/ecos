@@ -36,6 +36,7 @@
   <ItemGroup>
     <ProjectReference Include="../KAS.ECOS.Entity.DB/KAS.Entity.DB.ECOS.csproj" />
     <ProjectReference Include="..\KAS.ECOS.MIDDLEWARE\KAS.ECOS.MIDDLEWARE.csproj" />
+    <ProjectReference Include="..\KAS.ECOS.SERVICE\KAS.ECOS.SERVICE.csproj" />
   </ItemGroup>
 
 </Project>

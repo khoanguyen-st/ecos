@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KAS.Entity.DB.ECOS", "KAS.E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KAS.ECOS.MIDDLEWARE", "KAS.ECOS.MIDDLEWARE\KAS.ECOS.MIDDLEWARE.csproj", "{E29BC014-EDFA-4BD0-940B-C3D7503AFC62}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KAS.ECOS.SERVICE", "KAS.ECOS.SERVICE\KAS.ECOS.SERVICE.csproj", "{0F8EA689-3E63-4B32-95DC-CA829D18D635}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{E29BC014-EDFA-4BD0-940B-C3D7503AFC62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E29BC014-EDFA-4BD0-940B-C3D7503AFC62}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E29BC014-EDFA-4BD0-940B-C3D7503AFC62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F8EA689-3E63-4B32-95DC-CA829D18D635}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F8EA689-3E63-4B32-95DC-CA829D18D635}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F8EA689-3E63-4B32-95DC-CA829D18D635}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F8EA689-3E63-4B32-95DC-CA829D18D635}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

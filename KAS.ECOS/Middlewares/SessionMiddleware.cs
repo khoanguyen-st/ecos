@@ -16,16 +16,14 @@ namespace KAS.ECOS.API.Middlewares
     {
         private readonly RequestDelegate _next;
         private readonly IConfiguration _configuration;
-        private readonly ECOSContext _ECOSContext;
 
-        public SessionMiddleware(RequestDelegate next, IConfiguration configuration, ECOSContext ECOSContext)
+        public SessionMiddleware(RequestDelegate next, IConfiguration configuration)
         {
             _next = next;
             _configuration = configuration;
-            _ECOSContext = ECOSContext;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, ECOSContext _ECOSContext)
         {
             var request = context.Request;
             if (!request.Path.Value.Contains("Login"))

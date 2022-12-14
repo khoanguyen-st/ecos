@@ -3,7 +3,9 @@
 
 
 using KAS.ECOS.API.Middlewares;
+using KAS.ECOS.API.Services;
 using KAS.ECOS.MIDDLEWARE;
+using KAS.ECOS.SERVICE.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +18,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<KAS.Entity.DB.ECOS.Entities.ECOSContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("POSTGRESQL"), b => b.MigrationsAssembly("KAS.ECOS.API")));
+//builder.Services.AddScoped<KAS.Entity.DB.ECOS.Entities.ECOSContext>();
+
+builder.Services.AddTransient<IAuthService, AuthService>();
+builder.Services.AddTransient<IApplicationService, ApplicationService>();
+
 var app = builder.Build();
 
 //Create Code
@@ -33,13 +40,13 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 
 // app.UseHttpsRedirection();
 
-app.UseMiddleware<SessionMiddleware>();
+//app.UseMiddleware<SessionMiddleware>();
 
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseMiddleware<Middleware>((builder.Configuration.GetValue<string>("isDebug") ?? "0").ToLower() == "1");
+//app.UseMiddleware<Middleware>((builder.Configuration.GetValue<string>("isDebug") ?? "0").ToLower() == "1");
 
 using (var scope = app.Services.CreateScope())
 {
