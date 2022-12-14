@@ -381,6 +381,70 @@ namespace KAS.ECOS.API.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "ApplicationLists",
+                columns: new[] { "Id", "ApplicationDescription", "ApplicationName" },
+                values: new object[] { "1", "desc", "ECOS" });
+
+            migrationBuilder.InsertData(
+                table: "EndUserLists",
+                columns: new[] { "Id", "CreatedDate", "DeletedDate", "Email", "FirstName", "IsActive", "LastName", "Password", "PhoneNumber", "Username" },
+                values: new object[] { "1", new DateTime(2022, 12, 13, 15, 48, 11, 225, DateTimeKind.Local).AddTicks(240), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "khoanguyen@gmail.com", "Khoa", true, "Nguyen", "123123", "0763602013", "khoanguyen" });
+
+            migrationBuilder.InsertData(
+                table: "OrganizationLists",
+                columns: new[] { "Id", "Address", "CreatedDate", "CustomerCodeSmac", "DeletedDate", "Email", "HandPhone", "IsActive", "OrganizationDescription", "OrganizationName", "ParentId" },
+                values: new object[] { "1", "116 Mai Thuc Lan", new DateTime(2022, 12, 13, 15, 48, 11, 225, DateTimeKind.Local).AddTicks(364), "123123", null, "kas@gmail.com", "0123456677", true, null, "Kas", null });
+
+            migrationBuilder.InsertData(
+                table: "UserDeviceLists",
+                columns: new[] { "Id", "CreatedDate", "DeviceName", "IsAcive", "LatestAccessDate", "LatestIPAccess", "LatestLocation", "OSName", "OSVer" },
+                values: new object[] { "1", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "POS", true, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "12.0.0.1", "Danang", "Windows", "10" });
+
+            migrationBuilder.InsertData(
+                table: "ApplicationFunctionLists",
+                columns: new[] { "Id", "ApplicationId", "FunctionDescription", "FunctionName", "Level", "ParentId", "Path" },
+                values: new object[] { "1", "1", "desc", "CREATE", (short)0, null, "Path" });
+
+            migrationBuilder.InsertData(
+                table: "OrganizationUserLists",
+                columns: new[] { "Id", "CreatedDate", "DeletedDate", "EndUserId", "IsActive", "OrganizationId", "OrganizationListId" },
+                values: new object[] { "1", new DateTime(2022, 12, 13, 15, 48, 11, 225, DateTimeKind.Local).AddTicks(350), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "1", true, "1", null });
+
+            migrationBuilder.InsertData(
+                table: "RoleLists",
+                columns: new[] { "Id", "CreatedDate", "DeletedDate", "IsActive", "OrganizationId", "RoleDescription", "RoleName" },
+                values: new object[,]
+                {
+                    { "1", new DateTime(2022, 12, 13, 15, 48, 11, 225, DateTimeKind.Local).AddTicks(439), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "1", "Desc", "Admin" },
+                    { "2", new DateTime(2022, 12, 13, 15, 48, 11, 225, DateTimeKind.Local).AddTicks(442), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "1", "Employee", "Employee" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ApplicationFunctionPermissionLists",
+                columns: new[] { "Id", "ApplicationFunctionId", "MaxRecords", "Permission", "PermissionName" },
+                values: new object[,]
+                {
+                    { "1", "1", 10, (short)4, "CREATE" },
+                    { "2", "1", 10, (short)4, "CREATE" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "EndUserRoleLists",
+                columns: new[] { "Id", "CreatedDate", "DeletedDate", "OrganizationUserId", "RoleId", "UserDeviceId" },
+                values: new object[] { "1", new DateTime(2022, 12, 13, 15, 48, 11, 225, DateTimeKind.Local).AddTicks(392), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "1", "1", "1" });
+
+            migrationBuilder.InsertData(
+                table: "RoleApplicationFunctionPermissionLists",
+                columns: new[] { "Id", "ApplicationFunctionPermissionId", "CreatedDate", "DeletedDate", "RoleId" },
+                values: new object[,]
+                {
+                    { "1", "1", new DateTime(2022, 12, 13, 15, 48, 11, 225, DateTimeKind.Local).AddTicks(488), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "1" },
+                    { "2", "1", new DateTime(2022, 12, 13, 15, 48, 11, 225, DateTimeKind.Local).AddTicks(489), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "1" },
+                    { "3", "1", new DateTime(2022, 12, 13, 15, 48, 11, 225, DateTimeKind.Local).AddTicks(490), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "1" },
+                    { "4", "2", new DateTime(2022, 12, 13, 15, 48, 11, 225, DateTimeKind.Local).AddTicks(491), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "2" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AccessHistoryLists_EndUserId",
                 table: "AccessHistoryLists",

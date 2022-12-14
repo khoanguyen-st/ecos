@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace KAS.ECOS.API.Controllers
 {
@@ -23,10 +24,11 @@ namespace KAS.ECOS.API.Controllers
             _configuration = configuration;
         }
 
-        [HttpGet]
-        public async Task<string> Get()
+        [HttpPost("Test")]
+        public ActionResult Test(RequestDTO requestDTO)
         {
-            return "ok";
+            var result = JsonConvert.SerializeObject(requestDTO);
+            return Ok(result);
         }
 
         [HttpPost("Login")]

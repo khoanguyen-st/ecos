@@ -2,6 +2,7 @@
 
 
 
+using KAS.ECOS.API.Middlewares;
 using KAS.ECOS.MIDDLEWARE;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,7 +22,7 @@ var app = builder.Build();
 //cd C:\Users\ducph\Documents\MyProject\KAS\KAS.ECOS\KAS.ECOS.Entity.DB
 //dotnet ef dbcontext scaffold "Host=127.0.0.1;Database=KAS.ECOS;Username=kasEcos_user01;Password=123" Npgsql.EntityFrameworkCore.PostgreSQL --project KAS.Entity.DB.ECOS -f
 
-
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
@@ -31,6 +32,8 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 }
 
 // app.UseHttpsRedirection();
+
+app.UseMiddleware<SessionMiddleware>();
 
 app.UseAuthorization();
 

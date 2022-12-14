@@ -12,16 +12,16 @@ services:
     networks:
       - global
 
-#  db:
-#    image: postgres:15.1
-#    environment:
-#      POSTGRES_DB: KAS.ECOS
-#      POSTGRES_PASSWORD: 123
-#      POSTGRES_USER: kasEcos_user01
-#    ports:
-#      - 5432:5432
-#    networks:
-#      - ecosapi-network
+  db:
+    image: postgres:15.1
+    environment:
+      POSTGRES_DB: KAS.ECOS
+      POSTGRES_PASSWORD: 123
+      POSTGRES_USER: kasEcos_user01
+    ports:
+      - 5432:5432
+    networks:
+      - ecosapi-network
 
 networks:
   global:
