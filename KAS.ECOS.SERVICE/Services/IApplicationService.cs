@@ -1,4 +1,5 @@
-﻿using KAS.Entity.DB.ECOS.Entities;
+﻿using KAS.ECOS.SERVICE.DTOs;
+using KAS.Entity.DB.ECOS.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,9 @@ namespace KAS.ECOS.SERVICE.Services
     public interface IApplicationService
     {
         IEnumerable<ApplicationList> GetApplications();
+        void AddApplication(ApplicationList application);
+        bool ApplicationExist(string applicationId);
+        ApplicationList GetApplicationById(string applicationId);
+        Task<bool> SaveChangesAsync();
     }
 }

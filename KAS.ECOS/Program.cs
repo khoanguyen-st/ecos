@@ -5,6 +5,7 @@
 using KAS.ECOS.API.Middlewares;
 using KAS.ECOS.API.Services;
 using KAS.ECOS.MIDDLEWARE;
+using KAS.ECOS.SERVICE.Mapping.Application;
 using KAS.ECOS.SERVICE.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(typeof(ApplicationProfile));
 builder.Services.AddDbContext<KAS.Entity.DB.ECOS.Entities.ECOSContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("POSTGRESQL"), b => b.MigrationsAssembly("KAS.ECOS.API")));
 //builder.Services.AddScoped<KAS.Entity.DB.ECOS.Entities.ECOSContext>();

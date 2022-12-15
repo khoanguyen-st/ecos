@@ -1,4 +1,5 @@
-﻿using KAS.ECOS.SERVICE.Services;
+﻿using KAS.ECOS.SERVICE.DTOs;
+using KAS.ECOS.SERVICE.Services;
 using KAS.Entity.DB.ECOS.Entities;
 using System.Data.Entity;
 
@@ -15,6 +16,23 @@ namespace KAS.ECOS.API.Services
         public IEnumerable<ApplicationList> GetApplications()
         {
             return _context.ApplicationLists.ToList();
+        }
+        public void AddApplication(ApplicationList application)
+        {
+            _context.ApplicationLists.Add(application);
+            _context.SaveChanges();
+        }
+        public bool ApplicationExist(string applicationId)
+        {
+            return _context.ApplicationLists.Any(a => a.Id == applicationId);
+        }
+        public ApplicationList? GetApplicationById(string applicationId)
+        {
+            return _context.ApplicationLists.Where(a => a.Id == applicationId).FirstOrDefault();
+        }
+        public async Task<bool> SaveChangesAsync()
+        {
+            return (await _context.SaveChangesAsync() >= 0);
         }
     }
 }
