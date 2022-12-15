@@ -37,7 +37,7 @@ namespace KAS.ECOS.API.Controllers
 
         // GET: api/Organization/5
         [HttpGet("{id}")]
-        public IActionResult Get(string id)
+        public IActionResult Get(Guid id)
         {
             var organization = _context.OrganizationLists.Find(id);
             
@@ -72,7 +72,7 @@ namespace KAS.ECOS.API.Controllers
 
         // PUT: api/Organization/5
         [HttpPut("{id}")]
-        public IActionResult Put(string id, UpdateOrganizationListDto organizationList)
+        public IActionResult Put(Guid id, UpdateOrganizationListDto organizationList)
         {
             var organization = _context.OrganizationLists.Find(id);
             
@@ -89,7 +89,7 @@ namespace KAS.ECOS.API.Controllers
 
         // DELETE: api/Organization/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(string id)
+        public IActionResult Delete(Guid id)
         {
             var organization = _context.OrganizationLists.Find(id);
             if (organization == null)

@@ -4,7 +4,7 @@ namespace KAS.ECOS.API.Entity
 {
     public class UpdateOrganizationListDto
     {
-        public string Id { get; set; } = null!;
+        public Guid Id { get; set; }
         public string OrganizationName { get; set; } = null!;
         public string? OrganizationDescription { get; set; } = null!;
         public string Address { get; set; } = string.Empty;
