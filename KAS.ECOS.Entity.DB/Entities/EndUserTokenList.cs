@@ -8,10 +8,10 @@ namespace KAS.Entity.DB.ECOS.Entities
 {
     public class EndUserTokenList
     {
-        public string Id { get; set; } = null!;
-        public string EndUserId { get; set; } = null!;
-        public string RefreshToken { get; set; } = null!;
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public Guid Id { get; set; }
+        public Guid EndUserId { get; set; }
+        public string? RefreshToken { get; set; }
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public EndUserList EndUser { get; set; } = null!;
     }
 }

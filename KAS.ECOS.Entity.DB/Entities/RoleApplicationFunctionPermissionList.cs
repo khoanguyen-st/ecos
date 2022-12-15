@@ -8,10 +8,10 @@ namespace KAS.Entity.DB.ECOS.Entities
 {
     public class RoleApplicationFunctionPermissionList
     {
-        public string Id { get; set; } = null!;
-        public string ApplicationFunctionPermissionId { get; set; } = null!;
-        public string RoleId { get; set; } = null!;
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public Guid Id { get; set; }
+        public Guid ApplicationFunctionPermissionId { get; set; }
+        public Guid RoleId { get; set; }
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public DateTime DeletedDate { get; set; }
         public ApplicationFunctionPermissionList ApplicationFunctionPermission { get; set; } = null!;
         public RoleList Role { get; set; } = null!;

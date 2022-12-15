@@ -38,13 +38,13 @@ namespace KAS.ECOS.API.Middlewares
 
                 var User = _ECOSContext.EndUserLists.Where(u => u.Username == Username).First();
 
-                var userInOrganization = _ECOSContext.OrganizationUserLists.Where(o => o.EndUserId == User.Id && o.OrganizationId == requestBody.organizationId).FirstOrDefault();
+                var userInOrganization = _ECOSContext.OrganizationUserLists.Where(o => o.EndUserId == User.Id && o.OrganizationId == Guid.Parse(requestBody.organizationId)).FirstOrDefault();
 
-                var roleList = new HashSet<string>();
+                var roleList = new HashSet<Guid>();
 
                 if (userInOrganization != null)
                 {
-                    var userRoles = _ECOSContext.EndUserRoleLists.Where(role => role.UserDeviceId == requestBody.deviceId && role.OrganizationUserId == userInOrganization.Id).ToList();
+                    var userRoles = _ECOSContext.EndUserRoleLists.Where(role => role.UserDeviceId == Guid.Parse(requestBody.deviceId) && role.OrganizationUserId == userInOrganization.Id).ToList();
 
                     foreach (var userRole in userRoles)
                     {

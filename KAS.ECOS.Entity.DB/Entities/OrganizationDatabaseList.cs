@@ -8,13 +8,13 @@ namespace KAS.Entity.DB.ECOS.Entities
 {
     public class OrganizationDatabaseList
     {
-        public string Id { get; set; } = null!;
-        public string OrganizationProfileId { get; set; } = null!;
+        public Guid Id { get; set; }
+        public Guid OrganizationProfileId { get; set; }
         public string DatabaseName { get; set; } = null!;
         public string ConnectionString { get; set; } = null!;
         public string UserName { get; set; } = null!;
         public string Password { get; set; } = null!;
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public OrganizationProfileList OrganizationProfile { get; set; } = null!;
     }
 }

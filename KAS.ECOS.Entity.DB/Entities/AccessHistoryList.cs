@@ -8,13 +8,13 @@ namespace KAS.Entity.DB.ECOS.Entities
 {
     public class AccessHistoryList
     {
-        public string Id { get; set; } = null!;
-        public string EndUserId { get; set; } = null!;
-        public string UserDeviceId { get; set; } = null!;
-        public string IPAdress { get; set; } = null!;
-        public string Location { get; set; } = null!;
+        public Guid Id { get; set; }
+        public Guid EndUserId { get; set; }
+        public Guid UserDeviceId { get; set; }
+        public string? IPAdress { get; set; }
+        public string? Location { get; set; }
         public DateTime AccessDate { get; set; }
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public EndUserList EndUser { get; set; } = null!;
         public UserDeviceList UserDevice { get; set; } = null!;
     }

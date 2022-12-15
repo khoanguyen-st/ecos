@@ -48,7 +48,7 @@ namespace KAS.ECOS.SERVICE.Services
             {
                 return new LoggedUserDTO(user.Id, user.Username, user.Email);
             }
-            return new LoggedUserDTO("", "", "");
+            return new LoggedUserDTO(new Guid(""), "", "");
         }
     }
 }

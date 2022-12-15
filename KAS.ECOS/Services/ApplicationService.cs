@@ -24,11 +24,15 @@ namespace KAS.ECOS.API.Services
         }
         public bool ApplicationExist(string applicationId)
         {
-            return _context.ApplicationLists.Any(a => a.Id == applicationId);
+            return _context.ApplicationLists.Any(a => a.Id == Guid.Parse(applicationId));
         }
         public ApplicationList? GetApplicationById(string applicationId)
         {
-            return _context.ApplicationLists.Where(a => a.Id == applicationId).FirstOrDefault();
+            return _context.ApplicationLists.Where(a => a.Id == Guid.Parse(applicationId)).FirstOrDefault();
+        }
+        public void DeleteApplication(ApplicationList application)
+        {
+            _context.ApplicationLists.Remove(application);
         }
         public async Task<bool> SaveChangesAsync()
         {

@@ -58,10 +58,20 @@ namespace KAS.ECOS.API.Controllers
             return NoContent();
         }
 
-        //[HttpDelete("{id}")]
-        //public async Task<ActionResult> DeleteApplication(string id)
-        //{
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteApplication(string id)
+        {
+            if (!_applicationService.ApplicationExist(id))
+            {
+                return NotFound();
+            }
 
-        //}
+            var existedApplication = _applicationService.GetApplicationById(id);
+            
+            _applicationService.DeleteApplication(existedApplication);
+            await _applicationService.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }

@@ -8,12 +8,12 @@ namespace KAS.Entity.DB.ECOS.Entities
 {
     public class OrganizationUserList
     {
-        public string Id { get; set; } = null!;
-        public string OrganizationId { get; set; } = null!;
-        public string EndUserId { get; set; } = null!;
+        public Guid Id { get; set; }
+        public Guid OrganizationId { get; set; }
+        public Guid EndUserId { get; set; }
         public bool IsActive { get; set; }
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public DateTime DeletedDate { get; set;}
-        public EndUserList EndUser { get; set; }
+        public EndUserList EndUser { get; set; } = null!;
     }
 }

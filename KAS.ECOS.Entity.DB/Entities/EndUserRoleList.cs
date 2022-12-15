@@ -8,11 +8,11 @@ namespace KAS.Entity.DB.ECOS.Entities
 {
     public class EndUserRoleList
     {
-        public string Id { get; set; } = null!;
-        public string UserDeviceId { get; set; } = null!;
-        public string RoleId { get; set; } = null!;
-        public string OrganizationUserId { get; set; } = null!;
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public Guid Id { get; set; }
+        public Guid UserDeviceId { get; set; }
+        public Guid RoleId { get; set; }
+        public Guid OrganizationUserId { get; set; }
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public DateTime DeletedDate { get; set; }
         public UserDeviceList UserDevice { get; set; } = null!;
         public RoleList Role { get; set; } = null!;

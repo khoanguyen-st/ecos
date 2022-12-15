@@ -24,8 +24,9 @@ namespace KAS.ECOS.API.Migrations
 
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.AccessHistoryList", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("AccessDate")
                         .HasColumnType("timestamp with time zone");
@@ -33,21 +34,17 @@ namespace KAS.ECOS.API.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("EndUserId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("EndUserId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("IPAdress")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Location")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("UserDeviceId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("UserDeviceId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -60,15 +57,14 @@ namespace KAS.ECOS.API.Migrations
 
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.ApplicationFunctionList", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("ApplicationId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("ApplicationId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("FunctionDescription")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("FunctionName")
@@ -90,27 +86,16 @@ namespace KAS.ECOS.API.Migrations
                     b.HasIndex("ApplicationId");
 
                     b.ToTable("ApplicationFunctionLists");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            ApplicationId = "1",
-                            FunctionDescription = "desc",
-                            FunctionName = "CREATE",
-                            Level = (short)0,
-                            Path = "Path"
-                        });
                 });
 
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.ApplicationFunctionPermissionList", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("ApplicationFunctionId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("ApplicationFunctionId")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("MaxRecords")
                         .HasColumnType("integer");
@@ -127,33 +112,15 @@ namespace KAS.ECOS.API.Migrations
                     b.HasIndex("ApplicationFunctionId");
 
                     b.ToTable("ApplicationFunctionPermissionLists");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            ApplicationFunctionId = "1",
-                            MaxRecords = 10,
-                            Permission = (short)4,
-                            PermissionName = "CREATE"
-                        },
-                        new
-                        {
-                            Id = "2",
-                            ApplicationFunctionId = "1",
-                            MaxRecords = 10,
-                            Permission = (short)4,
-                            PermissionName = "CREATE"
-                        });
                 });
 
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.ApplicationList", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ApplicationDescription")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("ApplicationName")
@@ -163,20 +130,13 @@ namespace KAS.ECOS.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ApplicationLists");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            ApplicationDescription = "desc",
-                            ApplicationName = "ECOS"
-                        });
                 });
 
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.EndUserCredentialHistoryList", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -185,9 +145,8 @@ namespace KAS.ECOS.API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("EndUserId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("EndUserId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -210,8 +169,9 @@ namespace KAS.ECOS.API.Migrations
 
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.EndUserList", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -249,27 +209,13 @@ namespace KAS.ECOS.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("EndUserLists");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            CreatedDate = new DateTime(2022, 12, 13, 15, 48, 11, 225, DateTimeKind.Local).AddTicks(240),
-                            DeletedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "khoanguyen@gmail.com",
-                            FirstName = "Khoa",
-                            IsActive = true,
-                            LastName = "Nguyen",
-                            Password = "123123",
-                            PhoneNumber = "0763602013",
-                            Username = "khoanguyen"
-                        });
                 });
 
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.EndUserRoleList", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -277,17 +223,14 @@ namespace KAS.ECOS.API.Migrations
                     b.Property<DateTime>("DeletedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("OrganizationUserId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("OrganizationUserId")
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("UserDeviceId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("UserDeviceId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -298,33 +241,21 @@ namespace KAS.ECOS.API.Migrations
                     b.HasIndex("UserDeviceId");
 
                     b.ToTable("EndUserRoleLists");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            CreatedDate = new DateTime(2022, 12, 13, 15, 48, 11, 225, DateTimeKind.Local).AddTicks(392),
-                            DeletedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            OrganizationUserId = "1",
-                            RoleId = "1",
-                            UserDeviceId = "1"
-                        });
                 });
 
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.EndUserTokenList", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("EndUserId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("EndUserId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("RefreshToken")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -336,8 +267,9 @@ namespace KAS.ECOS.API.Migrations
 
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.OrganizationDatabaseList", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ConnectionString")
                         .IsRequired()
@@ -350,9 +282,8 @@ namespace KAS.ECOS.API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("OrganizationProfileId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("OrganizationProfileId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -371,8 +302,9 @@ namespace KAS.ECOS.API.Migrations
 
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.OrganizationDeviceList", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -383,13 +315,11 @@ namespace KAS.ECOS.API.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("OrganizationId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("UserDeviceId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("UserDeviceId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -402,8 +332,9 @@ namespace KAS.ECOS.API.Migrations
 
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.OrganizationList", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -411,10 +342,6 @@ namespace KAS.ECOS.API.Migrations
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("CustomerCodeSmac")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("timestamp with time zone");
@@ -430,6 +357,10 @@ namespace KAS.ECOS.API.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("OrganizationCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("OrganizationDescription")
                         .HasColumnType("text");
 
@@ -437,38 +368,25 @@ namespace KAS.ECOS.API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("ParentId")
-                        .HasColumnType("text");
+                    b.Property<Guid?>("ParentId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.ToTable("OrganizationLists");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            Address = "116 Mai Thuc Lan",
-                            CreatedDate = new DateTime(2022, 12, 13, 15, 48, 11, 225, DateTimeKind.Local).AddTicks(364),
-                            CustomerCodeSmac = "123123",
-                            Email = "kas@gmail.com",
-                            HandPhone = "0123456677",
-                            IsActive = true,
-                            OrganizationName = "Kas"
-                        });
                 });
 
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.OrganizationProfileList", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("OrganizationId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("OrganizationProfileName")
                         .IsRequired()
@@ -483,8 +401,9 @@ namespace KAS.ECOS.API.Migrations
 
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.OrganizationUserList", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -492,19 +411,17 @@ namespace KAS.ECOS.API.Migrations
                     b.Property<DateTime>("DeletedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("EndUserId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("EndUserId")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("OrganizationId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("OrganizationListId")
-                        .HasColumnType("text");
+                    b.Property<Guid?>("OrganizationListId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -513,27 +430,16 @@ namespace KAS.ECOS.API.Migrations
                     b.HasIndex("OrganizationListId");
 
                     b.ToTable("OrganizationUserLists");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            CreatedDate = new DateTime(2022, 12, 13, 15, 48, 11, 225, DateTimeKind.Local).AddTicks(350),
-                            DeletedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EndUserId = "1",
-                            IsActive = true,
-                            OrganizationId = "1"
-                        });
                 });
 
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.RoleApplicationFunctionPermissionList", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("ApplicationFunctionPermissionId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("ApplicationFunctionPermissionId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -541,9 +447,8 @@ namespace KAS.ECOS.API.Migrations
                     b.Property<DateTime>("DeletedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -552,46 +457,13 @@ namespace KAS.ECOS.API.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("RoleApplicationFunctionPermissionLists");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            ApplicationFunctionPermissionId = "1",
-                            CreatedDate = new DateTime(2022, 12, 13, 15, 48, 11, 225, DateTimeKind.Local).AddTicks(488),
-                            DeletedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RoleId = "1"
-                        },
-                        new
-                        {
-                            Id = "2",
-                            ApplicationFunctionPermissionId = "1",
-                            CreatedDate = new DateTime(2022, 12, 13, 15, 48, 11, 225, DateTimeKind.Local).AddTicks(489),
-                            DeletedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RoleId = "1"
-                        },
-                        new
-                        {
-                            Id = "3",
-                            ApplicationFunctionPermissionId = "1",
-                            CreatedDate = new DateTime(2022, 12, 13, 15, 48, 11, 225, DateTimeKind.Local).AddTicks(490),
-                            DeletedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RoleId = "1"
-                        },
-                        new
-                        {
-                            Id = "4",
-                            ApplicationFunctionPermissionId = "2",
-                            CreatedDate = new DateTime(2022, 12, 13, 15, 48, 11, 225, DateTimeKind.Local).AddTicks(491),
-                            DeletedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RoleId = "2"
-                        });
                 });
 
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.RoleList", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -602,12 +474,10 @@ namespace KAS.ECOS.API.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("OrganizationId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("RoleDescription")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("RoleName")
@@ -619,34 +489,13 @@ namespace KAS.ECOS.API.Migrations
                     b.HasIndex("OrganizationId");
 
                     b.ToTable("RoleLists");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            CreatedDate = new DateTime(2022, 12, 13, 15, 48, 11, 225, DateTimeKind.Local).AddTicks(439),
-                            DeletedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = true,
-                            OrganizationId = "1",
-                            RoleDescription = "Desc",
-                            RoleName = "Admin"
-                        },
-                        new
-                        {
-                            Id = "2",
-                            CreatedDate = new DateTime(2022, 12, 13, 15, 48, 11, 225, DateTimeKind.Local).AddTicks(442),
-                            DeletedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = true,
-                            OrganizationId = "1",
-                            RoleDescription = "Employee",
-                            RoleName = "Employee"
-                        });
                 });
 
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.UserDeviceList", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -662,38 +511,20 @@ namespace KAS.ECOS.API.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("LatestIPAccess")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("LatestLocation")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("OSName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("OSVer")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.ToTable("UserDeviceLists");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeviceName = "POS",
-                            IsAcive = true,
-                            LatestAccessDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LatestIPAccess = "12.0.0.1",
-                            LatestLocation = "Danang",
-                            OSName = "Windows",
-                            OSVer = "10"
-                        });
                 });
 
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.AccessHistoryList", b =>

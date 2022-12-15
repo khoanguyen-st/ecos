@@ -8,8 +8,8 @@ namespace KAS.Entity.DB.ECOS.Entities
 {
     public class ApplicationFunctionPermissionList
     {
-        public string Id { get; set; } = null!;
-        public string ApplicationFunctionId { get; set; } = null!;
+        public Guid Id { get; set; }
+        public Guid ApplicationFunctionId { get; set; }
         public string PermissionName { get; set; } = null!;
         public short Permission { get; set; }
         public int MaxRecords { get; set; }

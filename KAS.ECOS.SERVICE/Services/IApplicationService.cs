@@ -14,6 +14,7 @@ namespace KAS.ECOS.SERVICE.Services
         void AddApplication(ApplicationList application);
         bool ApplicationExist(string applicationId);
         ApplicationList GetApplicationById(string applicationId);
+        void DeleteApplication(ApplicationList application);
         Task<bool> SaveChangesAsync();
     }
 }

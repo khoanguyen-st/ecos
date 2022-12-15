@@ -8,10 +8,10 @@ namespace KAS.Entity.DB.ECOS.Entities
 {
     public class ApplicationFunctionList
     {
-        public string Id { get; set; } = null!;
-        public string ApplicationId { get; set; } = null!;
+        public Guid Id { get; set; }
+        public Guid ApplicationId { get; set; }
         public string FunctionName { get; set; } = null!;
-        public string FunctionDescription { get; set; } = null!;
+        public string? FunctionDescription { get; set; }
         public string? ParentId { get; set; }
         public string Path { get; set; } = null!;
         public short Level { get; set; }

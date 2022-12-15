@@ -10,6 +10,6 @@
         public string refreshToken { get; set; }
         public string organizationId { get; set; }
         public string deviceId { get; set; }
-        public ICollection<string> permissions { get; set; } = new List<string>();
+        public ICollection<Guid> permissions { get; set; } = new List<Guid>();
     }
 }

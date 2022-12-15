@@ -10,10 +10,8 @@ namespace KAS.Entity.DB.ECOS.Entities
 {
     public class ApplicationList
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string Id { get; set; }
+        public Guid Id { get; set; }
         public string ApplicationName { get; set; } = null!;
-        public string ApplicationDescription { get; set; } = null!;
+        public string? ApplicationDescription { get; set; }
     }
 }
