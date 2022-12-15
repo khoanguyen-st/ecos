@@ -11,7 +11,7 @@
   "profiles": {
     "KASE.ECOS": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "swagger",
       "applicationUrl": "https://localhost:7202;http://localhost:5202",
       "environmentVariables": {

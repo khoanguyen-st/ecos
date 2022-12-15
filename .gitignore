@@ -364,3 +364,6 @@ FodyWeavers.xsd
 
 # appsettings
 appsettings.json
+
+# IDE
+.idea/

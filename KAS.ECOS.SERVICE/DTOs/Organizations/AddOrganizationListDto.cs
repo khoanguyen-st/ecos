@@ -1,22 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using KAS.Entity.DB.ECOS.Entities;
 
-namespace KAS.Entity.DB.ECOS.Entities
+namespace KAS.ECOS.API.Entity
 {
-    public class OrganizationList
+    public class AddOrganizationListDto
     {
-        public Guid Id { get; set; }
         public string OrganizationName { get; set; } = null!;
-        public string? OrganizationDescription { get; set; }
-        public string Address { get; set; } = null!;
-        public string HandPhone { get; set; } = null!;
-        public string Email { get; set; } = null!;
-        public Guid? ParentId { get; set; }
+        public string? OrganizationDescription { get; set; } = null!;
+        public string Address { get; set; } = string.Empty;
+        public string HandPhone { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string? ParentId { get; set; }
         public string OrganizationCode { get; set; } = null!;
         public bool IsActive { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
