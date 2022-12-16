@@ -5,12 +5,15 @@ using KAS.ECOS.MIDDLEWARE;
 using KAS.ECOS.SERVICE.Mapping.Application;
 using KAS.ECOS.SERVICE.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers().AddJsonOptions(x =>
+builder.Services.AddControllers()
+    //.AddNewtonsoftJson()
+    .AddJsonOptions(x =>
     x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -25,6 +28,8 @@ builder.Services.AddScoped<IApplicationService, ApplicationService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IOrganizationService, OrganizationService>();
 builder.Services.AddScoped<IAuthorizationService, AuthorizationService>();
+builder.Services.AddTransient<IEndUserService, EndUserService>();
+//builder.Services.AddTransient<IApplicationFunctionService, ApplicationFunctionService>();
 
 var app = builder.Build();
 

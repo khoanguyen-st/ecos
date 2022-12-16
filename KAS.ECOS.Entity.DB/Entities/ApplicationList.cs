@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace KAS.Entity.DB.ECOS.Entities
 {
@@ -13,5 +14,7 @@ namespace KAS.Entity.DB.ECOS.Entities
         public Guid Id { get; set; }
         public string ApplicationName { get; set; } = null!;
         public string? ApplicationDescription { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<ApplicationFunctionList>? ApplicationFunctions { get; set; }
     }
 }

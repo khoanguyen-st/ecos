@@ -1,18 +1,17 @@
-﻿using System;
+﻿using KAS.Entity.DB.ECOS.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KAS.Entity.DB.ECOS.Entities
+namespace KAS.ECOS.SERVICE.DTOs.ApplicationFunctionPermission
 {
-    public class ApplicationFunctionPermissionList
+    public class UpdateApplicationFunctionPermissionDTO
     {
-        public Guid Id { get; set; }
         public Guid ApplicationFunctionId { get; set; }
         public string PermissionName { get; set; } = null!;
-        public string Permission { get; set; }
+        public short Permission { get; set; }
         public int MaxRecords { get; set; }
-        public virtual ApplicationFunctionList? ApplicationFunction { get; set; }
     }
 }

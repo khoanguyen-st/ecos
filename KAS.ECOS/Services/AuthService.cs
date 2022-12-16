@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Text;
 using KAS.ECOS.API.Services;
 using KAS.ECOS.API.Entity;
+using System.Security.Cryptography;
 
 namespace KAS.ECOS.SERVICE.Services
 {
@@ -41,14 +42,28 @@ namespace KAS.ECOS.SERVICE.Services
             var tokenToReturn = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
             return tokenToReturn;
         }
-        public LoggedUserDTO ValidateUser(string Email, string Password)
+        public LoggedUserDTO? ValidateUser(string Email, string Password)
         {
-            var user = _context.EndUserLists.Where(u => u.Email == Email && u.Password == Password).FirstOrDefault();
-            if(user != null)
+            var user = _context.EndUserLists.Where(u => u.Email == Email).FirstOrDefault();
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            int keySize = Int32.Parse(_configuration["Security:KeySize"]);
+            int iterations = Int32.Parse(_configuration["Security:Iterations"]);
+            byte[] salt = Encoding.ASCII.GetBytes(_configuration["Security:Salt"]);
+            HashAlgorithmName hashAlgorithm = HashAlgorithmName.SHA512;
+            var passwordHash = user.Password;
+
+            var hashToCompare = Rfc2898DeriveBytes.Pbkdf2(Password, salt, iterations, hashAlgorithm, keySize);
+            if (hashToCompare.SequenceEqual(Convert.FromHexString(passwordHash)))
             {
                 return new LoggedUserDTO(user.Id, user.Username, user.Email);
             }
-            return new LoggedUserDTO(new Guid(""), "", "");
+
+            return null;
         }
     }
 }

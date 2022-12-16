@@ -29,8 +29,6 @@ namespace KAS.ECOS.API.Controllers
         [Route(("Login"))]
         public ActionResult<string> LoginSession(LoginDTO account)
         {
-            //var account = ie.getData<LoginDTO>();
-            Console.WriteLine(JsonConvert.SerializeObject(account));
             var validatedAccount = _authService.ValidateUser(account.email, account.password);
             if (validatedAccount == null)
             {

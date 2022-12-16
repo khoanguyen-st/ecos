@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KAS.ECOS.API.Controllers
 {
-    [Route("api/application")]
+    [Route("api/Application")]
     [ApiController]
     public class Applications : ControllerBase
     {
@@ -32,7 +32,7 @@ namespace KAS.ECOS.API.Controllers
         {
             if(application == null)
             {
-                return BadRequest("Application is null");
+                return BadRequest("New application is null!");
             }
 
             var newApplication = _mapper.Map<ApplicationList>(application);
