@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace KAS.ECOS.API.Migrations
 {
-    public partial class InitDb : Migration
+    public partial class InitialDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -206,7 +206,7 @@ namespace KAS.ECOS.API.Migrations
                     RoleDescription = table.Column<string>(type: "text", nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DeletedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    DeletedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -257,7 +257,7 @@ namespace KAS.ECOS.API.Migrations
                     UserDeviceId = table.Column<Guid>(type: "uuid", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DeletedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    DeletedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -283,7 +283,7 @@ namespace KAS.ECOS.API.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     ApplicationFunctionId = table.Column<Guid>(type: "uuid", nullable: false),
                     PermissionName = table.Column<string>(type: "text", nullable: false),
-                    Permission = table.Column<short>(type: "smallint", nullable: false),
+                    Permission = table.Column<string>(type: "text", nullable: false),
                     MaxRecords = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace KAS.ECOS.API.Migrations
 {
     [DbContext(typeof(ECOSContext))]
-    [Migration("20221215081104_InitDb")]
-    partial class InitDb
+    [Migration("20221216041513_InitialDb")]
+    partial class InitialDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -102,8 +102,9 @@ namespace KAS.ECOS.API.Migrations
                     b.Property<int>("MaxRecords")
                         .HasColumnType("integer");
 
-                    b.Property<short>("Permission")
-                        .HasColumnType("smallint");
+                    b.Property<string>("Permission")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("PermissionName")
                         .IsRequired()
@@ -311,7 +312,7 @@ namespace KAS.ECOS.API.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("DeletedDate")
+                    b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsActive")
@@ -470,7 +471,7 @@ namespace KAS.ECOS.API.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("DeletedDate")
+                    b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsActive")

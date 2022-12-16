@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace KAS.Entity.DB.ECOS.Entities
         public string? RoleDescription { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
-        public DateTime DeletedDate { get; set; }
-        public OrganizationList Organization { get; set; } = null!;
+        public DateTime? DeletedDate { get; set; }
+        public virtual OrganizationList? Organization { get; set; }
     }
 }

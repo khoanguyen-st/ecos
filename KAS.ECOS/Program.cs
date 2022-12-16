@@ -1,7 +1,4 @@
-
-
-
-
+using System.Text.Json.Serialization;
 using KAS.ECOS.API.Middlewares;
 using KAS.ECOS.API.Services;
 using KAS.ECOS.MIDDLEWARE;
@@ -13,7 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(x =>
+    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -22,8 +20,9 @@ builder.Services.AddDbContext<KAS.Entity.DB.ECOS.Entities.ECOSContext>(options =
                 options.UseNpgsql(builder.Configuration.GetConnectionString("POSTGRESQL"), b => b.MigrationsAssembly("KAS.ECOS.API")));
 //builder.Services.AddScoped<KAS.Entity.DB.ECOS.Entities.ECOSContext>();
 
-builder.Services.AddTransient<IAuthService, AuthService>();
-builder.Services.AddTransient<IApplicationService, ApplicationService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IApplicationService, ApplicationService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
 
 var app = builder.Build();
 

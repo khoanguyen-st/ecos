@@ -13,7 +13,7 @@ namespace KAS.Entity.DB.ECOS.Entities
         public Guid RoleId { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public DateTime DeletedDate { get; set; }
-        public ApplicationFunctionPermissionList ApplicationFunctionPermission { get; set; } = null!;
-        public RoleList Role { get; set; } = null!;
+        public virtual ApplicationFunctionPermissionList ApplicationFunctionPermission { get; set; } = null!;
+        public virtual RoleList Role { get; set; } = null!;
     }
 }

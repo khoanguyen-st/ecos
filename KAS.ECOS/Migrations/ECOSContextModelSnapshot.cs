@@ -100,8 +100,9 @@ namespace KAS.ECOS.API.Migrations
                     b.Property<int>("MaxRecords")
                         .HasColumnType("integer");
 
-                    b.Property<short>("Permission")
-                        .HasColumnType("smallint");
+                    b.Property<string>("Permission")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("PermissionName")
                         .IsRequired()
@@ -309,7 +310,7 @@ namespace KAS.ECOS.API.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("DeletedDate")
+                    b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsActive")
@@ -468,7 +469,7 @@ namespace KAS.ECOS.API.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("DeletedDate")
+                    b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsActive")
