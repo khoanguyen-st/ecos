@@ -12,8 +12,8 @@ namespace KAS.Entity.DB.ECOS.Entities
         public Guid ApplicationFunctionPermissionId { get; set; }
         public Guid RoleId { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
-        public DateTime DeletedDate { get; set; }
-        public virtual ApplicationFunctionPermissionList ApplicationFunctionPermission { get; set; } = null!;
-        public virtual RoleList Role { get; set; } = null!;
+        public DateTime? DeletedDate { get; set; }
+        public virtual ApplicationFunctionPermissionList? ApplicationFunctionPermission { get; set; }
+        public virtual RoleList? Role { get; set; }
     }
 }
