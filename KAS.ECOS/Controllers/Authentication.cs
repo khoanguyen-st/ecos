@@ -29,16 +29,24 @@ namespace KAS.ECOS.API.Controllers
         [Route(("Login"))]
         public ActionResult<string> LoginSession(LoginDTO account)
         {
-            var validatedAccount = _authService.ValidateUser(account.email, account.password);
-            if (validatedAccount == null)
+            try
             {
-                return Unauthorized();
+                var validatedAccount = _authService.ValidateUser(account.email, account.password);
+                if (validatedAccount == null)
+                {
+                    return Unauthorized();
+                }
+                var tokenToReturn = _authService.Authenticate(validatedAccount);
+                return Ok(new
+                {
+                    token = tokenToReturn
+                });
             }
-            var tokenToReturn = _authService.Authenticate(validatedAccount);
-            return Ok(new
+            catch (Exception)
             {
-                token = tokenToReturn
-            });
+
+                return BadRequest();
+            }
         }
     }
 

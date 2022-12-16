@@ -14,7 +14,6 @@ namespace KAS.Entity.DB.ECOS.Entities
         public Guid Id { get; set; }
         public string ApplicationName { get; set; } = null!;
         public string? ApplicationDescription { get; set; }
-        [JsonIgnore]
         public virtual ICollection<ApplicationFunctionList>? ApplicationFunctions { get; set; }
     }
 }

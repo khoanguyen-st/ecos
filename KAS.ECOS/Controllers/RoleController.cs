@@ -10,7 +10,7 @@ namespace KAS.ECOS.API.Controllers
     [ApiController]
     public class RoleController : ControllerBase
     {
-        private readonly IMapper _mapper;
+        private readonly IMapper _mapper; 
         private readonly IRoleService _roleService;
 
         public RoleController(IMapper mapper, IRoleService roleService)

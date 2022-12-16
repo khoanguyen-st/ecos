@@ -28,7 +28,10 @@ builder.Services.AddScoped<IApplicationService, ApplicationService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IOrganizationService, OrganizationService>();
 builder.Services.AddScoped<IAuthorizationService, AuthorizationService>();
-builder.Services.AddTransient<IEndUserService, EndUserService>();
+builder.Services.AddScoped<IEndUserService, EndUserService>();
+builder.Services.AddScoped<IApplicationFunctionPermission, ApplicationFunctionPermissionService>();
+builder.Services.AddScoped<IApplicationFunctionService, ApplicationFunctionService>();
+builder.Services.AddScoped<IEndUserRoleService, EndUserRoleService>();
 //builder.Services.AddTransient<IApplicationFunctionService, ApplicationFunctionService>();
 
 var app = builder.Build();

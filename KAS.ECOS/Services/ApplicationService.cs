@@ -15,7 +15,9 @@ namespace KAS.ECOS.API.Services
         }
         public IEnumerable<ApplicationList> GetApplications()
         {
-            return _context.ApplicationLists.ToList();
+            return _context.ApplicationLists
+                .Include(a => a.ApplicationFunctions)
+                .ToList();
         }
         public void AddApplication(ApplicationList application)
         {

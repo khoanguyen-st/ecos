@@ -18,9 +18,9 @@ namespace KAS.Entity.DB.ECOS.Entities
         public bool IsActive { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public DateTime DeletedDate { get; set; }
-        public ICollection<AccessHistoryList>? AccessHitories { get; set; }
-        public ICollection<EndUserTokenList>? EndUserTokens { get; set; }
-        public ICollection<OrganizationUserList>? OrganizationUsers { get; set; }
-        public ICollection<EndUserCredentialHistoryList>? EndUserCredentialHistories { get; set; }
+        public virtual ICollection<AccessHistoryList>? AccessHitories { get; set; }
+        public virtual ICollection<EndUserTokenList>? EndUserTokens { get; set; }
+        public virtual ICollection<OrganizationUserList>? OrganizationUsers { get; set; }
+        public virtual ICollection<EndUserCredentialHistoryList>? EndUserCredentialHistories { get; set; }
     }
 }

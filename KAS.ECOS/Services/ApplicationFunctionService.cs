@@ -6,7 +6,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace KAS.ECOS.API.Services
 {
-    public class ApplicationFunctionService
+    public class ApplicationFunctionService : IApplicationFunctionService
     {
         private readonly ECOSContext _context;
 
@@ -28,13 +28,6 @@ namespace KAS.ECOS.API.Services
         }
         public async Task AddApplicationFunction(Guid applicationId, ApplicationFunctionList applicationFunction)
         {
-            //var application = await GetApplicationExist(applicationId);
-
-            //if(application != null)
-            //{
-            //    application.FunctionLists?.Add(applicationFunction);
-            //}
-
             _context.ApplicationFunctionLists.Add(applicationFunction);
         }
 
@@ -52,7 +45,10 @@ namespace KAS.ECOS.API.Services
 
         public async Task<IEnumerable<ApplicationFunctionList>> GetApplicationFunctions()
         {
-            return await _context.ApplicationFunctionLists.Include(f => f.Application).ToListAsync();
+            return await _context.ApplicationFunctionLists
+                .Include(f => f.Application)
+                .Include(f => f.ApplicationPermissions)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<ApplicationFunctionList>> GetApplicationFunctionsByApplicationId(Guid applicationid)

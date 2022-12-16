@@ -15,73 +15,105 @@ namespace KAS.ECOS.API.Controllers
     [ApiController]
     public class ApplicationFunctionPermission : ControllerBase
     {
-        private readonly ApplicationFunctionPermissionService _applicationFunctionPermissionService;
+        private readonly IApplicationFunctionPermission _applicationFunctionPermissionService;
         private readonly ECOSContext _context;
         private readonly IMapper _mapper;
 
-        public ApplicationFunctionPermission(ECOSContext context, IMapper mapper)
+        public ApplicationFunctionPermission(ECOSContext context, IMapper mapper, IApplicationFunctionPermission applicationFunctionPermissionService)
         {
             _context = context;
             _mapper = mapper;
-            _applicationFunctionPermissionService = new ApplicationFunctionPermissionService(context);
+            _applicationFunctionPermissionService = applicationFunctionPermissionService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ApplicationFunctionPermissionList>>> GetApplicationFunctionPermissions()
         {
-            var functionList = await _applicationFunctionPermissionService.GetApplicationFunctionPermissions();
-            return Ok(functionList);
+            try
+            {
+                var functionList = await _applicationFunctionPermissionService.GetApplicationFunctionPermissions();
+                return Ok(functionList);
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
         }
         [HttpPost]
         public async Task<ActionResult> AddApplicationFunctionPermission(AddApplicationFunctionPermissionDTO functionPermission)
         {
-            if (functionPermission == null)
+            try
             {
-                return BadRequest("Function is null!");
-            }
+                if (functionPermission == null)
+                {
+                    return BadRequest("Function is null!");
+                }
 
-            if (!await _applicationFunctionPermissionService.IsApplicationFunctionExist(functionPermission.ApplicationFunctionId))
+                if (!await _applicationFunctionPermissionService.IsApplicationFunctionExist(functionPermission.ApplicationFunctionId))
+                {
+                    return NotFound();
+                }
+
+                var newApplicationFunction = _mapper.Map<ApplicationFunctionPermissionList>(functionPermission);
+
+                await _applicationFunctionPermissionService.AddApplicationFunctionPermission(functionPermission.ApplicationFunctionId, newApplicationFunction);
+                await _applicationFunctionPermissionService.SaveChangesAsync();
+
+                return CreatedAtRoute("", newApplicationFunction);
+            }
+            catch (Exception)
             {
-                return NotFound();
+
+                return BadRequest();
             }
-
-            var newApplicationFunction = _mapper.Map<ApplicationFunctionPermissionList>(functionPermission);
-
-            await _applicationFunctionPermissionService.AddApplicationFunctionPermission(functionPermission.ApplicationFunctionId, newApplicationFunction);
-            await _applicationFunctionPermissionService.SaveChangesAsync();
-
-            return CreatedAtRoute("", newApplicationFunction);
         }
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateApplicationFunctionPermission(Guid id, UpdateApplicationFunctionPermissionDTO functionPermission)
         {
-            if (!await _applicationFunctionPermissionService.IsApplicationFunctionPermissionExist(id))
+            try
             {
-                return NotFound();
+                if (!await _applicationFunctionPermissionService.IsApplicationFunctionPermissionExist(id))
+                {
+                    return NotFound();
+                }
+
+                var existedPermission = await _applicationFunctionPermissionService.GetApplicationFunctionPermission(id);
+
+                _mapper.Map(functionPermission, existedPermission);
+
+                await _applicationFunctionPermissionService.SaveChangesAsync();
+
+                return NoContent();
             }
+            catch (Exception)
+            {
 
-            var existedPermission = await _applicationFunctionPermissionService.GetApplicationFunctionPermission(id);
-
-            _mapper.Map(functionPermission, existedPermission);
-
-            await _applicationFunctionPermissionService.SaveChangesAsync();
-
-            return NoContent();
+                return BadRequest();
+            }
         }
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteApplicationFunctionPermission(Guid id)
         {
-            if (!await _applicationFunctionPermissionService.IsApplicationFunctionPermissionExist(id))
+            try
             {
-                return NotFound();
+                if (!await _applicationFunctionPermissionService.IsApplicationFunctionPermissionExist(id))
+                {
+                    return NotFound();
+                }
+
+                var existedPermission = await _applicationFunctionPermissionService.GetApplicationFunctionPermission(id);
+                _applicationFunctionPermissionService.DeleteApplicationFunction(existedPermission);
+
+                await _applicationFunctionPermissionService.SaveChangesAsync();
+
+                return NoContent();
             }
+            catch (Exception)
+            {
 
-            var existedPermission = await _applicationFunctionPermissionService.GetApplicationFunctionPermission(id);
-            _applicationFunctionPermissionService.DeleteApplicationFunction(existedPermission);
-
-            await _applicationFunctionPermissionService.SaveChangesAsync();
-
-            return NoContent();
+                return BadRequest();
+            }
         }
     }
 }
