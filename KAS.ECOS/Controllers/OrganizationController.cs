@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using KAS.ECOS.API.Entity;
+using KAS.ECOS.SERVICE.Services;
 using KAS.Entity.DB.ECOS;
 using KAS.Entity.DB.ECOS.Entities;
 using Microsoft.AspNetCore.Http;
@@ -19,18 +20,20 @@ namespace KAS.ECOS.API.Controllers
     {
         private readonly ECOSContext _context;
         private readonly IMapper _mapper;
+        private readonly IOrganizationService _organizationService;
 
-        public OrganizationController(ECOSContext context, IMapper mapper)
+        public OrganizationController(ECOSContext context, IMapper mapper, IOrganizationService organizationService)
         {
             _context = context;
             _mapper = mapper;
+            _organizationService = organizationService;
         }
         
         // GET: api/Organization
         [HttpGet]
         public IActionResult Get()
         {
-            var mapper = _mapper.Map<List<GetOrganizationListDto>>(_context.OrganizationLists.ToList());
+            var mapper = _mapper.Map<List<GetOrganizationListDto>>(_organizationService.GetOrganizationLists());
 
             return Ok(mapper);
         }
@@ -39,7 +42,7 @@ namespace KAS.ECOS.API.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(Guid id)
         {
-            var organization = _context.OrganizationLists.Find(id);
+            var organization = _organizationService.GetOrganizationById(id);
             
             if (organization == null)
             {
@@ -56,51 +59,45 @@ namespace KAS.ECOS.API.Controllers
         {
             var mapper = _mapper.Map<OrganizationList>(listOrganization);
             
-            _context.OrganizationLists.Add(mapper);
-            
             try
             {
-                await _context.SaveChangesAsync();
+                await _organizationService.CreateOrganizationList(mapper);
+                return CreatedAtAction("Get", new { id = mapper.Id }, mapper);
             }
-            catch (DbUpdateException)
+            catch (Exception e)
             {
-                throw;
+                return BadRequest();
             }
-
-            return CreatedAtAction("Get", new { id = mapper.Id }, listOrganization);
         }
 
         // PUT: api/Organization/5
         [HttpPut("{id}")]
         public IActionResult Put(Guid id, UpdateOrganizationListDto organizationList)
         {
-            var organization = _context.OrganizationLists.Find(id);
-            
-            if (organization == null)
+            try
             {
-                return NotFound();
+                _organizationService.UpdateOrganizationList(organizationList, id);
+                return NoContent();
             }
-            
-            _mapper.Map(organizationList, organization);
-            _context.SaveChanges();
-            
-            return NoContent();
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
         }
 
         // DELETE: api/Organization/5
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
-            var organization = _context.OrganizationLists.Find(id);
-            if (organization == null)
+            try
             {
-                return NotFound();
+                _organizationService.DeleteOrganizationList(id);
+                return NoContent();
             }
-            
-            _context.OrganizationLists.Remove(organization);
-            _context.SaveChanges();
-            
-            return NoContent();
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
         }
     }
 }

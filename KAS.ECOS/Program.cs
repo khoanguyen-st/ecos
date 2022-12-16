@@ -23,6 +23,7 @@ builder.Services.AddDbContext<KAS.Entity.DB.ECOS.Entities.ECOSContext>(options =
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IApplicationService, ApplicationService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IOrganizationService, OrganizationService>();
 
 var app = builder.Build();
 

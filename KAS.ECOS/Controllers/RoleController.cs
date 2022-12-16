@@ -1,11 +1,8 @@
-
 using AutoMapper;
 using KAS.ECOS.API.Entity;
 using KAS.ECOS.SERVICE.Services;
 using KAS.Entity.DB.ECOS.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using DbUpdateException = System.Data.Entity.Infrastructure.DbUpdateException;
 
 namespace KAS.ECOS.API.Controllers
 {
@@ -13,13 +10,11 @@ namespace KAS.ECOS.API.Controllers
     [ApiController]
     public class RoleController : ControllerBase
     {
-        private readonly ECOSContext _context;
         private readonly IMapper _mapper;
         private readonly IRoleService _roleService;
 
-        public RoleController(ECOSContext context, IMapper mapper, IRoleService roleService)
+        public RoleController(IMapper mapper, IRoleService roleService)
         {
-            _context = context;
             _mapper = mapper;
             _roleService = roleService;
         }
@@ -28,46 +23,37 @@ namespace KAS.ECOS.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var mapper = _mapper.Map<List<GetRoleListDto>>(_context.RoleLists.Include(u => u.Organization).ToList());
-
-            return Ok(mapper);
+            return Ok(_mapper.Map<List<GetRoleListDto>>(_roleService.GetRoleLists()));
         }
 
         // GET: api/Organization/5
         [HttpGet("{id}")]
         public IActionResult Get(Guid id)
         {
-            var role = _context.RoleLists.Include(u => u.Organization).FirstOrDefault(x => x.Id == id);
-            
+            var role = _roleService.GetRoleById(id);
             if (role == null)
             {
                 return NotFound();
             }
+            var mapper = _mapper.Map<GetRoleListDto>(role);
             
-            var mapper = _mapper.Map<RoleList>(role);
-
             return Ok(mapper);  
         }
 
         [HttpPost]
-        public async Task<ActionResult<RoleList>> Post([FromBody]AddRoleListDto roles)
+        public async Task<ActionResult<RoleList>> Post(AddRoleListDto roles)
         {
             var mapper = _mapper.Map<RoleList>(roles);
-            
-            _context.RoleLists.Add(mapper);
-            
+
             try
             {
-                await _context.SaveChangesAsync();
-                // _roleService.SyncRoleApplicationFuntionPermissionList(_context, mapper, roles.Permissions);
+                await _roleService.CreateRoleList(mapper, roles.Permissions);
+                return CreatedAtAction("Get", new { id = mapper.Id }, mapper);
             }
-            catch (DbUpdateException)
+            catch (Exception e)
             {
-                throw;
+                return BadRequest();
             }
-            
-            return CreatedAtAction("Get", new { id = mapper.Id }, mapper);
-           
         }
         
 
@@ -75,33 +61,30 @@ namespace KAS.ECOS.API.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(Guid id, UpdateRoleListDto roleList)
         {
-            var role = _context.RoleLists.Find(id);
-            
-            if (role == null)
+            try
             {
-                return NotFound();
+                _roleService.UpdateRoleList(roleList, id, roleList.Permissions);
+                return NoContent();
             }
-            
-            _mapper.Map(roleList, role);
-            _context.SaveChanges();
-            // _roleService.SyncRoleApplicationFuntionPermissionList(_context, mapper, roles.Permissions, true);
-            return NoContent();
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
         }
 
         // DELETE: api/Organization/5
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
-            var role = _context.RoleLists.Find(id);
-            if (role == null)
+            try
             {
-                return NotFound();
+                _roleService.DeleteRoleList(id);
+                return NoContent();
             }
-            
-            _context.RoleLists.Remove(role);
-            _context.SaveChanges();
-            
-            return NoContent();
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
         }
     }
 }
