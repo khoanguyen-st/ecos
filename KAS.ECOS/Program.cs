@@ -6,13 +6,15 @@ using KAS.ECOS.SERVICE.Mapping.Application;
 using KAS.ECOS.SERVICE.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using Autofac.Extensions.DependencyInjection;
+using Autofac;
+using KAS.ECOS.API.Modules;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers()
-    //.AddNewtonsoftJson()
     .AddJsonOptions(x =>
     x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -23,16 +25,8 @@ builder.Services.AddDbContext<KAS.Entity.DB.ECOS.Entities.ECOSContext>(options =
                 options.UseNpgsql(builder.Configuration.GetConnectionString("POSTGRESQL"), b => b.MigrationsAssembly("KAS.ECOS.API")));
 //builder.Services.AddScoped<KAS.Entity.DB.ECOS.Entities.ECOSContext>();
 
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IApplicationService, ApplicationService>();
-builder.Services.AddScoped<IRoleService, RoleService>();
-builder.Services.AddScoped<IOrganizationService, OrganizationService>();
-builder.Services.AddScoped<IAuthorizationService, AuthorizationService>();
-builder.Services.AddScoped<IEndUserService, EndUserService>();
-builder.Services.AddScoped<IApplicationFunctionPermission, ApplicationFunctionPermissionService>();
-builder.Services.AddScoped<IApplicationFunctionService, ApplicationFunctionService>();
-builder.Services.AddScoped<IEndUserRoleService, EndUserRoleService>();
-//builder.Services.AddTransient<IApplicationFunctionService, ApplicationFunctionService>();
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder => containerBuilder.RegisterModule(new CoreModule()));
 
 var app = builder.Build();
 

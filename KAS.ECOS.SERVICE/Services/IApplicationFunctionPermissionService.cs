@@ -2,7 +2,7 @@
 
 namespace KAS.ECOS.API.Services
 {
-    public interface IApplicationFunctionPermission
+    public interface IApplicationFunctionPermissionService
     {
         Task AddApplicationFunctionPermission(Guid functionId, ApplicationFunctionPermissionList functionPermission);
         void DeleteApplicationFunction(ApplicationFunctionPermissionList functionPermission);

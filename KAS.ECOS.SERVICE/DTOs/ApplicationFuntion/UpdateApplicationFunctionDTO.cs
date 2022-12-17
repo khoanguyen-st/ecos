@@ -15,6 +15,5 @@ namespace KAS.ECOS.SERVICE.DTOs.ApplicationFuntion
         public string? ParentId { get; set; }
         public string Path { get; set; } = null!;
         public short Level { get; set; }
-        public List<ApplicationFunctionPermissionList> applicationFunctionPermissions { get; set; } = new List<ApplicationFunctionPermissionList>();
     }
 }

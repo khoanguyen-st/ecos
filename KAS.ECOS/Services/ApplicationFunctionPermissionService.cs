@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KAS.ECOS.API.Services
 {
-    public class ApplicationFunctionPermissionService : IApplicationFunctionPermission
+    public class ApplicationFunctionPermissionService : IApplicationFunctionPermissionService
     {
         private readonly ECOSContext _context;
 

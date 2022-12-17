@@ -15,11 +15,11 @@ namespace KAS.ECOS.API.Controllers
     [ApiController]
     public class ApplicationFunctionPermission : ControllerBase
     {
-        private readonly IApplicationFunctionPermission _applicationFunctionPermissionService;
+        private readonly IApplicationFunctionPermissionService _applicationFunctionPermissionService;
         private readonly ECOSContext _context;
         private readonly IMapper _mapper;
 
-        public ApplicationFunctionPermission(ECOSContext context, IMapper mapper, IApplicationFunctionPermission applicationFunctionPermissionService)
+        public ApplicationFunctionPermission(ECOSContext context, IMapper mapper, IApplicationFunctionPermissionService applicationFunctionPermissionService)
         {
             _context = context;
             _mapper = mapper;

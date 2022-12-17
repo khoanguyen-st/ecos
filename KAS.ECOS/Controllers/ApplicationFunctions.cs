@@ -26,6 +26,7 @@ namespace KAS.ECOS.API.Controllers
             _mapper = mapper;
             _applicationFunctionService = applicationFunctionService;
         }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ApplicationFunctionList>>> GetApplicationFunctions()
         {
@@ -40,6 +41,7 @@ namespace KAS.ECOS.API.Controllers
                 return BadRequest();
             }
         }
+
         [HttpPost]
         public async Task<ActionResult> AddApplicationFunction(AddApplicationFunctionDTO applicationFunction)
         {
@@ -68,39 +70,23 @@ namespace KAS.ECOS.API.Controllers
                 return BadRequest();
             }
         }
-        [HttpPatch("{id}")]
-        public async Task<ActionResult> UpdateApplicationFunction(Guid id, JsonPatchDocument<UpdateApplicationFunctionDTO> applicationFunction)
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateApplicationFunction(Guid id, UpdateApplicationFunctionDTO applicationFunction)
         {
-            try
+            var existedApplicationFunction = await _applicationFunctionService.GetApplicationFunction(id);
+
+            if (existedApplicationFunction == null)
             {
-                var existedApplicationFunction = await _applicationFunctionService.GetApplicationFunction(id);
-
-                if (existedApplicationFunction == null)
-                {
-                    return NotFound("This function not found!");
-                }
-
-                var functionToPatch = _mapper.Map<UpdateApplicationFunctionDTO>(existedApplicationFunction);
-
-                applicationFunction.ApplyTo(functionToPatch, ModelState);
-
-                if(!ModelState.IsValid || !TryValidateModel(functionToPatch))
-                {
-                    return BadRequest(ModelState);
-                }
-
-                _mapper.Map(functionToPatch, existedApplicationFunction);
-
-                await _applicationFunctionService.SaveChangesAsync();
-
-                return NoContent();
+                return NotFound("This function not found!");
             }
-            catch (Exception)
-            {
 
-                return BadRequest();
-            }
+            _mapper.Map(applicationFunction, existedApplicationFunction);
+            await _applicationFunctionService.SaveChangesAsync();
+
+            return NoContent();
         }
+
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteApplicationFunction(Guid id)
         {

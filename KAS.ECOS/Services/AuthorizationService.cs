@@ -19,6 +19,12 @@ public class AuthorizationService: IAuthorizationService
     {
         var applicationFuntionPermissonList =
             _context.ApplicationFunctionPermissionLists.FirstOrDefault(x => x.Permission == mapper.Permission);
+
+        if(applicationFuntionPermissonList == null)
+        {
+            return false;
+        }
+
         var permission = (
             from endUser in _context.EndUserLists
             join organizationUserList in _context.OrganizationUserLists on endUser.Id equals organizationUserList
@@ -30,6 +36,7 @@ public class AuthorizationService: IAuthorizationService
                 equals roleApplicationFunctionPermissionList.RoleId
             select roleApplicationFunctionPermissionList).FirstOrDefault(x =>
             x.ApplicationFunctionPermissionId == applicationFuntionPermissonList.Id);
+
         return permission != null;
     }
 }
