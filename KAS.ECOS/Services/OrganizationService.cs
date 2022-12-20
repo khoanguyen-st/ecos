@@ -18,7 +18,9 @@ namespace KAS.ECOS.SERVICE.Services
 
         public List<OrganizationList> GetOrganizationLists()
         {
-            return _context.OrganizationLists.ToList();
+            return _context.OrganizationLists
+                //.Include(o => o.RoleLists)
+                .ToList();
         }
 
         public OrganizationList GetOrganizationById(Guid id)

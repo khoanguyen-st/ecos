@@ -45,6 +45,9 @@ namespace KAS.Entity.DB.ECOS.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //modelBuilder.Entity<RoleList>()
+            //    .Ignore(r => r.Organization.RoleLists);
+
             //modelBuilder.Entity<EndUserList>()
             //    .HasData(
             //    new EndUserList()

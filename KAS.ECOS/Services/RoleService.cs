@@ -16,37 +16,47 @@ namespace KAS.ECOS.SERVICE.Services
         }
         public List<RoleList> GetRoleLists()
         {
-            return _context.RoleLists.Include(u => u.Organization).ToList();
+            return _context.RoleLists
+                .Include(u => u.Organization)
+                .ToList();
         }
 
-        public RoleList GetRoleById(Guid id)
+        public RoleList? GetRoleById(Guid id)
         {
             return _context.RoleLists.Include(u => u.Organization).FirstOrDefault(x => x.Id == id);
         }
 
         public async Task<RoleList> CreateRoleList(RoleList mapper, List<string> permissions)
         {
+            using var transaction = _context.Database.BeginTransaction();
+
             try
             {
                 _context.RoleLists.Add(mapper);
                 await _context.SaveChangesAsync();
-                // this.SyncRoleApplicationFuntionPermissionList(mapper, permissions);
+
+                await SyncRoleApplicationFuntionPermissionList(mapper, permissions);
+
+                transaction.Commit();
+
                 return mapper;
             }
             catch (Exception e)
             {
+                transaction.Rollback();
                 throw e;
             }
         }
 
-        public void UpdateRoleList(UpdateRoleListDto roleList, Guid id, List<string> permissions)
+        public async Task UpdateRoleList(UpdateRoleListDto roleList, Guid id, List<string> permissions)
         {
             try
             {
-                var role = _context.RoleLists.Find(id);
+                var role = _context.RoleLists.Find(id)!;
                 _mapper.Map(roleList, role);
                 _context.SaveChanges();
-                // this.SyncRoleApplicationFuntionPermissionList(mapper, permissions, true);
+
+                await SyncRoleApplicationFuntionPermissionList(role, permissions, true);
             }
             catch (Exception e)
             {
@@ -69,7 +79,7 @@ namespace KAS.ECOS.SERVICE.Services
             }
         }
         
-        public async void SyncRoleApplicationFuntionPermissionList(RoleList mapper, List<string> permissions, Boolean isUpdate = false)
+        public async Task SyncRoleApplicationFuntionPermissionList(RoleList mapper, List<string> permissions, Boolean isUpdate = false)
         {
             try
             {
@@ -83,16 +93,17 @@ namespace KAS.ECOS.SERVICE.Services
                 foreach (var permission in permissions)
                 {
                     var applicationPermission =
-                        _context.ApplicationFunctionPermissionLists.FirstOrDefault(b => b.Permission == permission);
+                            _context.ApplicationFunctionPermissionLists.FirstOrDefault(b => b.Permission == permission);
 
                     var roleApplicationFuntionPermissionList = new RoleApplicationFunctionPermissionList()
                     {
                         ApplicationFunctionPermissionId = applicationPermission.Id,
                         RoleId = mapper.Id
                     };
+
                     _context.RoleApplicationFunctionPermissionLists.Add(roleApplicationFuntionPermissionList);
-                    await _context.SaveChangesAsync();
                 }
+                await _context.SaveChangesAsync();
             }
             catch (Exception e)
             {

@@ -23,7 +23,7 @@ namespace KAS.ECOS.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_mapper.Map<List<GetRoleListDto>>(_roleService.GetRoleLists()));
+            return Ok(_roleService.GetRoleLists());
         }
 
         // GET: api/Organization/5
@@ -50,7 +50,7 @@ namespace KAS.ECOS.API.Controllers
                 await _roleService.CreateRoleList(mapper, roles.Permissions);
                 return CreatedAtAction("Get", new { id = mapper.Id }, mapper);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return BadRequest();
             }

@@ -33,7 +33,7 @@ namespace KAS.ECOS.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var mapper = _mapper.Map<List<GetOrganizationListDto>>(_organizationService.GetOrganizationLists());
+            var mapper = _organizationService.GetOrganizationLists();
 
             return Ok(mapper);
         }
@@ -64,7 +64,7 @@ namespace KAS.ECOS.API.Controllers
                 await _organizationService.CreateOrganizationList(mapper);
                 return CreatedAtAction("Get", new { id = mapper.Id }, mapper);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return BadRequest();
             }
@@ -79,7 +79,7 @@ namespace KAS.ECOS.API.Controllers
                 _organizationService.UpdateOrganizationList(organizationList, id);
                 return NoContent();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return BadRequest();
             }
@@ -94,7 +94,7 @@ namespace KAS.ECOS.API.Controllers
                 _organizationService.DeleteOrganizationList(id);
                 return NoContent();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return BadRequest();
             }

@@ -3,6 +3,7 @@ using System;
 using KAS.Entity.DB.ECOS.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,13 +12,14 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace KAS.ECOS.API.Migrations
 {
     [DbContext(typeof(ECOSContext))]
-    partial class ECOSContextModelSnapshot : ModelSnapshot
+    [Migration("20221219075333_changeOrg")]
+    partial class changeOrg
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.12")
+                .HasAnnotation("ProductVersion", "6.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -696,7 +698,7 @@ namespace KAS.ECOS.API.Migrations
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.RoleList", b =>
                 {
                     b.HasOne("KAS.Entity.DB.ECOS.Entities.OrganizationList", "Organization")
-                        .WithMany("RoleLists")
+                        .WithMany()
                         .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -732,8 +734,6 @@ namespace KAS.ECOS.API.Migrations
                     b.Navigation("OrganizationProfileLists");
 
                     b.Navigation("OrganizationUserLists");
-
-                    b.Navigation("RoleLists");
                 });
 
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.OrganizationProfileList", b =>
