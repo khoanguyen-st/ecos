@@ -19,7 +19,8 @@ namespace KAS.ECOS.SERVICE.Services
         public List<OrganizationList> GetOrganizationLists()
         {
             return _context.OrganizationLists
-                //.Include(o => o.RoleLists)
+                .AsNoTracking()
+                .Include(o => o.RoleLists)
                 .ToList();
         }
 

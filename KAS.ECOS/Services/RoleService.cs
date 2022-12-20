@@ -17,13 +17,17 @@ namespace KAS.ECOS.SERVICE.Services
         public List<RoleList> GetRoleLists()
         {
             return _context.RoleLists
+                .AsNoTracking()
                 .Include(u => u.Organization)
                 .ToList();
         }
 
         public RoleList? GetRoleById(Guid id)
         {
-            return _context.RoleLists.Include(u => u.Organization).FirstOrDefault(x => x.Id == id);
+            return _context.RoleLists
+                .AsNoTracking()
+                .Include(u => u.Organization)
+                .FirstOrDefault(x => x.Id == id);
         }
 
         public async Task<RoleList> CreateRoleList(RoleList mapper, List<string> permissions)

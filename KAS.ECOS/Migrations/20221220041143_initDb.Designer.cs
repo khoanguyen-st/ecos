@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace KAS.ECOS.API.Migrations
 {
     [DbContext(typeof(ECOSContext))]
-    [Migration("20221219075333_changeOrg")]
-    partial class changeOrg
+    [Migration("20221220041143_initDb")]
+    partial class initDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -698,7 +698,7 @@ namespace KAS.ECOS.API.Migrations
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.RoleList", b =>
                 {
                     b.HasOne("KAS.Entity.DB.ECOS.Entities.OrganizationList", "Organization")
-                        .WithMany()
+                        .WithMany("RoleLists")
                         .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -734,6 +734,8 @@ namespace KAS.ECOS.API.Migrations
                     b.Navigation("OrganizationProfileLists");
 
                     b.Navigation("OrganizationUserLists");
+
+                    b.Navigation("RoleLists");
                 });
 
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.OrganizationProfileList", b =>

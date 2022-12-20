@@ -16,6 +16,7 @@ namespace KAS.ECOS.API.Services
         public IEnumerable<ApplicationList> GetApplications()
         {
             return _context.ApplicationLists
+                .AsNoTracking()
                 .Include(a => a.ApplicationFunctions)
                 .ToList();
         }
@@ -30,7 +31,10 @@ namespace KAS.ECOS.API.Services
         }
         public ApplicationList? GetApplicationById(string applicationId)
         {
-            return _context.ApplicationLists.Where(a => a.Id == Guid.Parse(applicationId)).FirstOrDefault();
+            return _context.ApplicationLists
+                .AsNoTracking()
+                .Where(a => a.Id == Guid.Parse(applicationId))
+                .FirstOrDefault();
         }
         public void DeleteApplication(ApplicationList application)
         {

@@ -17,6 +17,7 @@ namespace KAS.ECOS.API.Services
         public async Task<ApplicationList>? GetApplicationExist(Guid applicationId)
         {
             return await _context.ApplicationLists
+                .AsNoTracking()
                 .Where(a => a.Id == applicationId)
                 .FirstOrDefaultAsync();
         }
@@ -39,6 +40,7 @@ namespace KAS.ECOS.API.Services
         public async Task<ApplicationFunctionList?> GetApplicationFunction(Guid functionId)
         {
             return await _context.ApplicationFunctionLists
+                    .AsNoTracking()
                     .Include(f => f.Application)
                     .FirstOrDefaultAsync(f => f.Id == functionId);
         }
@@ -46,6 +48,7 @@ namespace KAS.ECOS.API.Services
         public async Task<IEnumerable<ApplicationFunctionList>> GetApplicationFunctions()
         {
             return await _context.ApplicationFunctionLists
+                .AsNoTracking()
                 .Include(f => f.Application)
                 .Include(f => f.ApplicationPermissions)
                 .ToListAsync();
@@ -54,6 +57,7 @@ namespace KAS.ECOS.API.Services
         public async Task<IEnumerable<ApplicationFunctionList>> GetApplicationFunctionsByApplicationId(Guid applicationid)
         {
             return await _context.ApplicationFunctionLists
+                .AsNoTracking()
                 .Where(f => f.ApplicationId == applicationid)
                 .ToListAsync();
         }

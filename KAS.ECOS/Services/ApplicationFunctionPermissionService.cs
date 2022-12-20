@@ -15,6 +15,7 @@ namespace KAS.ECOS.API.Services
         public async Task<ApplicationFunctionList>? GetApplicationFunctionExist(Guid functionId)
         {
             return await _context.ApplicationFunctionLists
+                .AsNoTracking()
                 .Where(a => a.Id == functionId)
                 .FirstOrDefaultAsync();
         }
@@ -32,13 +33,6 @@ namespace KAS.ECOS.API.Services
         }
         public async Task AddApplicationFunctionPermission(Guid functionId, ApplicationFunctionPermissionList functionPermission)
         {
-            //var application = await GetApplicationExist(functionId);
-
-            //if(application != null)
-            //{
-            //    application.FunctionLists?.Add(functionPermission);
-            //}
-
             _context.ApplicationFunctionPermissionLists.Add(functionPermission);
         }
 
@@ -50,6 +44,7 @@ namespace KAS.ECOS.API.Services
         public async Task<ApplicationFunctionPermissionList?> GetApplicationFunctionPermission(Guid permissionId)
         {
             return await _context.ApplicationFunctionPermissionLists
+                    .AsNoTracking()
                     .Include(p => p.ApplicationFunction)
                     .FirstOrDefaultAsync(f => f.Id == permissionId);
         }
@@ -57,6 +52,7 @@ namespace KAS.ECOS.API.Services
         public async Task<IEnumerable<ApplicationFunctionPermissionList>> GetApplicationFunctionPermissions()
         {
             return await _context.ApplicationFunctionPermissionLists
+                .AsNoTracking()
                 .Include(p => p.ApplicationFunction)
                     .ThenInclude(f => f.Application)
                 .ToListAsync();
@@ -65,6 +61,7 @@ namespace KAS.ECOS.API.Services
         public async Task<IEnumerable<ApplicationFunctionPermissionList>> GetApplicationFunctionsPermissionByFunctionId(Guid functionId)
         {
             return await _context.ApplicationFunctionPermissionLists
+                .AsNoTracking()
                 .Where(f => f.ApplicationFunctionId == functionId)
                 .ToListAsync();
         }

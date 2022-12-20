@@ -14,6 +14,7 @@ namespace KAS.ECOS.API.Services
         public async Task<IEnumerable<EndUserRoleList>> GetEndUserRoles()
         {
             return await _context.EndUserRoleLists
+                .AsNoTracking()
                 .Include(r => r.UserDevice)
                 .Include(r => r.Role)
                 .Include(r => r.OrganizationUser)
@@ -21,7 +22,10 @@ namespace KAS.ECOS.API.Services
         }
         public async Task<EndUserRoleList>? GetEndUserRole(Guid id)
         {
-            return await _context.EndUserRoleLists.Where(r => r.Id == id).FirstOrDefaultAsync();
+            return await _context.EndUserRoleLists
+                .AsNoTracking()
+                .Where(r => r.Id == id)
+                .FirstOrDefaultAsync();
         }
         public async Task<bool> IsDeviceExist(Guid deviceId)
         {
