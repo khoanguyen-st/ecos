@@ -44,9 +44,9 @@ namespace KAS.ECOS.API.Services
         public async Task<ApplicationFunctionPermissionList?> GetApplicationFunctionPermission(Guid permissionId)
         {
             return await _context.ApplicationFunctionPermissionLists
-                    .AsNoTracking()
                     .Include(p => p.ApplicationFunction)
-                    .FirstOrDefaultAsync(f => f.Id == permissionId);
+                    .Where(f => f.Id == permissionId)
+                    .FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<ApplicationFunctionPermissionList>> GetApplicationFunctionPermissions()

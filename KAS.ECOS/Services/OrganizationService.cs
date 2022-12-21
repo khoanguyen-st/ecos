@@ -31,14 +31,22 @@ namespace KAS.ECOS.SERVICE.Services
 
         public async Task<OrganizationList> CreateOrganizationList(OrganizationList mapper)
         {
+            using var transaction = _context.Database.BeginTransaction();
+
             try
             {
                 _context.OrganizationLists.Add(mapper);
+
                 await _context.SaveChangesAsync();
+                await CreateDefaultRole(mapper.Id);
+
+                transaction.Commit();
+
                 return mapper;
             }
             catch (Exception e)
             {
+                transaction.Rollback();
                 throw e;
             }
         }
@@ -70,6 +78,46 @@ namespace KAS.ECOS.SERVICE.Services
             {
                 throw e;
             }
+        }
+
+        public async Task CreateDefaultRole(Guid organizationId)
+        {
+            try
+            {
+                var permissionList = _context.ApplicationFunctionPermissionLists.Select(p => p.Permission).ToList();
+
+                var role = new RoleList()
+                {
+                    Id = new Guid(),
+                    OrganizationId = organizationId,
+                    RoleName = "Default",
+                    IsActive = true
+                };
+
+                _context.RoleLists.Add(role);
+
+                foreach (var permission in permissionList)
+                {
+                    var applicationPermission =
+                                _context.ApplicationFunctionPermissionLists.FirstOrDefault(b => b.Permission == permission);
+
+                    var roleApplicationFuntionPermissionList = new RoleApplicationFunctionPermissionList()
+                    {
+                        ApplicationFunctionPermissionId = applicationPermission.Id,
+                        RoleId = role.Id
+                    };
+
+                    _context.RoleApplicationFunctionPermissionLists.Add(roleApplicationFuntionPermissionList);
+                }
+
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            
+
         }
     }
 }

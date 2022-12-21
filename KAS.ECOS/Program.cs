@@ -53,13 +53,13 @@ app.MapControllers();
 
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
+   var services = scope.ServiceProvider;
 
-    var context = services.GetRequiredService<KAS.Entity.DB.ECOS.Entities.ECOSContext>();
-    if (context.Database.GetPendingMigrations().Any())
-    {
-        context.Database.Migrate();
-    }
+   var context = services.GetRequiredService<KAS.Entity.DB.ECOS.Entities.ECOSContext>();
+   if (context.Database.GetPendingMigrations().Any())
+   {
+       context.Database.Migrate();
+   }
 }
 
 try

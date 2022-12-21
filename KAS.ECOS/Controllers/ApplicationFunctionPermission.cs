@@ -88,8 +88,7 @@ namespace KAS.ECOS.API.Controllers
             }
             catch (Exception)
             {
-
-                return BadRequest();
+                return BadRequest("Something wrong here!");
             }
         }
         [HttpDelete("{id}")]
