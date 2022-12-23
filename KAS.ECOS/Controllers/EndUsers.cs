@@ -65,7 +65,7 @@ namespace KAS.ECOS.API.Controllers
                 return BadRequest("Password Confirm is not correct!");
             }
 
-            if (_userService.OrganizationExist(user.OrganizationId))
+            if (!_userService.OrganizationExist(user.OrganizationId))
             {
                 return BadRequest("This organization is not exist!");
             }
