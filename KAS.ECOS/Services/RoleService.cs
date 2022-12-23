@@ -67,6 +67,19 @@ public class RoleService : IRoleService
             _mapper.Map(roleList, role);
 
             await SyncUpdateRoleApplicationFunctionPermissionList(role, permissions);
+
+            if (role.IsBaseRole == true && roleList.IsBaseRole == true)
+            {
+                var childrenRole = await _context.RoleLists
+                    .Where(r => r.OrganizationId == role.OrganizationId && r.IsBaseRole == false)
+                    .ToListAsync();
+
+                foreach (var childRole in childrenRole)
+                {
+                    await SyncNotBaseRoleWhenUpdateBaseRole(childRole, permissions);
+                }
+            }
+
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
         }
@@ -128,23 +141,12 @@ public class RoleService : IRoleService
     {
         try
         {
-            var roleApplicationFunctionPermissionLists =
-                _context.RoleApplicationFunctionPermissionLists.Where(u => u.RoleId == roleToUpdate.Id).ToList();
-            _context.RoleApplicationFunctionPermissionLists.RemoveRange(roleApplicationFunctionPermissionLists);
-
             foreach (var applicationPermission in permissions
                          .Select(permission =>
                              _context.ApplicationFunctionPermissionLists.FirstOrDefault(b =>
                                  b.Permission == permission)))
             {
                 if (!await CheckRoleContainsPermission(applicationPermission.Id, roleToUpdate.Id))
-                {
-                    var rolePermissionToDelete =
-                        _context.RoleApplicationFunctionPermissionLists
-                            .FirstOrDefault(p => p.RoleId == roleToUpdate.Id && p.ApplicationFunctionPermissionId == applicationPermission.Id);
-                    _context.RoleApplicationFunctionPermissionLists.Remove(rolePermissionToDelete);
-                }
-                else
                 {
                     var roleApplicationFunctionPermissionList = new RoleApplicationFunctionPermissionList()
                     {
@@ -154,6 +156,34 @@ public class RoleService : IRoleService
 
                     _context.RoleApplicationFunctionPermissionLists.Add(roleApplicationFunctionPermissionList);
                 }
+
+                var rolePermissionsToDelete = await _context.RoleApplicationFunctionPermissionLists
+                    .Where(p => !permissions.Contains(p.ApplicationFunctionPermission.Permission)).ToListAsync();
+                _context.RoleApplicationFunctionPermissionLists.RemoveRange(rolePermissionsToDelete);
+            }
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task SyncNotBaseRoleWhenUpdateBaseRole(RoleList roleToUpdate, List<string> permissions)
+    {
+        try
+        {
+            foreach (var applicationPermission in permissions
+                         .Select(permission =>
+                             _context.ApplicationFunctionPermissionLists.FirstOrDefault(b =>
+                                 b.Permission == permission)))
+            {
+                if (!await CheckRoleContainsPermission(applicationPermission.Id, roleToUpdate.Id)) continue;
+
+                var rolePermissionsToDelete = await _context.RoleApplicationFunctionPermissionLists
+                    .Where(p => !permissions.Contains(p.ApplicationFunctionPermission.Permission)).ToListAsync();
+                _context.RoleApplicationFunctionPermissionLists.RemoveRange(rolePermissionsToDelete);
             }
             await _context.SaveChangesAsync();
         }

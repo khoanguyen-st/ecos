@@ -85,6 +85,9 @@ namespace KAS.ECOS.SERVICE.Services
         {
             try
             {
+                //var permissionList = new List<string>
+                //    { "ECOS_GRANT_ENDUSER_ORGANIZATION_CREATE", "3RD_MOMO_CREATE", "3RD_MOMO_UPDATE", "3RD_MOMO_CANCEL", "3RD_MOMO_CHECK", "3RD_MOMO_LIST", "ECOS_ENDUSER_CREATE", "ECOS_ROLE_CREATE", "ECOS_ROLE_UPDATE", "ECOS_GRANT_ENDUSER_GLOBAL_CREATE", "ECOS_GRANT_ENDUSER_ORGANIZATION_CREATE" };
+
                 var permissionList = _context.ApplicationFunctionPermissionLists.Select(p => p.Permission).ToList();
 
                 var role = new RoleList()
