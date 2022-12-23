@@ -13,9 +13,9 @@ namespace KAS.Entity.DB.ECOS.Entities
         public Guid UserDeviceId { get; set; }
         public string? IPAdress { get; set; }
         public string? Location { get; set; }
-        public DateTime AccessDate { get; set; }
+        public DateTime? AccessDate { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
-        public EndUserList EndUser { get; set; } = null!;
-        public UserDeviceList UserDevice { get; set; } = null!;
+        public EndUserList? EndUser { get; set; }
+        public UserDeviceList? UserDevice { get; set; }
     }
 }

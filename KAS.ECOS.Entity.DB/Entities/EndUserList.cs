@@ -15,7 +15,7 @@ namespace KAS.Entity.DB.ECOS.Entities
         public string Email { get; set; } = null!;
         public string PhoneNumber { get; set; } = null!;
         public string Password { get; set; } = null!;
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public DateTime DeletedDate { get; set; }
         public virtual ICollection<AccessHistoryList>? AccessHitories { get; set; }

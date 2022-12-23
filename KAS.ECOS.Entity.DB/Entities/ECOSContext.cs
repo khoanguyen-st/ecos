@@ -23,7 +23,7 @@ namespace KAS.Entity.DB.ECOS.Entities
         public virtual DbSet<OrganizationDatabaseList> OrganizationDatabaseLists { get; set; } = null!;
         public virtual DbSet<RoleList> RoleLists { get; set; } = null!;
         public virtual DbSet<ApplicationList> ApplicationLists { get; set; } = null!;
-        public virtual DbSet<ApplicationFunctionList> ApplicationFunctionLists { get; set; } = null!;
+        public virtual DbSet<ApplicationFunctionList?> ApplicationFunctionLists { get; set; } = null!;
         public virtual DbSet<ApplicationFunctionPermissionList> ApplicationFunctionPermissionLists { get; set; } = null!;
         public virtual DbSet<RoleApplicationFunctionPermissionList> RoleApplicationFunctionPermissionLists { get; set; } = null!;
         public virtual DbSet<EndUserList> EndUserLists { get; set; } = null!;

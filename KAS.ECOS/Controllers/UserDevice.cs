@@ -1,41 +1,47 @@
-﻿using AutoMapper;
-using KAS.ECOS.SERVICE.DTOs.OrganizationUser;
+﻿using System.Data.Entity;
+using AutoMapper;
 using KAS.ECOS.SERVICE.DTOs.UserDevice;
 using KAS.Entity.DB.ECOS.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KAS.ECOS.API.Controllers
+namespace KAS.ECOS.API.Controllers;
+
+[Route("api/UserDevice")]
+[ApiController]
+public class UserDevice : ControllerBase
 {
-    [Route("api/UserDevice")]
-    [ApiController]
-    public class UserDevice : ControllerBase
+    private readonly ECOSContext _context;
+    private readonly IMapper _mapper;
+
+    public UserDevice(ECOSContext context, IMapper mapper)
     {
-        private readonly ECOSContext _context;
-        private readonly IMapper _mapper;
+        _context = context;
+        _mapper = mapper;
+    }
 
-        public UserDevice(ECOSContext context, IMapper mapper)
+    [HttpGet]
+    public ActionResult<IEnumerable<UserDeviceList>> GetRoleApplicationFunctionPermission()
+    {
+        var userDeviceList = _context.UserDeviceLists
+            .Include(d => d.EndUserRoles)
+            .ToList();
+        return Ok(userDeviceList);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult> AddUserDevice(AddUserDeviceDTO userDeviceDto)
+    {
+        try
         {
-            _context = context;
-            _mapper = mapper;
+            var newUserDevice = _mapper.Map<UserDeviceList>(userDeviceDto);
+            _context.UserDeviceLists.Add(newUserDevice);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtRoute("", newUserDevice);
         }
-
-        [HttpPost]
-        public async Task<ActionResult> AddUserDevice(AddUserDeviceDTO userDeviceDto)
+        catch (Exception)
         {
-            try
-            {
-                var newUserDevice = _mapper.Map<UserDeviceList>(userDeviceDto);
-                _context.UserDeviceLists.Add(newUserDevice);
-                await _context.SaveChangesAsync();
-
-                return CreatedAtRoute("", newUserDevice);
-            }
-            catch (Exception)
-            {
-
-                return BadRequest();
-            }
+            return BadRequest();
         }
     }
 }

@@ -18,13 +18,6 @@ namespace KAS.ECOS.API.Controllers
             _authService = authService;
         }
 
-        [HttpPost("Test")]
-        public ActionResult Test(RequestDTO requestDTO)
-        {
-            var result = JsonConvert.SerializeObject(requestDTO);
-            return Ok(result);
-        }
-
         [HttpPost]
         [Route(("Login"))]
         public ActionResult<string> LoginSession(LoginDTO account)

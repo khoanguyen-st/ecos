@@ -10,10 +10,9 @@ namespace KAS.ECOS.SERVICE.DTOs.GrantUser
 {
     public class AddEndUserRoleDTO
     {
-        public Guid UserDeviceId { get; set; }
+        public Guid? UserDeviceId { get; set; }
         public Guid RoleId { get; set; }
-        public Guid OrganizationUserId { get; set; }
+        public Guid UserId { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
-        public DateTime DeletedDate { get; set; }
     }
 }

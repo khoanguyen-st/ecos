@@ -19,9 +19,22 @@ namespace KAS.ECOS.API.Services
         {
             return _context.EndUserLists.ToList();
         }
-        public void AddEndUser(EndUserList user)
+        public void AddEndUser(EndUserList user, Guid organizationId = default, bool isAssignOrg = false)
         {
             _context.EndUserLists.Add(user);
+
+            if (isAssignOrg)
+            {
+                var organizationUser = new OrganizationUserList()
+                {
+                    Id = new Guid(),
+                    OrganizationId = organizationId,
+                    EndUserId = user.Id,
+                };
+
+                _context.OrganizationUserLists.Add(organizationUser);
+            }
+
             _context.SaveChanges();
         }
         public bool UserEmailExist(string userEmail)
@@ -32,13 +45,18 @@ namespace KAS.ECOS.API.Services
         {
             return _context.EndUserLists.Any(u => u.Id == userId);
         }
+
+        public bool OrganizationExist(Guid organizationId)
+        {
+            return _context.OrganizationLists.Any(o => o.Id == organizationId);
+        }
         public string HashPassword(string password)
         {
-            int keySize = Int32.Parse(_configuration["Security:KeySize"]);
-            int iterations = Int32.Parse(_configuration["Security:Iterations"]);
-            HashAlgorithmName hashAlgorithm = HashAlgorithmName.SHA512;
+            var keySize = int.Parse(_configuration["Security:KeySize"]);
+            var iterations = int.Parse(_configuration["Security:Iterations"]);
+            var hashAlgorithm = HashAlgorithmName.SHA512;
 
-            byte[] salt = Encoding.ASCII.GetBytes(_configuration["Security:Salt"]);
+            var salt = Encoding.ASCII.GetBytes(_configuration["Security:Salt"]);
 
             var hash = Rfc2898DeriveBytes.Pbkdf2(
                 Encoding.UTF8.GetBytes(password),

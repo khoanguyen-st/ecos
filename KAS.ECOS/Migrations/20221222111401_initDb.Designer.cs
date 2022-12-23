@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace KAS.ECOS.API.Migrations
 {
     [DbContext(typeof(ECOSContext))]
-    [Migration("20221220041143_initDb")]
+    [Migration("20221222111401_initDb")]
     partial class initDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,7 +30,7 @@ namespace KAS.ECOS.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("AccessDate")
+                    b.Property<DateTime?>("AccessDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("CreatedDate")
@@ -99,14 +99,10 @@ namespace KAS.ECOS.API.Migrations
                     b.Property<Guid>("ApplicationFunctionId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("MaxRecords")
+                    b.Property<int?>("MaxRecords")
                         .HasColumnType("integer");
 
                     b.Property<string>("Permission")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("PermissionName")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -223,7 +219,7 @@ namespace KAS.ECOS.API.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("DeletedDate")
+                    b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("OrganizationUserId")
@@ -232,7 +228,7 @@ namespace KAS.ECOS.API.Migrations
                     b.Property<Guid>("RoleId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("UserDeviceId")
+                    b.Property<Guid?>("UserDeviceId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -353,6 +349,9 @@ namespace KAS.ECOS.API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("HandPhone")
                         .IsRequired()
                         .HasColumnType("text");
@@ -373,6 +372,9 @@ namespace KAS.ECOS.API.Migrations
 
                     b.Property<Guid?>("ParentId")
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime>("RegistryDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -411,26 +413,32 @@ namespace KAS.ECOS.API.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("DeletedDate")
+                    b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("EndUserId")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsAdmin")
                         .HasColumnType("boolean");
 
                     b.Property<Guid>("OrganizationId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("OrganizationListId")
-                        .HasColumnType("uuid");
+                    b.Property<DateTime>("RegistryDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EndUserId");
 
-                    b.HasIndex("OrganizationListId");
+                    b.HasIndex("OrganizationId");
 
                     b.ToTable("OrganizationUserLists");
                 });
@@ -475,6 +483,9 @@ namespace KAS.ECOS.API.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsBaseRole")
                         .HasColumnType("boolean");
 
                     b.Property<Guid>("OrganizationId")
@@ -598,9 +609,7 @@ namespace KAS.ECOS.API.Migrations
 
                     b.HasOne("KAS.Entity.DB.ECOS.Entities.UserDeviceList", "UserDevice")
                         .WithMany("EndUserRoles")
-                        .HasForeignKey("UserDeviceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserDeviceId");
 
                     b.Navigation("OrganizationUser");
 
@@ -669,11 +678,15 @@ namespace KAS.ECOS.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("KAS.Entity.DB.ECOS.Entities.OrganizationList", null)
+                    b.HasOne("KAS.Entity.DB.ECOS.Entities.OrganizationList", "Organization")
                         .WithMany("OrganizationUserLists")
-                        .HasForeignKey("OrganizationListId");
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("EndUser");
+
+                    b.Navigation("Organization");
                 });
 
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.RoleApplicationFunctionPermissionList", b =>

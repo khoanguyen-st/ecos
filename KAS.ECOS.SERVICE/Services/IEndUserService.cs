@@ -10,9 +10,10 @@ namespace KAS.ECOS.SERVICE.Services
     public interface IEndUserService
     {
         IEnumerable<EndUserList> GetEndUsers();
-        void AddEndUser(EndUserList user);
+        void AddEndUser(EndUserList user, Guid organizationId = default, bool isAssignOrg = false);
         bool UserEmailExist(string userEmail);
         bool EndUserExist(Guid userId);
+        bool OrganizationExist(Guid organizationId);
         string HashPassword(string password);
         EndUserList GetEndUserById(Guid userId);
         void DeleteEndUser(EndUserList user);

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using KAS.Entity.DB.ECOS.Entities;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace KAS.ECOS.API.Services
 {
@@ -27,7 +28,7 @@ namespace KAS.ECOS.API.Services
                 .Where(r => r.Id == id)
                 .FirstOrDefaultAsync();
         }
-        public async Task<bool> IsDeviceExist(Guid deviceId)
+        public async Task<bool> IsDeviceExist(Guid? deviceId)
         {
             return await _context.UserDeviceLists.Where(d => d.Id == deviceId).AnyAsync();
         }
@@ -35,17 +36,23 @@ namespace KAS.ECOS.API.Services
         {
             return await _context.RoleLists.Where(r => r.Id == roleId).AnyAsync();
         }
-        public async Task<bool> IsOrganizationUserExist(Guid organizationUserId)
+        public async Task<Guid> FindOrganizationUserId(Guid userId)
         {
-            return await _context.OrganizationUserLists.Where(r => r.Id == organizationUserId).AnyAsync();
+            var organizationUserId = await _context.OrganizationUserLists
+                .Where(u => u.EndUserId == userId)
+                .Select(u => u.Id)
+                .FirstOrDefaultAsync();
+
+            return organizationUserId;
         }
         public async Task<bool> IsEndUserRoleExist(Guid endUserRoleId)
         {
             return await _context.EndUserRoleLists.Where(r => r.Id == endUserRoleId).AnyAsync();
         }
-        public void AddEndUserRole(EndUserRoleList endUserRole)
+        public async Task AddEndUserRole(EndUserRoleList endUserRole)
         {
-            _context.EndUserRoleLists.Add(endUserRole);
+            Console.WriteLine(JsonConvert.SerializeObject(endUserRole));
+            await _context.EndUserRoleLists.AddAsync(endUserRole);
         }
         public void DeleteEndUserRole(EndUserRoleList endUserRole)
         {

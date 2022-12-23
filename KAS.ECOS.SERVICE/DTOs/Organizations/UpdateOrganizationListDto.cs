@@ -15,9 +15,5 @@ namespace KAS.ECOS.API.Entity
         public bool IsActive { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public DateTime? DeletedDate { get; set; }
-        public ICollection<OrganizationProfileList>? OrganizationProfileLists { get; set; }
-        public ICollection<OrganizationDeviceList>? OrganizationDeviceLists { get; set; }
-        public ICollection<OrganizationUserList>? OrganizationUserLists { get; set; }
-        public ICollection<RoleList>? RoleLists { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using KAS.ECOS.SERVICE.DTOs.OrganizationUser;
 using KAS.Entity.DB.ECOS.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data.Entity;
 
 namespace KAS.ECOS.API.Controllers
 {
@@ -17,6 +18,17 @@ namespace KAS.ECOS.API.Controllers
         {
             _context = context;
             _mapper = mapper;
+        }
+
+        [HttpGet]
+        public ActionResult<IEnumerable<OrganizationUserList>> GetOrganizationUsers()
+        {
+            var organizationUserList = _context.OrganizationUserLists
+                .AsNoTracking()
+                .Include(u => u.EndUser)
+                .Include(u => u.Organization)
+                .ToList();
+            return Ok(organizationUserList);
         }
 
         [HttpPost]

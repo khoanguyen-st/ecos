@@ -10,8 +10,7 @@ namespace KAS.ECOS.SERVICE.DTOs.ApplicationFunctionPermission
     public class AddApplicationFunctionPermissionDTO
     {
         public Guid ApplicationFunctionId { get; set; }
-        public string PermissionName { get; set; } = null!;
-        public string Permission { get; set; }
+        public string Permission { get; set; } = null!;
         public int MaxRecords { get; set; }
     }
 }

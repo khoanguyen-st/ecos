@@ -47,14 +47,16 @@ namespace KAS.ECOS.API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    OrganizationCode = table.Column<string>(type: "text", nullable: false),
                     OrganizationName = table.Column<string>(type: "text", nullable: false),
                     OrganizationDescription = table.Column<string>(type: "text", nullable: true),
                     Address = table.Column<string>(type: "text", nullable: false),
                     HandPhone = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
                     ParentId = table.Column<Guid>(type: "uuid", nullable: true),
-                    OrganizationCode = table.Column<string>(type: "text", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    RegistryDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ExpiryDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DeletedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
@@ -176,9 +178,11 @@ namespace KAS.ECOS.API.Migrations
                     OrganizationId = table.Column<Guid>(type: "uuid", nullable: false),
                     EndUserId = table.Column<Guid>(type: "uuid", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    IsAdmin = table.Column<bool>(type: "boolean", nullable: false),
+                    RegistryDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ExpiryDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DeletedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    OrganizationListId = table.Column<Guid>(type: "uuid", nullable: true)
+                    DeletedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -190,10 +194,11 @@ namespace KAS.ECOS.API.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_OrganizationUserLists_OrganizationLists_OrganizationListId",
-                        column: x => x.OrganizationListId,
+                        name: "FK_OrganizationUserLists_OrganizationLists_OrganizationId",
+                        column: x => x.OrganizationId,
                         principalTable: "OrganizationLists",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -205,6 +210,7 @@ namespace KAS.ECOS.API.Migrations
                     RoleName = table.Column<string>(type: "text", nullable: false),
                     RoleDescription = table.Column<string>(type: "text", nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    IsBaseRole = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DeletedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
@@ -228,7 +234,7 @@ namespace KAS.ECOS.API.Migrations
                     UserDeviceId = table.Column<Guid>(type: "uuid", nullable: false),
                     IPAdress = table.Column<string>(type: "text", nullable: true),
                     Location = table.Column<string>(type: "text", nullable: true),
-                    AccessDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    AccessDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
@@ -282,9 +288,8 @@ namespace KAS.ECOS.API.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     ApplicationFunctionId = table.Column<Guid>(type: "uuid", nullable: false),
-                    PermissionName = table.Column<string>(type: "text", nullable: false),
                     Permission = table.Column<string>(type: "text", nullable: false),
-                    MaxRecords = table.Column<int>(type: "integer", nullable: false)
+                    MaxRecords = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -325,11 +330,11 @@ namespace KAS.ECOS.API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserDeviceId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserDeviceId = table.Column<Guid>(type: "uuid", nullable: true),
                     RoleId = table.Column<Guid>(type: "uuid", nullable: false),
                     OrganizationUserId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DeletedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    DeletedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -350,8 +355,7 @@ namespace KAS.ECOS.API.Migrations
                         name: "FK_EndUserRoleLists_UserDeviceLists_UserDeviceId",
                         column: x => x.UserDeviceId,
                         principalTable: "UserDeviceLists",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -452,9 +456,9 @@ namespace KAS.ECOS.API.Migrations
                 column: "EndUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrganizationUserLists_OrganizationListId",
+                name: "IX_OrganizationUserLists_OrganizationId",
                 table: "OrganizationUserLists",
-                column: "OrganizationListId");
+                column: "OrganizationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoleApplicationFunctionPermissionLists_ApplicationFunctionP~",

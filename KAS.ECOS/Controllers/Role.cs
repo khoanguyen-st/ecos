@@ -3,17 +3,18 @@ using KAS.ECOS.API.Entity;
 using KAS.ECOS.SERVICE.Services;
 using KAS.Entity.DB.ECOS.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace KAS.ECOS.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Role")]
     [ApiController]
-    public class RoleController : ControllerBase
+    public class Role : ControllerBase
     {
         private readonly IMapper _mapper; 
         private readonly IRoleService _roleService;
 
-        public RoleController(IMapper mapper, IRoleService roleService)
+        public Role(IMapper mapper, IRoleService roleService)
         {
             _mapper = mapper;
             _roleService = roleService;
@@ -59,11 +60,11 @@ namespace KAS.ECOS.API.Controllers
 
         // PUT: api/Organization/5
         [HttpPut("{id}")]
-        public IActionResult Put(Guid id, UpdateRoleListDto roleList)
+        public async  Task<IActionResult> Put(Guid id, UpdateRoleListDto roleList)
         {
             try
             {
-                _roleService.UpdateRoleList(roleList, id, roleList.Permissions);
+                await _roleService.UpdateRoleList(roleList, id, roleList.Permissions);
                 return NoContent();
             }
             catch (Exception e)

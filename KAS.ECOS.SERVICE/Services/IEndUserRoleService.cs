@@ -4,13 +4,13 @@ namespace KAS.ECOS.API.Services
 {
     public interface IEndUserRoleService
     {
-        void AddEndUserRole(EndUserRoleList endUserRole);
+        Task AddEndUserRole(EndUserRoleList endUserRole);
         void DeleteEndUserRole(EndUserRoleList endUserRole);
         Task<EndUserRoleList>? GetEndUserRole(Guid id);
         Task<IEnumerable<EndUserRoleList>> GetEndUserRoles();
-        Task<bool> IsDeviceExist(Guid deviceId);
+        Task<bool> IsDeviceExist(Guid? deviceId);
         Task<bool> IsEndUserRoleExist(Guid endUserRoleId);
-        Task<bool> IsOrganizationUserExist(Guid organizationUserId);
+        Task<Guid> FindOrganizationUserId(Guid organizationUserId);
         Task<bool> IsRoleExist(Guid roleId);
         Task<bool> SaveChangesAsync();
     }

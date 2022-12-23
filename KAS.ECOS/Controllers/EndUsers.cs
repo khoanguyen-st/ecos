@@ -52,6 +52,31 @@ namespace KAS.ECOS.API.Controllers
             return NoContent();
         }
 
+        [HttpPost("Organization")]
+        public ActionResult AddEndUserInitOrg(AddEndUserDTO user)
+        {
+            if (_userService.UserEmailExist(user.Email))
+            {
+                return BadRequest("This email is already used!");
+            }
+
+            if (user.Password != user.PasswordConfirmed)
+            {
+                return BadRequest("Password Confirm is not correct!");
+            }
+
+            if (_userService.OrganizationExist(user.OrganizationId))
+            {
+                return BadRequest("This organization is not exist!");
+            }
+
+            user.Password = _userService.HashPassword(user.Password);
+
+            var newUser = _mapper.Map<EndUserList>(user);
+            _userService.AddEndUser(newUser, user.OrganizationId, true);
+            return NoContent();
+        }
+
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateEndUser(Guid id, UpdateEndUserDTO updateUser)
         {

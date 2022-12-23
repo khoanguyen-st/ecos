@@ -4,6 +4,7 @@ using KAS.ECOS.SERVICE.DTOs.UserDevice;
 using KAS.Entity.DB.ECOS.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data.Entity;
 
 namespace KAS.ECOS.API.Controllers
 {
@@ -18,6 +19,16 @@ namespace KAS.ECOS.API.Controllers
         {
             _context = context;
             _mapper = mapper;
+        }
+
+        [HttpGet]
+        public ActionResult<IEnumerable<RoleApplicationFunctionPermissionList>> GetRoleApplicationFunctionPermission()
+        {
+            var permissionList = _context.RoleApplicationFunctionPermissionLists
+                .Include(p => p.ApplicationFunctionPermission)
+                .Include(p => p.Role)
+                .ToList();
+            return Ok(permissionList);
         }
 
         [HttpPost]

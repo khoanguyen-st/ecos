@@ -18,11 +18,5 @@ namespace KAS.ECOS.SERVICE.DTOs.EndUser
         public string? Password { get; set; }
         public string? PasswordConfirmed { get; set; }
         public bool IsActive { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime DeletedDate { get; set; }
-        public ICollection<AccessHistoryList>? AccessHitories { get; set; }
-        public ICollection<EndUserTokenList>? EndUserTokens { get; set; }
-        public ICollection<OrganizationUserList>? OrganizationUsers { get; set; }
-        public ICollection<EndUserCredentialHistoryList>? EndUserCredentialHistories { get; set; }
     }
 }

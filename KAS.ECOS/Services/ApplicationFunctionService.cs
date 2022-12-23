@@ -14,35 +14,31 @@ namespace KAS.ECOS.API.Services
         {
             _context = context;
         }
-        public async Task<ApplicationList>? GetApplicationExist(Guid applicationId)
-        {
-            return await _context.ApplicationLists
-                .AsNoTracking()
-                .Where(a => a.Id == applicationId)
-                .FirstOrDefaultAsync();
-        }
+
         public async Task<bool> IsApplicationExist(Guid applicationId)
         {
             return await _context.ApplicationLists
                 .Where(a => a.Id == applicationId)
                 .AnyAsync();
         }
-        public async Task AddApplicationFunction(Guid applicationId, ApplicationFunctionList applicationFunction)
+        public async Task AddApplicationFunction(Guid applicationId, ApplicationFunctionList? applicationFunction)
         {
             _context.ApplicationFunctionLists.Add(applicationFunction);
         }
 
-        public void DeleteApplicationFunction(ApplicationFunctionList applicationFunction)
+        public void DeleteApplicationFunction(ApplicationFunctionList? applicationFunction)
         {
             _context.ApplicationFunctionLists.Remove(applicationFunction);
         }
 
         public async Task<ApplicationFunctionList?> GetApplicationFunction(Guid functionId)
         {
-            return await _context.ApplicationFunctionLists
-                    .AsNoTracking()
-                    .Include(f => f.Application)
-                    .FirstOrDefaultAsync(f => f.Id == functionId);
+            var result = await _context.ApplicationFunctionLists
+                .FirstOrDefaultAsync(f => f.Id == functionId);
+
+            Console.WriteLine(JsonConvert.SerializeObject(result));
+
+            return result;
         }
 
         public async Task<IEnumerable<ApplicationFunctionList>> GetApplicationFunctions()
@@ -54,11 +50,11 @@ namespace KAS.ECOS.API.Services
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<ApplicationFunctionList>> GetApplicationFunctionsByApplicationId(Guid applicationid)
+        public async Task<IEnumerable<ApplicationFunctionList?>> GetApplicationFunctionsByApplicationId(Guid applicationId)
         {
             return await _context.ApplicationFunctionLists
                 .AsNoTracking()
-                .Where(f => f.ApplicationId == applicationid)
+                .Where(f => f.ApplicationId == applicationId)
                 .ToListAsync();
         }
 

@@ -12,6 +12,5 @@ namespace KAS.ECOS.SERVICE.DTOs.RoleApplicationPermission
         public Guid ApplicationFunctionPermissionId { get; set; }
         public Guid RoleId { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
-        public DateTime DeletedDate { get; set; }
     }
 }

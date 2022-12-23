@@ -16,10 +16,6 @@ namespace KAS.ECOS.SERVICE.DTOs.EndUser
         public string PhoneNumber { get; set; } = null!;
         public string Password { get; set; } = null!;
         public string PasswordConfirmed { get; set; } = null!;
-        public bool IsActive { get; set; }
-        public virtual ICollection<AccessHistoryList>? AccessHitories { get; set; }
-        public virtual ICollection<EndUserTokenList>? EndUserTokens { get; set; }
-        public virtual ICollection<OrganizationUserList>? OrganizationUsers { get; set; }
-        public virtual ICollection<EndUserCredentialHistoryList>? EndUserCredentialHistories { get; set; }
+        public Guid OrganizationId { get; set; } = default;
     }
 }

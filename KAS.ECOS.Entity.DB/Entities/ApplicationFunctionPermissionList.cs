@@ -10,9 +10,8 @@ namespace KAS.Entity.DB.ECOS.Entities
     {
         public Guid Id { get; set; }
         public Guid ApplicationFunctionId { get; set; }
-        public string PermissionName { get; set; } = null!;
-        public string Permission { get; set; }
-        public int MaxRecords { get; set; }
+        public string Permission { get; set; } = null!;
+        public int? MaxRecords { get; set; }
         public virtual ApplicationFunctionList? ApplicationFunction { get; set; }
     }
 }

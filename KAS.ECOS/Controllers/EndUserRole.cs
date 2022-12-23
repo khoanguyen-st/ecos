@@ -33,7 +33,6 @@ namespace KAS.ECOS.API.Controllers
             }
             catch (Exception)
             {
-
                 return BadRequest();
             }
         }
@@ -43,14 +42,9 @@ namespace KAS.ECOS.API.Controllers
         {
             try
             {
-                if (!await _grantUserService.IsDeviceExist(endUserRole.UserDeviceId))
+                if (endUserRole.UserDeviceId != null && !await _grantUserService.IsDeviceExist(endUserRole.UserDeviceId))
                 {
                     return NotFound("Device is not found!");
-                }
-
-                if (!await _grantUserService.IsOrganizationUserExist(endUserRole.OrganizationUserId))
-                {
-                    return NotFound("Organization user is not found!");
                 }
 
                 if (!await _grantUserService.IsRoleExist(endUserRole.RoleId))
@@ -58,15 +52,25 @@ namespace KAS.ECOS.API.Controllers
                     return NotFound("Role is not found!");
                 }
 
-                var newEndUserRole = _mapper.Map<EndUserRoleList>(endUserRole);
-                _grantUserService.AddEndUserRole(newEndUserRole);
+                var organizationUserId = await _grantUserService.FindOrganizationUserId(endUserRole.UserId);
+
+                var newEndUserRole = new EndUserRoleList()
+                {
+                    Id = new Guid(),
+                    OrganizationUserId = organizationUserId,
+                    RoleId = endUserRole.RoleId,
+                    UserDeviceId = endUserRole.UserDeviceId,
+                    CreatedDate = endUserRole.CreatedDate
+                };
+
+                await _grantUserService.AddEndUserRole(newEndUserRole);
                 await _grantUserService.SaveChangesAsync();
 
                 return CreatedAtRoute("", newEndUserRole);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
         }
 

@@ -8,22 +8,8 @@ namespace KAS.ECOS.SERVICE.Mapping.Application
     {
         public RoleProfile()
         {
-            CreateMap<RoleList, AddRoleListDto>()
-                .ForMember(
-                    dist => dist.OrganizationId,
-                    opt => opt.MapFrom(src => src.OrganizationId)
-                    )
-                .ReverseMap();
-            CreateMap<RoleList, UpdateRoleListDto>()
-                .ForMember(
-                    dist => dist.OrganizationId,
-                    opt => opt.MapFrom(src => src.OrganizationId)
-                )
-                .ForMember(
-                    dist => dist.Id,
-                    opt => opt.MapFrom(src => src.Id)
-                )
-                .ReverseMap();
+            CreateMap<RoleList, AddRoleListDto>().ReverseMap();
+            CreateMap<RoleList, UpdateRoleListDto>().ReverseMap();
             CreateMap<RoleList, GetRoleListDto>().ReverseMap();
         }
     }

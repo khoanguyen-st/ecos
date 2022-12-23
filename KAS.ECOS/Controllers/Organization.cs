@@ -14,15 +14,15 @@ using DbUpdateException = System.Data.Entity.Infrastructure.DbUpdateException;
 
 namespace KAS.ECOS.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Organization")]
     [ApiController]
-    public class OrganizationController : ControllerBase
+    public class Organization : ControllerBase
     {
         private readonly ECOSContext _context;
         private readonly IMapper _mapper;
         private readonly IOrganizationService _organizationService;
 
-        public OrganizationController(ECOSContext context, IMapper mapper, IOrganizationService organizationService)
+        public Organization(ECOSContext context, IMapper mapper, IOrganizationService organizationService)
         {
             _context = context;
             _mapper = mapper;
