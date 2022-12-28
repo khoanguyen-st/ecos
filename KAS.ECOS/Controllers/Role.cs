@@ -1,5 +1,6 @@
 using AutoMapper;
 using KAS.ECOS.API.Entity;
+using KAS.ECOS.API.Policy;
 using KAS.ECOS.SERVICE.Services;
 using KAS.Entity.DB.ECOS.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -41,6 +42,7 @@ namespace KAS.ECOS.API.Controllers
             return Ok(mapper);  
         }
 
+        [UserAuthorize("ECOS_ROLE_CREATE")]
         [HttpPost]
         public async Task<ActionResult<RoleList>> Post(AddRoleListDto roles)
         {
@@ -56,9 +58,10 @@ namespace KAS.ECOS.API.Controllers
                 return BadRequest();
             }
         }
-        
+
 
         // PUT: api/Organization/5
+        [UserAuthorize("ECOS_ROLE_UPDATE")]
         [HttpPut("{id}")]
         public async  Task<IActionResult> Put(Guid id, UpdateRoleListDto roleList)
         {

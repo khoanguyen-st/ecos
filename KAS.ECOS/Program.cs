@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.Json.Serialization;
 using KAS.ECOS.API.Middlewares;
 using KAS.ECOS.API.Services;
@@ -9,6 +10,9 @@ using System.Text.Json.Serialization;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;
 using KAS.ECOS.API.Modules;
+using KAS.ECOS.API.Policy;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +28,24 @@ builder.Services.AddAutoMapper(typeof(ApplicationProfile));
 builder.Services.AddDbContext<KAS.Entity.DB.ECOS.Entities.ECOSContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("POSTGRESQL"), b => b.MigrationsAssembly("KAS.ECOS.API")));
 //builder.Services.AddScoped<KAS.Entity.DB.ECOS.Entities.ECOSContext>();
+
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, UserAuthorizePolicyProvider>();
+builder.Services.AddSingleton<IAuthorizationHandler, UserAuthorizeHandler>();
+
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Authentication:Issuer"],
+            ValidAudience = builder.Configuration["Authentication:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.ASCII.GetBytes((builder.Configuration["Authentication:SecretForKey"])))
+        };
+    });
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder => containerBuilder.RegisterModule(new CoreModule()));
@@ -44,6 +66,8 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 // app.UseHttpsRedirection();
 
 //app.UseMiddleware<SessionMiddleware>();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

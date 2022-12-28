@@ -40,6 +40,7 @@ namespace KAS.ECOS.API.Controllers
                 return BadRequest();
             }
         }
+
         [HttpPost]
         public async Task<ActionResult> AddApplicationFunctionPermission(AddApplicationFunctionPermissionDTO functionPermission)
         {
@@ -68,6 +69,7 @@ namespace KAS.ECOS.API.Controllers
                 return BadRequest();
             }
         }
+
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateApplicationFunctionPermission(Guid id, UpdateApplicationFunctionPermissionDTO functionPermission)
         {
@@ -91,6 +93,7 @@ namespace KAS.ECOS.API.Controllers
                 return BadRequest("Something wrong here!");
             }
         }
+
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteApplicationFunctionPermission(Guid id)
         {
@@ -110,7 +113,6 @@ namespace KAS.ECOS.API.Controllers
             }
             catch (Exception)
             {
-
                 return BadRequest();
             }
         }

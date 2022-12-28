@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using KAS.ECOS.API.Entity;
+using KAS.ECOS.API.Policy;
 using KAS.ECOS.SERVICE.Services;
 using KAS.Entity.DB.ECOS;
 using KAS.Entity.DB.ECOS.Entities;
@@ -28,8 +29,9 @@ namespace KAS.ECOS.API.Controllers
             _mapper = mapper;
             _organizationService = organizationService;
         }
-        
+
         // GET: api/Organization
+        [UserAuthorize("ECOS_ORGANIZATION_READ")]
         [HttpGet]
         public IActionResult Get()
         {
@@ -39,6 +41,7 @@ namespace KAS.ECOS.API.Controllers
         }
 
         // GET: api/Organization/5
+        [UserAuthorize("ECOS_ORGANIZATION_READ")]
         [HttpGet("{id}")]
         public IActionResult Get(Guid id)
         {
@@ -54,6 +57,7 @@ namespace KAS.ECOS.API.Controllers
             return Ok(mapper);
         }
 
+        [UserAuthorize("ECOS_ORGANIZATION_CREATE")]
         [HttpPost]
         public async Task<ActionResult<OrganizationList>> Post(AddOrganizationListDto listOrganization)
         {
@@ -71,6 +75,7 @@ namespace KAS.ECOS.API.Controllers
         }
 
         // PUT: api/Organization/5
+        [UserAuthorize("ECOS_ORGANIZATION_UPDATE")]
         [HttpPut("{id}")]
         public IActionResult Put(Guid id, UpdateOrganizationListDto organizationList)
         {
@@ -86,6 +91,7 @@ namespace KAS.ECOS.API.Controllers
         }
 
         // DELETE: api/Organization/5
+        [UserAuthorize("ECOS_ORGANIZATION_DELETE")]
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {

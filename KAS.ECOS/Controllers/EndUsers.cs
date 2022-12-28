@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using KAS.ECOS.API.Policy;
 using KAS.ECOS.SERVICE.DTOs.EndUser;
 using KAS.ECOS.SERVICE.Services;
 using KAS.Entity.DB.ECOS.Entities;
@@ -20,6 +21,7 @@ namespace KAS.ECOS.API.Controllers
             _mapper = mapper;
         }
 
+        [UserAuthorize("3RD_MOMO_CREATE")]
         [HttpGet]
         public ActionResult<IEnumerable<GetEndUserDTO>> GetEndUsers()
         {
