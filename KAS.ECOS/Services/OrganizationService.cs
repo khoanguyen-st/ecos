@@ -1,5 +1,6 @@
 using AutoMapper;
 using KAS.ECOS.API.Entity;
+using KAS.ECOS.SERVICE.DTOs.EndUser;
 using KAS.Entity.DB.ECOS.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -111,17 +112,23 @@ namespace KAS.ECOS.SERVICE.Services
                     _context.RoleApplicationFunctionPermissionLists.Add(roleApplicationFunctionPermissionList);
                 }
 
-                var adminUser = new EndUserList()
+                var adminUserDto = new AddEndUserDTO()
                 {
-                    Id = new Guid(),
                     FirstName = organization.OrganizationName,
                     LastName = organization.OrganizationName,
-                    Username = organization.OrganizationCode,
+                    UserName = organization.Email,
                     Email = organization.Email,
                     PhoneNumber = organization.HandPhone,
-                    Password = _userService.HashPassword("admin")
+                    Password = "admin@password1"
                 };
-                _context.EndUserLists.Add(adminUser);
+
+                var adminUser = _mapper.Map<EndUserList>(adminUserDto);
+                var result = await _userService.AddEndUser(adminUser, adminUserDto.Password);
+
+                if (!result.Succeeded)
+                {
+                    throw new InvalidOperationException("Something wrong! Please check your information");
+                }
 
                 var adminOrgUser = new OrganizationUserList()
                 {

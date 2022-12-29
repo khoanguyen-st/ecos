@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace KAS.Entity.DB.ECOS.Entities
 {
-    public class ECOSContext : DbContext
+    public class ECOSContext : IdentityUserContext<EndUserList>
     {
         string cn;
         public ECOSContext(string conn)
@@ -23,10 +25,9 @@ namespace KAS.Entity.DB.ECOS.Entities
         public virtual DbSet<OrganizationDatabaseList> OrganizationDatabaseLists { get; set; } = null!;
         public virtual DbSet<RoleList> RoleLists { get; set; } = null!;
         public virtual DbSet<ApplicationList> ApplicationLists { get; set; } = null!;
-        public virtual DbSet<ApplicationFunctionList?> ApplicationFunctionLists { get; set; } = null!;
+        public virtual DbSet<ApplicationFunctionList> ApplicationFunctionLists { get; set; } = null!;
         public virtual DbSet<ApplicationFunctionPermissionList> ApplicationFunctionPermissionLists { get; set; } = null!;
         public virtual DbSet<RoleApplicationFunctionPermissionList> RoleApplicationFunctionPermissionLists { get; set; } = null!;
-        public virtual DbSet<EndUserList> EndUserLists { get; set; } = null!;
         public virtual DbSet<OrganizationUserList> OrganizationUserLists { get; set; } = null!;
         public virtual DbSet<EndUserTokenList> EndUserTokenLists { get; set; } = null!;
         public virtual DbSet<EndUserRoleList> EndUserRoleLists { get; set; } = null!;
@@ -185,6 +186,11 @@ namespace KAS.Entity.DB.ECOS.Entities
             //    });
 
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<EndUserList>(entity => { entity.ToTable(name: "Users"); });
+            modelBuilder.Entity<IdentityUserClaim<string>>(entity => { entity.ToTable(name: "UserClaim"); });
+            modelBuilder.Entity<IdentityUserLogin<string>>(entity => { entity.ToTable(name: "UserLogin"); });
+            modelBuilder.Entity<IdentityUserToken<string>>(entity => { entity.ToTable(name: "UserToken"); });
         }
     }
 }

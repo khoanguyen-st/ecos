@@ -57,7 +57,7 @@ namespace KAS.ECOS.API.Controllers
             return Ok(mapper);
         }
 
-        [UserAuthorize("ECOS_ORGANIZATION_CREATE")]
+        //[UserAuthorize("ECOS_ORGANIZATION_CREATE")]
         [HttpPost]
         public async Task<ActionResult<OrganizationList>> Post(AddOrganizationListDto listOrganization)
         {

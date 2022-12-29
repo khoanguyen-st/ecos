@@ -36,7 +36,7 @@ namespace KAS.ECOS.API.Services
         {
             return await _context.RoleLists.Where(r => r.Id == roleId).AnyAsync();
         }
-        public async Task<Guid> FindOrganizationUserId(Guid userId)
+        public async Task<Guid> FindOrganizationUserId(string userId)
         {
             var organizationUserId = await _context.OrganizationUserLists
                 .Where(u => u.EndUserId == userId)

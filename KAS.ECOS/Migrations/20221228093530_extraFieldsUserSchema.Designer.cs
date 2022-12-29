@@ -3,6 +3,7 @@ using System;
 using KAS.Entity.DB.ECOS.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace KAS.ECOS.API.Migrations
 {
     [DbContext(typeof(ECOSContext))]
-    partial class ECOSContextModelSnapshot : ModelSnapshot
+    [Migration("20221228093530_extraFieldsUserSchema")]
+    partial class extraFieldsUserSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,9 +36,8 @@ namespace KAS.ECOS.API.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("EndUserId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("EndUserId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("IPAdress")
                         .HasColumnType("text");
@@ -47,11 +48,16 @@ namespace KAS.ECOS.API.Migrations
                     b.Property<Guid>("UserDeviceId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.HasIndex("EndUserId");
 
                     b.HasIndex("UserDeviceId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("AccessHistoryLists");
                 });
@@ -143,9 +149,8 @@ namespace KAS.ECOS.API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("EndUserId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("EndUserId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -153,6 +158,9 @@ namespace KAS.ECOS.API.Migrations
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
                         .HasColumnType("text");
 
                     b.Property<string>("UserName")
@@ -163,20 +171,16 @@ namespace KAS.ECOS.API.Migrations
 
                     b.HasIndex("EndUserId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("EndUserCredentialHistoryLists");
                 });
 
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.EndUserList", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -185,11 +189,8 @@ namespace KAS.ECOS.API.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("boolean");
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -202,52 +203,24 @@ namespace KAS.ECOS.API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("PasswordHash")
+                    b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("boolean");
 
                     b.Property<string>("Type")
                         .HasColumnType("text");
 
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex");
-
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("EndUserLists");
                 });
 
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.EndUserRoleList", b =>
@@ -291,16 +264,20 @@ namespace KAS.ECOS.API.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("EndUserId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("EndUserId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("RefreshToken")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EndUserId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("EndUserTokenLists");
                 });
@@ -457,9 +434,8 @@ namespace KAS.ECOS.API.Migrations
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("EndUserId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("EndUserId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("ExpiryDate")
                         .HasColumnType("timestamp with time zone");
@@ -476,11 +452,16 @@ namespace KAS.ECOS.API.Migrations
                     b.Property<DateTime>("RegistryDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.HasIndex("EndUserId");
 
                     b.HasIndex("OrganizationId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("OrganizationUserLists");
                 });
@@ -545,6 +526,90 @@ namespace KAS.ECOS.API.Migrations
                     b.HasIndex("OrganizationId");
 
                     b.ToTable("RoleLists");
+                });
+
+            modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.User", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DeletedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex");
+
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.UserDeviceList", b =>
@@ -663,6 +728,10 @@ namespace KAS.ECOS.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("KAS.Entity.DB.ECOS.Entities.User", null)
+                        .WithMany("AccessHistories")
+                        .HasForeignKey("UserId");
+
                     b.Navigation("EndUser");
 
                     b.Navigation("UserDevice");
@@ -697,6 +766,10 @@ namespace KAS.ECOS.API.Migrations
                         .HasForeignKey("EndUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("KAS.Entity.DB.ECOS.Entities.User", null)
+                        .WithMany("EndUserCredentialHistories")
+                        .HasForeignKey("UserId");
 
                     b.Navigation("EndUser");
                 });
@@ -733,6 +806,10 @@ namespace KAS.ECOS.API.Migrations
                         .HasForeignKey("EndUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("KAS.Entity.DB.ECOS.Entities.User", null)
+                        .WithMany("EndUserTokens")
+                        .HasForeignKey("UserId");
 
                     b.Navigation("EndUser");
                 });
@@ -792,6 +869,10 @@ namespace KAS.ECOS.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("KAS.Entity.DB.ECOS.Entities.User", null)
+                        .WithMany("OrganizationUsers")
+                        .HasForeignKey("UserId");
+
                     b.Navigation("EndUser");
 
                     b.Navigation("Organization");
@@ -829,7 +910,7 @@ namespace KAS.ECOS.API.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("KAS.Entity.DB.ECOS.Entities.EndUserList", null)
+                    b.HasOne("KAS.Entity.DB.ECOS.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -838,7 +919,7 @@ namespace KAS.ECOS.API.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("KAS.Entity.DB.ECOS.Entities.EndUserList", null)
+                    b.HasOne("KAS.Entity.DB.ECOS.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -847,7 +928,7 @@ namespace KAS.ECOS.API.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("KAS.Entity.DB.ECOS.Entities.EndUserList", null)
+                    b.HasOne("KAS.Entity.DB.ECOS.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -889,6 +970,17 @@ namespace KAS.ECOS.API.Migrations
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.OrganizationProfileList", b =>
                 {
                     b.Navigation("OrganizationDatabaseLists");
+                });
+
+            modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.User", b =>
+                {
+                    b.Navigation("AccessHistories");
+
+                    b.Navigation("EndUserCredentialHistories");
+
+                    b.Navigation("EndUserTokens");
+
+                    b.Navigation("OrganizationUsers");
                 });
 
             modelBuilder.Entity("KAS.Entity.DB.ECOS.Entities.UserDeviceList", b =>

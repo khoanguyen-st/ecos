@@ -13,9 +13,9 @@ namespace KAS.ECOS.SERVICE.Mapping.EndUser
     {
         public EndUserProfile()
         {
-            CreateMap<GetEndUserDTO, EndUserList>().ReverseMap();
-            CreateMap<AddEndUserDTO, EndUserList>().ReverseMap();
-            CreateMap<UpdateEndUserDTO, EndUserList>().ReverseMap();
+            CreateMap<GetEndUserDTO, Entity.DB.ECOS.Entities.EndUserList>().ReverseMap();
+            CreateMap<AddEndUserDTO, Entity.DB.ECOS.Entities.EndUserList>().ReverseMap();
+            CreateMap<UpdateEndUserDTO, Entity.DB.ECOS.Entities.EndUserList>().ReverseMap();
         }
     }
 }

@@ -10,7 +10,7 @@ namespace KAS.ECOS.API.Services
         Task<IEnumerable<EndUserRoleList>> GetEndUserRoles();
         Task<bool> IsDeviceExist(Guid? deviceId);
         Task<bool> IsEndUserRoleExist(Guid endUserRoleId);
-        Task<Guid> FindOrganizationUserId(Guid organizationUserId);
+        Task<Guid> FindOrganizationUserId(string userId);
         Task<bool> IsRoleExist(Guid roleId);
         Task<bool> SaveChangesAsync();
     }

@@ -30,64 +30,92 @@ namespace KAS.ECOS.API.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddEndUsers(AddEndUserDTO user)
+        public async Task<ActionResult> AddEndUsers(AddEndUserDTO user)
         {
-            if(user == null)
+            try
             {
-                return BadRequest("New user is null!");
-            }
+                if (_userService.UserEmailExist(user.Email) == null)
+                {
+                    return BadRequest("This email is already used!");
+                }
 
-            if(_userService.UserEmailExist(user.Email))
+                if (user.Password != user.PasswordConfirmed)
+                {
+                    return BadRequest("Password Confirm is not correct!");
+                }
+
+                var newUser = _mapper.Map<EndUserList>(user);
+                var result = await _userService.AddEndUser(newUser, user.Password);
+
+                if (!result.Succeeded)
+                {
+                    return BadRequest(result.Errors);
+                }
+
+                return NoContent();
+            }
+            catch (Exception e)
             {
-                return BadRequest("This email is already used!");
+                return BadRequest(e.Message);
             }
-
-            if(user.Password != user.PasswordConfirmed)
-            {
-                return BadRequest("Password Confirm is not correct!");
-            }
-
-            user.Password = _userService.HashPassword(user.Password);
-
-            var newUser = _mapper.Map<EndUserList>(user);
-            _userService.AddEndUser(newUser);
-            return NoContent();
         }
 
         [HttpPost("Organization")]
-        public ActionResult AddEndUserInitOrg(AddEndUserDTO user)
+        public async Task<ActionResult> AddEndUserInitOrg(AddEndUserDTO user)
         {
-            if (_userService.UserEmailExist(user.Email))
+            try
             {
-                return BadRequest("This email is already used!");
-            }
 
-            if (user.Password != user.PasswordConfirmed)
+                if (_userService.UserEmailExist(user.Email) == null)
+                {
+                    return BadRequest("This email is already used!");
+                }
+
+                if (user.Password != user.PasswordConfirmed)
+                {
+                    return BadRequest("Password Confirm is not correct!");
+                }
+
+                if (!_userService.OrganizationExist(user.OrganizationId))
+                {
+                    return BadRequest("This organization is not exist!");
+                }
+
+                var newUser = _mapper.Map<EndUserList>(user);
+                var result = await _userService.AddEndUser(newUser, user.Password, user.OrganizationId, true);
+                
+                if (!result.Succeeded)
+                {
+                    return BadRequest(result.Errors);
+                }
+
+                return NoContent();
+            }
+            catch (Exception e)
             {
-                return BadRequest("Password Confirm is not correct!");
+                return BadRequest(e.Message);
             }
-
-            if (!_userService.OrganizationExist(user.OrganizationId))
-            {
-                return BadRequest("This organization is not exist!");
-            }
-
-            user.Password = _userService.HashPassword(user.Password);
-
-            var newUser = _mapper.Map<EndUserList>(user);
-            _userService.AddEndUser(newUser, user.OrganizationId, true);
-            return NoContent();
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateEndUser(Guid id, UpdateEndUserDTO updateUser)
+        public async Task<ActionResult> UpdateEndUser(string id, UpdateEndUserDTO updateUser)
         {
-            if(!_userService.EndUserExist(id))
+            if(_userService.EndUserExist(id) == null)
             {
                 return NotFound();
             }
 
-            var existedUser = _userService.GetEndUserById(id);
+            var existedUser = await _userService.GetEndUserById(id);
+
+            if (existedUser == null)
+            {
+                return BadRequest("This user is not exist!");
+            }
+
+            if (updateUser.Email != existedUser.Email && _userService.UserEmailExist(updateUser.Email) != null)
+            {
+                return BadRequest("This email is already used!");
+            }
 
             if (updateUser.Password != null)
             {
@@ -96,20 +124,15 @@ namespace KAS.ECOS.API.Controllers
                     return BadRequest("Password Confirm is not correct!");
                 }
 
-                updateUser.Password = _userService.HashPassword(updateUser.Password);
-            } else
-            {
-                updateUser.Password = existedUser.Password;
+                existedUser.PasswordHash = _userService.HashPassword(existedUser, updateUser.Password);
             }
 
-            if(existedUser.Email != existedUser.Email && _userService.UserEmailExist(updateUser.Email))
+            var result = await _userService.UpdateEndUser(existedUser);
+
+            if (!result.Succeeded)
             {
-                return BadRequest("This email is already used!");
+                return BadRequest();
             }
-
-            _mapper.Map(updateUser, existedUser);
-
-            await _userService.SaveChangesAsync();
 
             return NoContent();
         }

@@ -1,9 +1,11 @@
-﻿using KAS.ECOS.API.Entity;
+﻿using System.Security.Claims;
+using KAS.ECOS.API.Entity;
 using KAS.Entity.DB.ECOS.Entities;
 using KAS.ECOS.MIDDLEWARE.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using KAS.ECOS.API.Services;
+using Microsoft.AspNetCore.Identity;
 
 namespace KAS.ECOS.API.Controllers
 {
@@ -12,28 +14,39 @@ namespace KAS.ECOS.API.Controllers
     public class Authentication : Controller
     {
         private readonly IAuthService _authService;
+        private readonly UserManager<EndUserList> _userManager;
+        private readonly JwtService _jwtService;
 
-        public Authentication(IAuthService authService)
+        public Authentication(IAuthService authService, UserManager<EndUserList> userManager, JwtService jwtService)
         {
             _authService = authService;
+            _userManager = userManager;
+            _jwtService = jwtService;
         }
 
         [HttpPost]
         [Route(("Login"))]
-        public ActionResult<string> LoginSession(LoginDTO account)
+        public async Task<ActionResult<string>> LoginSession(LoginDTO account)
         {
             try
             {
-                var validatedAccount = _authService.ValidateUser(account.email, account.password);
-                if (validatedAccount == null)
+                var user = await _userManager.FindByEmailAsync(account.email);
+
+                if (user == null)
                 {
-                    return Unauthorized();
+                    return BadRequest("Bad credentials");
                 }
-                var tokenToReturn = _authService.Authenticate(validatedAccount);
-                return Ok(new
+
+                var isPasswordValid = await _userManager.CheckPasswordAsync(user, account.password);
+
+                if (!isPasswordValid)
                 {
-                    token = tokenToReturn
-                });
+                    return BadRequest("Bad credentials");
+                }
+
+                var token = _jwtService.CreateToken(user);
+
+                return Ok(token);
             }
             catch (Exception)
             {

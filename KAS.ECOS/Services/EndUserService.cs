@@ -2,28 +2,31 @@
 using KAS.Entity.DB.ECOS.Entities;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 
 namespace KAS.ECOS.API.Services
 {
     public class EndUserService : IEndUserService
     {
         private readonly ECOSContext _context;
-        private readonly IConfiguration _configuration;
+        private readonly UserManager<EndUserList> _userManager;
+        private readonly IPasswordHasher<EndUserList> _passwordHasher;
 
-        public EndUserService(ECOSContext context, IConfiguration configuration)
+        public EndUserService(ECOSContext context, UserManager<EndUserList> userManager, IPasswordHasher<EndUserList> passwordHasher)
         {
             _context = context;
-            _configuration = configuration;
+            _userManager = userManager;
+            _passwordHasher = passwordHasher;
         }
         public IEnumerable<EndUserList> GetEndUsers()
         {
-            return _context.EndUserLists.ToList();
+            return _userManager.Users.ToList();
         }
-        public void AddEndUser(EndUserList user, Guid organizationId = default, bool isAssignOrg = false)
+        public async Task<IdentityResult> AddEndUser(EndUserList user, string password, Guid organizationId = default, bool isAssignOrg = false)
         {
-            _context.EndUserLists.Add(user);
-
-            if (isAssignOrg)
+            var result = await _userManager.CreateAsync(user, password);
+            if (isAssignOrg && result.Succeeded)
             {
                 var organizationUser = new OrganizationUserList()
                 {
@@ -32,47 +35,44 @@ namespace KAS.ECOS.API.Services
                     EndUserId = user.Id,
                 };
 
-                _context.OrganizationUserLists.Add(organizationUser);
+                await _context.OrganizationUserLists.AddAsync(organizationUser);
+                await _context.SaveChangesAsync();
             }
 
-            _context.SaveChanges();
+            return result;
+
         }
-        public bool UserEmailExist(string userEmail)
+        public async Task<EndUserList> UserEmailExist(string userEmail)
         {
-            return _context.EndUserLists.Any(u => u.Email == userEmail);
+            return await _userManager.FindByEmailAsync(userEmail);
         }
-        public bool EndUserExist(Guid userId)
+
+        public Task<EndUserList> EndUserExist(string userId)
         {
-            return _context.EndUserLists.Any(u => u.Id == userId);
+            return _userManager.FindByIdAsync(userId);
         }
 
         public bool OrganizationExist(Guid organizationId)
         {
             return _context.OrganizationLists.Any(o => o.Id == organizationId);
         }
-        public string HashPassword(string password)
-        {
-            var keySize = int.Parse(_configuration["Security:KeySize"]);
-            var iterations = int.Parse(_configuration["Security:Iterations"]);
-            var hashAlgorithm = HashAlgorithmName.SHA512;
 
-            var salt = Encoding.ASCII.GetBytes(_configuration["Security:Salt"]);
+        public string HashPassword(EndUserList user, string password)
+        {
+            return _passwordHasher.HashPassword(user, password);
+        }
+        public async Task<EndUserList?> GetEndUserById(string userId)
+        {
+            return await _userManager.FindByIdAsync(userId);
+        }
+        public async void DeleteEndUser(EndUserList user)
+        {
+            await _userManager.DeleteAsync(user);
+        }
 
-            var hash = Rfc2898DeriveBytes.Pbkdf2(
-                Encoding.UTF8.GetBytes(password),
-                salt,
-                iterations,
-                hashAlgorithm,
-                keySize);
-            return Convert.ToHexString(hash);
-        }
-        public EndUserList? GetEndUserById(Guid userId)
+        public async Task<IdentityResult> UpdateEndUser(EndUserList user)
         {
-            return _context.EndUserLists.Where(u => u.Id == userId).FirstOrDefault();
-        }
-        public void DeleteEndUser(EndUserList user)
-        {
-            _context.EndUserLists.Remove(user);
+            return await _userManager.UpdateAsync(user);
         }
         public async Task<bool> SaveChangesAsync()
         {

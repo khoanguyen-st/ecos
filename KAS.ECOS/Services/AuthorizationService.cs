@@ -2,6 +2,7 @@ using AutoMapper;
 using KAS.ECOS.API.Entity;
 using KAS.ECOS.SERVICE.Services;
 using KAS.Entity.DB.ECOS.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace KAS.ECOS.API.Services;
 
@@ -9,11 +10,13 @@ public class AuthorizationService: IAuthorizationService
 {
     private readonly ECOSContext _context;
     private readonly IMapper _mapper;
+    private readonly UserManager<EndUserList> _userManager;
 
-    public AuthorizationService(ECOSContext context, IMapper mapper)
+    public AuthorizationService(ECOSContext context, IMapper mapper, UserManager<EndUserList> userManager)
     {
         _context = context;
         _mapper = mapper;
+        _userManager = userManager;
     }
     public bool CheckUserPermission(AuthorizationDto mapper)
     {
@@ -25,9 +28,11 @@ public class AuthorizationService: IAuthorizationService
             return false;
         }
 
+        var Users = _userManager.Users.ToList();
+
         var permission = (
-            from endUser in _context.EndUserLists
-            join organizationUserList in _context.OrganizationUserLists on endUser.Id equals organizationUserList
+            from endUser in Users
+            join organizationUserList in _context.OrganizationUserLists on mapper.UserId equals organizationUserList
                 .EndUserId
             join endUserRoleList in _context.EndUserRoleLists on organizationUserList.Id equals endUserRoleList
                 .OrganizationUserId

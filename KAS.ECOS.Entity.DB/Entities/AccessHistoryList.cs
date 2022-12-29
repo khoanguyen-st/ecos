@@ -9,7 +9,7 @@ namespace KAS.Entity.DB.ECOS.Entities
     public class AccessHistoryList
     {
         public Guid Id { get; set; }
-        public Guid EndUserId { get; set; }
+        public string EndUserId { get; set; } = null!;
         public Guid UserDeviceId { get; set; }
         public string? IPAdress { get; set; }
         public string? Location { get; set; }

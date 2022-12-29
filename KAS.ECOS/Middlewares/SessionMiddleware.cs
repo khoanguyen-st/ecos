@@ -8,19 +8,21 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace KAS.ECOS.API.Middlewares
 {
-    // You may need to install the Microsoft.AspNetCore.Http.Abstractions package into your project
     public class SessionMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly IConfiguration _configuration;
+        private readonly UserManager<EndUserList> _userManager;
 
-        public SessionMiddleware(RequestDelegate next, IConfiguration configuration)
+        public SessionMiddleware(RequestDelegate next, IConfiguration configuration, UserManager<EndUserList> userManager)
         {
             _next = next;
             _configuration = configuration;
+            _userManager = userManager;
         }
 
         public async Task Invoke(HttpContext context, ECOSContext _ECOSContext)
@@ -36,7 +38,7 @@ namespace KAS.ECOS.API.Middlewares
 
                 var Username = principal.Claims.Where(p => p.Type == "user").First().Value;
 
-                var User = _ECOSContext.EndUserLists.Where(u => u.Username == Username).First();
+                var User = await _userManager.FindByNameAsync(Username);
 
                 var userInOrganization = _ECOSContext.OrganizationUserLists.Where(o => o.EndUserId == User.Id && o.OrganizationId == Guid.Parse(requestBody.organizationId)).FirstOrDefault();
 

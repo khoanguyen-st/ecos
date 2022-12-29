@@ -10,7 +10,7 @@ namespace KAS.Entity.DB.ECOS.Entities
     {
         public Guid Id { get; set; }
         public Guid OrganizationId { get; set; }
-        public Guid EndUserId { get; set; }
+        public string EndUserId { get; set; } = null!;
         public bool IsActive { get; set; } = true;
         public bool IsAdmin { get; set; } = false;
         public DateTime RegistryDate { get; set; }
