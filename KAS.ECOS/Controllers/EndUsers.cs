@@ -20,8 +20,7 @@ namespace KAS.ECOS.API.Controllers
             _userService = userService;
             _mapper = mapper;
         }
-
-        [UserAuthorize("3RD_MOMO_CREATE")]
+        
         [HttpGet]
         public ActionResult<IEnumerable<GetEndUserDTO>> GetEndUsers()
         {
@@ -29,6 +28,7 @@ namespace KAS.ECOS.API.Controllers
             return Ok(_mapper.Map<IEnumerable<GetEndUserDTO>>(endUserList));
         }
 
+        //[UserAuthorize("ECOS_ENDUSER_CREATE")]
         [HttpPost]
         public async Task<ActionResult> AddEndUsers(AddEndUserDTO user)
         {
@@ -60,6 +60,7 @@ namespace KAS.ECOS.API.Controllers
             }
         }
 
+        [UserAuthorize("ECOS_ENDUSER_CREATE")]
         [HttpPost("Organization")]
         public async Task<ActionResult> AddEndUserInitOrg(AddEndUserDTO user)
         {
@@ -97,6 +98,7 @@ namespace KAS.ECOS.API.Controllers
             }
         }
 
+        [UserAuthorize("ECOS_ENDUSER_UPDATE")]
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateEndUser(string id, UpdateEndUserDTO updateUser)
         {

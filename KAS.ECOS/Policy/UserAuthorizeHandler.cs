@@ -23,7 +23,13 @@ namespace KAS.ECOS.API.Policy
                 return Task.FromResult(0);
             }
 
-            var userId = ctx.User.FindFirst(c => c.Type == "userId").Value;
+            var userId = ctx.User.FindFirst(c => c.Type == "userId")?.Value;
+
+            if (_context.Users.Any(u => u.Id == userId && u.Type == "super"))
+            {
+                ctx.Succeed(requirement);
+                return Task.CompletedTask;
+            }
 
             var applicationFunctionPermissionList =
                 _context.ApplicationFunctionPermissionLists.FirstOrDefault(p => p.Permission == requirement.Permission);

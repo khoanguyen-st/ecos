@@ -16,6 +16,7 @@ namespace KAS.ECOS.SERVICE.DTOs.EndUser
         public string PhoneNumber { get; set; } = null!;
         public string Password { get; set; } = null!;
         public string PasswordConfirmed { get; set; } = null!;
+        public string? Type { get; set; }
         public Guid OrganizationId { get; set; } = default;
     }
 }

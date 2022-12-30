@@ -184,8 +184,25 @@ namespace KAS.Entity.DB.ECOS.Entities
             //        ApplicationFunctionPermissionId = "2",
             //        RoleId = "2"
             //    });
-
             base.OnModelCreating(modelBuilder);
+
+            //var passwordHasher = new PasswordHasher<EndUserList>();
+
+            //var adminUser = new EndUserList()
+            //{
+            //    Id = "a18be9c0-aa65-4af8-bd17-00bd9344e575",
+            //    Email = "super@admin.com",
+            //    NormalizedEmail = "SUPER@ADMIN.COM",
+            //    FirstName = "super",
+            //    LastName = "admin",
+            //    UserName = "superAdmin",
+            //    NormalizedUserName = "SUPERADMIN",
+            //    Type = "super",
+            //    SecurityStamp = string.Empty
+            //};
+            //adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, "password");
+            
+            //modelBuilder.Entity<EndUserList>().HasData(adminUser);
 
             modelBuilder.Entity<EndUserList>(entity => { entity.ToTable(name: "Users"); });
             modelBuilder.Entity<IdentityUserClaim<string>>(entity => { entity.ToTable(name: "UserClaim"); });

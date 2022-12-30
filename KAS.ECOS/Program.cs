@@ -33,7 +33,7 @@ builder.Services.AddSwaggerGen(c => {
         Title = "ECOS",
         Version = "v1"
     });
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+    c.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme()
     {
         Name = "Authorization",
         Type = SecuritySchemeType.Http,
@@ -47,7 +47,7 @@ builder.Services.AddSwaggerGen(c => {
             new OpenApiSecurityScheme {
                 Reference = new OpenApiReference {
                     Type = ReferenceType.SecurityScheme,
-                    Id = JwtBearerDefaults.AuthenticationScheme
+                    Id = "bearerAuth"
                 }
             },
             new List<string>()
@@ -126,6 +126,28 @@ using (var scope = app.Services.CreateScope())
   if (context.Database.GetPendingMigrations().Any())
   {
       context.Database.Migrate();
+  }
+
+  if (!context.Users.Where(x => x.Email == "super@admin.com").Any())
+  {
+      var passwordHasher = new PasswordHasher<EndUserList>();
+
+      var adminUser = new EndUserList()
+      {
+          Id = "a18be9c0-aa65-4af8-bd17-00bd9344e575",
+          Email = "super@admin.com",
+          NormalizedEmail = "SUPER@ADMIN.COM",
+          FirstName = "super",
+          LastName = "admin",
+          UserName = "superAdmin",
+          NormalizedUserName = "SUPERADMIN",
+          Type = "super",
+          SecurityStamp = string.Empty
+      };
+      adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, "password");
+
+      context.Users.Add(adminUser);
+      context.SaveChanges();
   }
 }
 

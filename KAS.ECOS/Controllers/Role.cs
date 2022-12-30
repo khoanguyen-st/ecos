@@ -20,15 +20,14 @@ namespace KAS.ECOS.API.Controllers
             _mapper = mapper;
             _roleService = roleService;
         }
-        
-        // GET: api/Organization
+
+        [UserAuthorize("ECOS_ROLE_CREATE")]
         [HttpGet]
         public IActionResult Get()
         {
             return Ok(_roleService.GetRoleLists());
         }
-
-        // GET: api/Organization/5
+        
         [HttpGet("{id}")]
         public IActionResult Get(Guid id)
         {
@@ -59,8 +58,6 @@ namespace KAS.ECOS.API.Controllers
             }
         }
 
-
-        // PUT: api/Organization/5
         [UserAuthorize("ECOS_ROLE_UPDATE")]
         [HttpPut("{id}")]
         public async  Task<IActionResult> Put(Guid id, UpdateRoleListDto roleList)
@@ -76,7 +73,7 @@ namespace KAS.ECOS.API.Controllers
             }
         }
 
-        // DELETE: api/Organization/5
+        [UserAuthorize("ECOS_ROLE_DELETE")]
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using KAS.ECOS.API.Policy;
 using KAS.ECOS.API.Services;
 using KAS.ECOS.SERVICE.DTOs.GrantUser;
 using KAS.ECOS.SERVICE.Services;
@@ -37,6 +38,7 @@ namespace KAS.ECOS.API.Controllers
             }
         }
 
+        [UserAuthorize("ECOS_GRANT_ENDUSER_ORGANIZATION_CREATE")]
         [HttpPost]
         public async Task<ActionResult> AddEndUserRole(AddEndUserRoleDTO endUserRole)
         {
@@ -74,6 +76,7 @@ namespace KAS.ECOS.API.Controllers
             }
         }
 
+        [UserAuthorize("ECOS_GRANT_ENDUSER_ORGANIZATION_DELETE")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteEndUserRole(Guid id)
         {

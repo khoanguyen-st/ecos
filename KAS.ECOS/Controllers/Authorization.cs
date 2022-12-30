@@ -1,5 +1,6 @@
 using AutoMapper;
 using KAS.ECOS.API.Entity;
+using KAS.ECOS.API.Policy;
 using KAS.ECOS.SERVICE.DTOs.Application;
 using KAS.ECOS.SERVICE.Services;
 using KAS.Entity.DB.ECOS.Entities;
@@ -21,6 +22,7 @@ namespace KAS.ECOS.API.Controllers
             _mapper = mapper;
         }
 
+        [UserAuthorize("ECOS_AUTHORIZATION_CHECK")]
         [HttpGet]
         public IActionResult GetApplications([FromQuery] AuthorizationDto rqParams)
         {

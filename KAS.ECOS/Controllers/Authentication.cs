@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 namespace KAS.ECOS.API.Controllers
 {
     [ApiController]
-    [Route("api/authentication")]
+    [Route("api/Authentication")]
     public class Authentication : Controller
     {
         private readonly IAuthService _authService;

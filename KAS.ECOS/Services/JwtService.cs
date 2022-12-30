@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using KAS.ECOS.SERVICE.DTOs.Authentication;
+using KAS.Entity.DB.ECOS.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
@@ -9,11 +10,13 @@ namespace KAS.ECOS.API.Services
 {
     public class JwtService
     {
+        private readonly ECOSContext _context;
         private readonly IConfiguration _configuration;
         private const int EXPIRATION_MINUTES = 30;
 
-        public JwtService(IConfiguration configuration)
+        public JwtService(ECOSContext context,IConfiguration configuration)
         {
+            _context = context;
             _configuration = configuration;
         }
 
@@ -44,13 +47,16 @@ namespace KAS.ECOS.API.Services
                 signingCredentials: credentials
             );
 
-        private static IEnumerable<Claim> CreateClaims(IdentityUser user) =>
-            new[] {
+        private IEnumerable<Claim> CreateClaims(IdentityUser user)
+        {
+            return new[] {
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
                 new Claim("userId", user.Id),
                 new Claim("email", user.Email)
             };
+        }
+            
 
         private SigningCredentials CreateSigningCredentials() =>
             new(
