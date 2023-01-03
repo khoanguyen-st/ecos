@@ -4,25 +4,24 @@ using KAS.ECOS.API.Policy;
 using KAS.ECOS.SERVICE.DTOs.Application;
 using KAS.ECOS.SERVICE.Services;
 using KAS.Entity.DB.ECOS.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KAS.ECOS.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Authorization")]
     [ApiController]
     public class Authorization : ControllerBase
     {
-        private readonly IAuthorizationService _authorizationService;
-        private readonly IMapper _mapper;
+        private readonly SERVICE.Services.IAuthorizationService _authorizationService;
 
-        public Authorization(IAuthorizationService authorizationService, IMapper mapper)
+        public Authorization(SERVICE.Services.IAuthorizationService authorizationService)
         {
             _authorizationService = authorizationService;
-            _mapper = mapper;
         }
 
-        [UserAuthorize("ECOS_AUTHORIZATION_CHECK")]
+        [Authorize]
         [HttpGet]
         public IActionResult GetApplications([FromQuery] AuthorizationDto rqParams)
         {

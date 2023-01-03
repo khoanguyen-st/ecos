@@ -34,6 +34,7 @@ public class AuthorizationService: IAuthorizationService
             from endUser in Users
             join organizationUserList in _context.OrganizationUserLists on mapper.UserId equals organizationUserList
                 .EndUserId
+                where mapper.OrganizationId == organizationUserList.OrganizationId
             join endUserRoleList in _context.EndUserRoleLists on organizationUserList.Id equals endUserRoleList
                 .OrganizationUserId
             join roleList in _context.RoleLists on endUserRoleList.RoleId equals roleList.Id

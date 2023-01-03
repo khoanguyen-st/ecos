@@ -67,7 +67,7 @@ namespace KAS.ECOS.API.Controllers
                 await _roleService.UpdateRoleList(roleList, id, roleList.Permissions);
                 return NoContent();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return BadRequest();
             }
@@ -82,7 +82,7 @@ namespace KAS.ECOS.API.Controllers
                 _roleService.DeleteRoleList(id);
                 return NoContent();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return BadRequest();
             }

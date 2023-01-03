@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace KAS.Entity.DB.ECOS.Entities
 {
@@ -186,28 +188,44 @@ namespace KAS.Entity.DB.ECOS.Entities
             //    });
             base.OnModelCreating(modelBuilder);
 
-            //var passwordHasher = new PasswordHasher<EndUserList>();
+            var passwordHasher = new PasswordHasher<EndUserList>();
 
-            //var adminUser = new EndUserList()
-            //{
-            //    Id = "a18be9c0-aa65-4af8-bd17-00bd9344e575",
-            //    Email = "super@admin.com",
-            //    NormalizedEmail = "SUPER@ADMIN.COM",
-            //    FirstName = "super",
-            //    LastName = "admin",
-            //    UserName = "superAdmin",
-            //    NormalizedUserName = "SUPERADMIN",
-            //    Type = "super",
-            //    SecurityStamp = string.Empty
-            //};
-            //adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, "password");
-            
-            //modelBuilder.Entity<EndUserList>().HasData(adminUser);
+            var adminUser = new EndUserList()
+            {
+                Id = "a18be9c0-aa65-4af8-bd17-00bd9344e575",
+                Email = "super@admin.system",
+                NormalizedEmail = "SUPER@ADMIN.SYSTEM",
+                FirstName = "super",
+                LastName = "admin",
+                UserName = "superAdmin",
+                NormalizedUserName = "SUPERADMIN",
+                Type = "super",
+                SecurityStamp = string.Empty
+            };
+            adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, "password");
+
+            var appUser = new EndUserList()
+            {
+                Id = "a18be9c0-aa65-4af8-bd17-00bd9344e552",
+                Email = "3rd@application.system",
+                NormalizedEmail = "3RD@APPLICATION.SYSTEM",
+                FirstName = "3rd",
+                LastName = "Application",
+                UserName = "3rdApplication",
+                NormalizedUserName = "3RDAPPLICATION",
+                Type = "app",
+                SecurityStamp = string.Empty
+            };
+            appUser.PasswordHash = passwordHasher.HashPassword(appUser, "password");
 
             modelBuilder.Entity<EndUserList>(entity => { entity.ToTable(name: "Users"); });
             modelBuilder.Entity<IdentityUserClaim<string>>(entity => { entity.ToTable(name: "UserClaim"); });
             modelBuilder.Entity<IdentityUserLogin<string>>(entity => { entity.ToTable(name: "UserLogin"); });
             modelBuilder.Entity<IdentityUserToken<string>>(entity => { entity.ToTable(name: "UserToken"); });
+
+            Console.WriteLine(JsonConvert.SerializeObject(adminUser));
+
+            modelBuilder.Entity<EndUserList>().HasData(adminUser, appUser);
         }
     }
 }
