@@ -30,11 +30,16 @@ public class AuthorizationService: IAuthorizationService
 
         var Users = _userManager.Users.ToList();
 
+        if(Users.Any(u => u.Id == mapper.UserId && (u.Type == "super" || u.Type == "app")) && _context.ApplicationFunctionPermissionLists.Where(p => p.Permission == mapper.Permission).Any())
+        {
+            return true;
+        }
+
         var permission = (
             from endUser in Users
             join organizationUserList in _context.OrganizationUserLists on mapper.UserId equals organizationUserList
                 .EndUserId
-                where mapper.OrganizationId == organizationUserList.OrganizationId
+                where Guid.Parse(mapper.OrganizationId) == organizationUserList.OrganizationId
             join endUserRoleList in _context.EndUserRoleLists on organizationUserList.Id equals endUserRoleList
                 .OrganizationUserId
             join roleList in _context.RoleLists on endUserRoleList.RoleId equals roleList.Id

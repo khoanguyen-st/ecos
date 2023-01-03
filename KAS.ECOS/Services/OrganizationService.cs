@@ -102,14 +102,24 @@ namespace KAS.ECOS.SERVICE.Services
                 _context.RoleLists.Add(role);
 
                 foreach (var roleApplicationFunctionPermissionList in permissionList
-                             .Select(permission => _context.ApplicationFunctionPermissionLists.FirstOrDefault(b => b.Permission == permission))
-                             .Select(applicationPermission => new RoleApplicationFunctionPermissionList()
+                             .Select(permission => _context.ApplicationFunctionPermissionLists?.FirstOrDefault(b => b.Permission == permission))
+                             .Select(applicationPermission =>
                              {
-                                 ApplicationFunctionPermissionId = applicationPermission!.Id,
-                                 RoleId = role.Id
+                                 if(applicationPermission != null)
+                                 {
+                                     return new RoleApplicationFunctionPermissionList()
+                                     {
+                                         ApplicationFunctionPermissionId = applicationPermission.Id,
+                                         RoleId = role.Id
+                                     };
+                                 }
+                                 return null;
                              }))
                 {
-                    _context.RoleApplicationFunctionPermissionLists.Add(roleApplicationFunctionPermissionList);
+                    if(roleApplicationFunctionPermissionList != null)
+                    {
+                        _context.RoleApplicationFunctionPermissionLists.Add(roleApplicationFunctionPermissionList);
+                    }
                 }
 
                 var adminUserDto = new AddEndUserDTO()

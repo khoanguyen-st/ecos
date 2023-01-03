@@ -223,8 +223,6 @@ namespace KAS.Entity.DB.ECOS.Entities
             modelBuilder.Entity<IdentityUserLogin<string>>(entity => { entity.ToTable(name: "UserLogin"); });
             modelBuilder.Entity<IdentityUserToken<string>>(entity => { entity.ToTable(name: "UserToken"); });
 
-            Console.WriteLine(JsonConvert.SerializeObject(adminUser));
-
             modelBuilder.Entity<EndUserList>().HasData(adminUser, appUser);
         }
     }

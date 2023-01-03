@@ -26,22 +26,23 @@ builder.Services.AddControllers()
         x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c => {
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "ECOS",
-        Version = "v1"
-    });
-    c.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme()
-    {
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 1safsfsdfdfd\"",
-    });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+builder.Services.AddSwaggerGen(c =>
+{
+  c.SwaggerDoc("v1", new OpenApiInfo
+  {
+    Title = "ECOS",
+    Version = "v1"
+  });
+  c.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme()
+  {
+    Name = "Authorization",
+    Type = SecuritySchemeType.Http,
+    Scheme = "Bearer",
+    BearerFormat = "JWT",
+    In = ParameterLocation.Header,
+    Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 1safsfsdfdfd\"",
+  });
+  c.AddSecurityRequirement(new OpenApiSecurityRequirement {
         {
             new OpenApiSecurityScheme {
                 Reference = new OpenApiReference {
@@ -60,13 +61,13 @@ builder.Services.AddDbContext<KAS.Entity.DB.ECOS.Entities.ECOSContext>(options =
 
 builder.Services.AddIdentity<EndUserList, IdentityRole>(options =>
     {
-        options.SignIn.RequireConfirmedAccount = false;
-        options.User.RequireUniqueEmail = true;
-        options.Password.RequireDigit = false;
-        options.Password.RequiredLength = 6;
-        options.Password.RequireNonAlphanumeric = false;
-        options.Password.RequireLowercase = false;
-        options.Password.RequireUppercase = false;
+      options.SignIn.RequireConfirmedAccount = false;
+      options.User.RequireUniqueEmail = true;
+      options.Password.RequireDigit = false;
+      options.Password.RequiredLength = 6;
+      options.Password.RequireNonAlphanumeric = false;
+      options.Password.RequireLowercase = false;
+      options.Password.RequireUppercase = false;
     })
     .AddEntityFrameworkStores<ECOSContext>();
 builder.Services.AddScoped<JwtService>();
@@ -77,16 +78,16 @@ builder.Services.AddSingleton<IAuthorizationHandler, UserAuthorizeHandler>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Authentication:Issuer"],
-            ValidAudience = builder.Configuration["Authentication:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.ASCII.GetBytes((builder.Configuration["Authentication:SecretForKey"])))
-        };
+      options.TokenValidationParameters = new TokenValidationParameters
+      {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Authentication:Issuer"],
+        ValidAudience = builder.Configuration["Authentication:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(
+              Encoding.ASCII.GetBytes((builder.Configuration["Authentication:SecretForKey"])))
+      };
     });
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
@@ -101,8 +102,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+  app.UseSwagger();
+  app.UseSwaggerUI();
 }
 
 // app.UseHttpsRedirection();
@@ -124,38 +125,16 @@ using (var scope = app.Services.CreateScope())
   var context = services.GetRequiredService<KAS.Entity.DB.ECOS.Entities.ECOSContext>();
   if (context.Database.GetPendingMigrations().Any())
   {
-      context.Database.Migrate();
+    context.Database.Migrate();
   }
-
-  //if (!context.Users.Where(x => x.Email == "super@admin.com").Any())
-  //{
-  //    var passwordHasher = new PasswordHasher<EndUserList>();
-
-  //    var adminUser = new EndUserList()
-  //    {
-  //        Id = "a18be9c0-aa65-4af8-bd17-00bd9344e575",
-  //        Email = "super@admin.com",
-  //        NormalizedEmail = "SUPER@ADMIN.COM",
-  //        FirstName = "super",
-  //        LastName = "admin",
-  //        UserName = "superAdmin",
-  //        NormalizedUserName = "SUPERADMIN",
-  //        Type = "super",
-  //        SecurityStamp = string.Empty
-  //    };
-  //    adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, "password");
-
-  //    context.Users.Add(adminUser);
-  //    context.SaveChanges();
-  //}
 }
 
 try
 {
-    app.Run();
+  app.Run();
 }
 catch (Exception ex)
 {
-    Console.WriteLine(ex.InnerException!=null?ex.InnerException.Message:ex.Message);
+  Console.WriteLine(ex.InnerException != null ? ex.InnerException.Message : ex.Message);
 }
 Console.ReadLine();
