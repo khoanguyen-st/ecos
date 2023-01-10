@@ -1,7 +1,7 @@
 using AutoMapper;
-using KAS.ECOS.API.Entity;
 using KAS.ECOS.API.Policy;
 using KAS.ECOS.SERVICE.DTOs.Application;
+using KAS.ECOS.SERVICE.DTOs.Authorization;
 using KAS.ECOS.SERVICE.Services;
 using KAS.Entity.DB.ECOS.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -26,6 +26,12 @@ namespace KAS.ECOS.API.Controllers
         public IActionResult GetApplications([FromQuery] AuthorizationDto rqParams)
         {
             return Ok(_authorizationService.CheckUserPermission(rqParams));
+        }
+
+        [HttpGet("GetListPermissions")]
+        public IActionResult GetApplicationPermissions([FromQuery] GetListPermissionsDto rqParams)
+        {
+            return Ok(_authorizationService.ListPermission(rqParams));
         }
     }
 }

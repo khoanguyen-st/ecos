@@ -22,6 +22,7 @@ namespace KAS.Entity.DB.ECOS.Entities
         {
         }
 
+        public virtual DbSet<MomoConfigList> MomoConfigLists { get; set; } = null!;
         public virtual DbSet<OrganizationList> OrganizationLists { get; set; } = null!;
         public virtual DbSet<OrganizationProfileList> OrganizationProfileLists { get; set; } = null!;
         public virtual DbSet<OrganizationDatabaseList> OrganizationDatabaseLists { get; set; } = null!;
@@ -202,7 +203,7 @@ namespace KAS.Entity.DB.ECOS.Entities
                 Type = "super",
                 SecurityStamp = string.Empty
             };
-            adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, "password");
+            adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, "adminpassword");
 
             var appUser = new EndUserList()
             {
@@ -216,7 +217,7 @@ namespace KAS.Entity.DB.ECOS.Entities
                 Type = "app",
                 SecurityStamp = string.Empty
             };
-            appUser.PasswordHash = passwordHasher.HashPassword(appUser, "password");
+            appUser.PasswordHash = passwordHasher.HashPassword(appUser, "apppassword");
 
             modelBuilder.Entity<EndUserList>(entity => { entity.ToTable(name: "Users"); });
             modelBuilder.Entity<IdentityUserClaim<string>>(entity => { entity.ToTable(name: "UserClaim"); });
