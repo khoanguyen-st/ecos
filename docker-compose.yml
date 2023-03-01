@@ -5,19 +5,21 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    ports:
+      - 80:80
     networks:
       - global
 
-  # db:
-  #   image: postgres:15.1
-  #   environment:
-  #     POSTGRES_DB: KAS.ECOS
-  #     POSTGRES_PASSWORD: 123
-  #     POSTGRES_USER: kasEcos_user01
-  #   ports:
-  #     - 5433:5432
-  #   networks:
-  #     - global
+  db:
+    image: postgres:15.1
+    environment:
+      POSTGRES_DB: KAS.ECOS
+      POSTGRES_PASSWORD: 123
+      POSTGRES_USER: kasEcos_user01
+    ports:
+      - 5433:5432
+    networks:
+      - global
 
 networks:
   global:
